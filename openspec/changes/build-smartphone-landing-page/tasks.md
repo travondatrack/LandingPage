@@ -28,6 +28,9 @@
 - [x] 4.2 Implement lightweight product interactions such as favorites, cart preview, or recently viewed products.
 - [x] 4.3 Add skeleton loading states for API-backed product areas.
 - [x] 4.4 Add restrained micro-interactions and scroll animations that respect reduced-motion preferences.
+- [x] 4.5 Add a scrollytelling page flow with lightweight parallax moments that connect hero, features, product proof, specifications, and newsletter conversion.
+- [x] 4.6 Add webhook-ready newsletter submission using an environment-configured webhook URL, with a client-side fallback when no webhook is configured.
+- [x] 4.7 Add an optional product assistant chatbot using OpenAI or Gemini when credentials are configured, with a graceful demo or disabled state when credentials are absent.
 
 ## 5. SEO, Performance, and Accessibility
 
@@ -41,5 +44,9 @@
 
 - [x] 6.1 Run lint, format check, type check, and production build commands successfully.
 - [x] 6.2 Test the landing page against successful API, loading, and failed API states.
-- [ ] 6.3 Deploy the frontend to a free Next.js-compatible cloud platform, preferably Vercel.
-- [ ] 6.4 Capture delivery evidence: public GitHub repository link, live deployment URL, PageSpeed screenshot, and screenshots or notes for any bonus features.
+- [x] 6.3 Deploy the frontend to a free Next.js-compatible cloud platform, preferably Vercel.
+- [ ] 6.4 Prepare the public GitHub repository for submission, including clean branch naming and clear commit messages.
+- [x] 6.5 Capture the final landing page deployment URL.
+- [ ] 6.6 Capture Google PageSpeed Insights Mobile evidence showing the target score of at least 85/100 or document the exact remaining bottlenecks.
+- [x] 6.7 Capture bonus-feature proof: webhook submission behavior, dark mode, scrollytelling/parallax, skeleton loading, ecommerce-like interactions, and chatbot behavior if enabled.
+- [ ] 6.8 Assemble the final submission checklist: public GitHub repository link, live landing page link, PageSpeed screenshot, and bonus-feature evidence.

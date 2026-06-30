@@ -11,7 +11,7 @@ The assignment requires a polished, responsive product landing page for a smart 
 - Add SEO basics, including title, description, and Open Graph metadata.
 - Add performance-minded image handling, loading states, and frontend code quality tooling with ESLint and Prettier.
 - Prepare the app for deployment to a free cloud platform such as Vercel, Netlify, or Cloudflare Pages.
-- Include optional bonus-ready features where practical, such as dark mode, scroll animation, skeleton loading, micro-interactions, saved favorites/cart/recently viewed, or webhook-ready newsletter validation.
+- Include optional bonus-ready features where practical, such as dark mode, scrollytelling with parallax, skeleton loading, micro-interactions, saved favorites/cart/recently viewed, webhook-backed newsletter validation, and a lightweight product assistant chatbot using OpenAI or Gemini when credentials are available.
 
 ## Capabilities
 
@@ -27,5 +27,5 @@ The assignment requires a polished, responsive product landing page for a smart 
 
 - Frontend app under the project workspace, expected to use Next.js, TypeScript, Tailwind CSS, ESLint, and Prettier.
 - External product API dependency: `https://dummyjson.com/products/category/smartphones`.
-- UI behavior includes product data rendering, loading/error states, responsive layout, SEO metadata, and form validation.
-- Deployment readiness requires build scripts, lint/format configuration, and environment-safe code paths.
+- UI behavior includes product data rendering, loading/error states, responsive layout, SEO metadata, form validation, optional webhook submission, and optional chatbot assistance.
+- Deployment readiness requires build scripts, lint/format configuration, environment-safe code paths, public GitHub repository readiness, live deployment, PageSpeed evidence, and bonus-feature proof for final submission.

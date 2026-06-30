@@ -6,9 +6,9 @@ import { FeatureSection } from "@/components/sections/feature-section";
 import { HeroSection } from "@/components/sections/hero-section";
 import { ProductShowcase } from "@/components/sections/product-showcase";
 import { SpecsSection } from "@/components/sections/specs-section";
+import { TrustedBrandsSection } from "@/components/sections/trusted-brands-section";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { useBehaviorTracker } from "@/lib/use-behavior-tracker";
 import { useSmartphones } from "@/lib/use-smartphones";
 
 const ChatbotWidget = dynamic(
@@ -30,13 +30,13 @@ const NewsletterSection = dynamic(
 
 export function LandingPage() {
   const productState = useSmartphones();
-  useBehaviorTracker();
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-canvas text-ink">
       <SiteHeader />
       <main id="main-content">
         <HeroSection productState={productState} />
+        <TrustedBrandsSection />
         <BrandStorySection productState={productState} />
         <FeatureSection />
         <ProductShowcase productState={productState} />

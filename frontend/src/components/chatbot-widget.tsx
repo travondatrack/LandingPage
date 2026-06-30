@@ -9,11 +9,17 @@ type ChatMessage = {
   content: string;
 };
 
+type ChatResponse = {
+  reply?: string;
+  provider?: "openai" | "gemini" | "demo";
+  configured?: boolean;
+};
+
 const initialMessages: ChatMessage[] = [
   {
     role: "assistant",
     content:
-      "Hi, I can help compare phone price, discounts, warranty, shipping, favorites, and cart preview."
+      "Hi, I can help compare phone price, discounts, warranty, shipping, favorites, and cart preview. AI mode activates when OpenAI or Gemini credentials are configured."
   }
 ];
 
@@ -52,11 +58,16 @@ export function ChatbotWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message })
       });
-      const data = (await response.json()) as { reply?: string };
+      const data = (await response.json()) as ChatResponse;
+      const providerLabel =
+        data.provider && data.provider !== "demo" ? ` (${data.provider.toUpperCase()})` : "";
 
       setMessages((current) => [
         ...current,
-        { role: "assistant", content: data.reply ?? "I could not answer that yet." }
+        {
+          role: "assistant",
+          content: `${data.reply ?? "I could not answer that yet."}${providerLabel}`
+        }
       ]);
     } catch {
       setMessages((current) => [
@@ -87,7 +98,7 @@ export function ChatbotWidget() {
               </span>
               <div>
                 <h2 className="text-sm font-semibold text-ink">Product advisor</h2>
-                <p className="text-xs text-muted">Automated support</p>
+                <p className="text-xs text-muted">AI-ready demo support</p>
               </div>
             </div>
             <button

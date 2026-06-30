@@ -19,13 +19,18 @@ const config: Config = {
         accent: "rgb(var(--color-accent) / <alpha-value>)",
         accentStrong: "rgb(var(--color-accent-strong) / <alpha-value>)",
         success: "rgb(var(--color-success) / <alpha-value>)",
-        danger: "rgb(var(--color-danger) / <alpha-value>)"
+        danger: "rgb(var(--color-danger) / <alpha-value>)",
+        navy: "#07111F",
+        navySurface: "#0E1A2B",
+        cyanAccent: "#38BDF8"
       },
       boxShadow: {
-        soft: "0 18px 60px rgb(17 24 39 / 0.12)"
+        soft: "0 18px 60px rgb(7 17 31 / 0.45)",
+        cyan: "0 0 35px rgba(56, 189, 248, 0.25)",
+        cyanStrong: "0 0 50px rgba(56, 189, 248, 0.45)"
       },
       maxWidth: {
-        content: "1180px"
+        content: "1240px"
       }
     }
   },

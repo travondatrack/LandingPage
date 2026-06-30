@@ -29,19 +29,23 @@ const features = [
 
 export function FeatureSection() {
   return (
-    <section id="features" className="border-y border-line bg-surface/60 py-16 sm:py-20 lg:py-24 backdrop-blur">
+    <section
+      id="features"
+      className="border-y border-line bg-surface/60 py-16 sm:py-20 lg:py-24 backdrop-blur"
+    >
       <div className="mx-auto max-w-content px-5">
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-wide text-accent">
-              Why Choose HeliPhone
+              Why Choose QTPhone
             </p>
             <h2 className="mt-3 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
               Engineered without compromise.
             </h2>
           </div>
           <p className="max-w-sm text-sm leading-6 text-muted">
-            Discover cutting-edge innovations designed to empower your creativity, boost productivity, and secure your digital life.
+            Discover cutting-edge innovations designed to empower your creativity, boost
+            productivity, and secure your digital life.
           </p>
         </div>
 

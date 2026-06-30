@@ -2,15 +2,9 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
-  BadgeCheck,
-  ChevronLeft,
-  ChevronRight,
-  Pause,
-  Play,
-  ShieldCheck,
-  Sparkles,
   Star,
   Zap
 } from "lucide-react";
@@ -23,76 +17,98 @@ type HeroSectionProps = {
 
 const trustStats = [
   { label: "Products", value: "20+" },
-  { label: "Satisfaction", value: "99.4%" },
-  { label: "Warranty", value: "2 Years" }
+  { label: "Satisfaction", value: "99.8%" },
+  { label: "VIP Warranty", value: "2 Years" }
 ];
+const heroHeadline = "QTPhone changes how flagship feels.";
 
 export function HeroSection({ productState }: HeroSectionProps) {
   const products = productState.status === "success" ? productState.products.slice(0, 6) : [];
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [typedHeadline, setTypedHeadline] = useState(heroHeadline);
 
   useEffect(() => {
-    if (products.length <= 1 || isPaused) return;
+    if (products.length <= 1) return;
     const interval = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % products.length);
-    }, 4500);
+    }, 3800);
     return () => window.clearInterval(interval);
-  }, [products.length, isPaused]);
+  }, [products.length]);
 
-  const featured = products[activeIndex] ?? (productState.status === "success" ? productState.products[0] : undefined);
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function handlePrev() {
-    if (products.length === 0) return;
-    setActiveIndex((current) => (current - 1 + products.length) % products.length);
-  }
+    if (reducedMotion) {
+      setTypedHeadline(heroHeadline);
+      return;
+    }
 
-  function handleNext() {
-    if (products.length === 0) return;
-    setActiveIndex((current) => (current + 1) % products.length);
-  }
+    let index = 0;
+    let timeout: number;
+
+    function typeNextCharacter() {
+      index += 1;
+      setTypedHeadline(heroHeadline.slice(0, index));
+
+      if (index < heroHeadline.length) {
+        timeout = window.setTimeout(typeNextCharacter, index < 10 ? 80 : 42);
+      }
+    }
+
+    setTypedHeadline("");
+    timeout = window.setTimeout(typeNextCharacter, 280);
+
+    return () => window.clearTimeout(timeout);
+  }, []);
+
+  const featured =
+    products[activeIndex] ??
+    (productState.status === "success" ? productState.products[0] : undefined);
 
   return (
-    <section className="relative isolate overflow-hidden bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,119,182,0.15),transparent)] bg-canvas py-14 sm:py-20 lg:min-h-[calc(100vh-4rem)] lg:py-24">
+    <section className="relative isolate overflow-hidden bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(56,189,248,0.18),transparent)] bg-canvas py-10 sm:py-14 lg:min-h-[calc(92vh-4rem)] lg:py-16">
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(110deg,transparent_0%,rgb(var(--color-accent)/0.12)_44%,transparent_70%)]" />
-      <div className="mx-auto grid max-w-content items-center gap-10 px-5 lg:grid-cols-[1.02fr_0.98fr]">
+      <div className="mx-auto grid max-w-content items-center gap-8 px-5 lg:grid-cols-[1fr_0.92fr]">
         <div className="soft-reveal">
-          <div className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/78 px-3 py-2 text-sm font-semibold text-accent shadow-sm backdrop-blur">
-            <Sparkles aria-hidden="true" size={16} />
-            Premium Smart Device Commerce
-          </div>
-          <h1 className="mt-6 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight text-ink sm:text-6xl lg:text-7xl">
-            Experience next-generation smartphone innovation.
+          <h1
+            className="mt-5 max-w-4xl text-4xl font-black leading-[1.02] tracking-tight text-ink sm:text-5xl lg:text-6xl"
+            aria-label={heroHeadline}
+          >
+            <span aria-hidden="true">{typedHeadline}</span>
+            <span
+              className="typing-cursor ml-1 inline-block h-[0.82em] w-[0.08em] translate-y-[0.08em] rounded-full bg-accent"
+              aria-hidden="true"
+            />
           </h1>
-          <p className="mt-6 max-w-2xl text-base leading-8 text-muted sm:text-lg">
-            Discover flagship smartphones engineered for pro-grade optical clarity, extreme battery endurance, and lightning-fast connectivity. Compare specifications and shop the latest models seamlessly.
+          <p className="mt-5 max-w-2xl text-sm leading-7 text-muted sm:text-base">
+            Experience next-generation titanium engineering, studio optics, and neural architecture. Powered by live external product API data.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <a
-              className="premium-button inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-accent px-6 text-sm font-semibold text-white"
+              className="premium-button inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-accent px-6 text-sm font-semibold text-white shadow-cyan transition hover:scale-105"
               href="#products"
             >
-              Explore phones
+              Explore Flagship Series
               <ArrowRight aria-hidden="true" size={18} />
             </a>
             <a
-              className="premium-button inline-flex min-h-12 items-center justify-center rounded-full border border-line bg-surface/86 px-6 text-sm font-semibold text-ink backdrop-blur hover:border-accent"
-              href="#specs"
+              className="premium-button inline-flex min-h-12 items-center justify-center rounded-full border border-line bg-surface/86 px-6 text-sm font-semibold text-ink backdrop-blur hover:border-accent hover:shadow-soft transition"
+              href="#compare"
             >
-              Compare products
+              Compare Matrix
             </a>
           </div>
 
-          <dl className="mt-10 grid max-w-xl grid-cols-3 gap-3">
+          <dl className="mt-8 grid max-w-xl grid-cols-3 gap-3">
             {trustStats.map((stat) => (
               <div
                 key={stat.label}
-                className="rounded-2xl border border-line bg-surface/78 p-4 backdrop-blur"
+                className="rounded-2xl border border-line bg-surface/78 p-3 backdrop-blur sm:p-4 hover:border-accent/50 transition"
               >
                 <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
                   {stat.label}
                 </dt>
-                <dd className="mt-2 text-2xl font-semibold tracking-tight text-ink">
+                <dd className="mt-1.5 text-xl font-bold tracking-tight text-ink sm:text-2xl text-accent">
                   {stat.value}
                 </dd>
               </div>
@@ -100,103 +116,77 @@ export function HeroSection({ productState }: HeroSectionProps) {
           </dl>
         </div>
 
-        <div
-          className="soft-reveal relative"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          <div className="premium-panel product-sheen relative overflow-hidden rounded-[1.75rem] p-4 sm:p-6">
+        <div className="soft-reveal relative">
+
+          <div className="premium-panel product-sheen relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-surface/75 backdrop-blur-xl p-4 sm:p-5 shadow-cyanStrong">
             {featured ? (
-              <article className="transition-all duration-500 ease-out">
+              <article>
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent sm:text-sm sm:py-1.5">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/20 border border-accent/40 px-3 py-1 text-xs font-bold text-accent sm:text-sm">
                       <Zap aria-hidden="true" size={14} />
                       {formatDiscount(featured.discountPercentage)}
                     </span>
-                    <span className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-3 py-1 text-xs font-semibold text-muted sm:text-sm sm:py-1.5">
-                      <Star aria-hidden="true" size={14} className="fill-accent text-accent" />
+                    <span className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-3 py-1 text-xs font-semibold text-ink sm:text-sm">
+                      <Star aria-hidden="true" size={14} className="fill-amber-400 text-amber-400" />
                       {formatRating(featured.rating)}
                     </span>
                   </div>
 
-                  {products.length > 1 ? (
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => setIsPaused(!isPaused)}
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-line bg-surface text-muted transition hover:border-accent hover:text-ink"
-                        title={isPaused ? "Resume auto slide" : "Pause auto slide"}
-                        aria-label={isPaused ? "Resume auto slide" : "Pause auto slide"}
-                      >
-                        {isPaused ? <Play size={14} /> : <Pause size={14} />}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handlePrev}
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-line bg-surface text-muted transition hover:border-accent hover:text-ink"
-                        title="Previous product"
-                        aria-label="Previous product"
-                      >
-                        <ChevronLeft size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleNext}
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-line bg-surface text-muted transition hover:border-accent hover:text-ink"
-                        title="Next product"
-                        aria-label="Next product"
-                      >
-                        <ChevronRight size={16} />
-                      </button>
-                    </div>
-                  ) : null}
                 </div>
 
-                <div className="relative mt-4 aspect-[16/11] overflow-hidden rounded-[1.25rem] bg-[linear-gradient(140deg,rgb(var(--color-surface)),rgb(var(--color-accent)/0.10))] sm:aspect-[4/3]">
-                  <Image
+                <AnimatePresence mode="wait">
+                  <motion.div
                     key={featured.id}
-                    src={featured.image}
-                    alt={`${featured.name} smartphone product spotlight`}
-                    fill
-                    priority
-                    sizes="(min-width: 1024px) 520px, 92vw"
-                    className="animate-in fade-in zoom-in-95 duration-500 object-contain p-6 transition hover:scale-[1.035] sm:p-8"
-                  />
-                  {products.length > 1 ? (
-                    <div className="absolute bottom-3 right-3 rounded-full bg-surface/90 px-2.5 py-1 text-xs font-medium text-ink shadow-sm backdrop-blur">
-                      {activeIndex + 1} / {products.length}
+                    initial={{ opacity: 0, y: 15, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -15, scale: 0.97 }}
+                    transition={{ duration: 0.38, ease: "easeOut" }}
+                  >
+                    <div className="relative mt-4 aspect-[16/10] overflow-hidden rounded-[1.25rem] bg-[radial-gradient(ellipse_at_center,rgb(var(--color-accent)/0.15),transparent_70%)] bg-elevated border border-white/5 sm:aspect-[16/11]">
+                      <Image
+                        src={featured.image}
+                        alt={`${featured.name} smartphone product spotlight`}
+                        fill
+                        priority
+                        sizes="(min-width: 1024px) 520px, 92vw"
+                        className="object-contain p-5 transition duration-500 hover:scale-[1.05] sm:p-7 drop-shadow-[0_15px_30px_rgba(56,189,248,0.25)]"
+                      />
+                      {products.length > 1 ? (
+                        <div className="absolute bottom-3 right-3 rounded-full bg-surface/90 border border-line/60 px-3 py-1 text-xs font-semibold text-ink shadow-sm backdrop-blur">
+                          {activeIndex + 1} / {products.length}
+                        </div>
+                      ) : null}
                     </div>
-                  ) : null}
-                </div>
 
-                <div className="mt-5 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
-                  <div key={`info-${featured.id}`} className="animate-in fade-in duration-300">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-accent sm:text-sm">{featured.brand}</p>
-                    <h2 className="mt-1 break-words text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-                      {featured.name}
-                    </h2>
-                  </div>
-                  <div className="rounded-2xl border border-line bg-surface px-4 py-2.5 text-right sm:py-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">Price</p>
-                    <p className="mt-0.5 text-2xl font-extrabold tracking-tight text-accent sm:text-3xl">
-                      {formatPrice(featured.price)}
-                    </p>
-                  </div>
-                </div>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-widest text-accent">
+                          {featured.brand} • {featured.processor}
+                        </p>
+                        <h2 className="mt-1 break-words text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
+                          {featured.name}
+                        </h2>
+                      </div>
+                      <div className="rounded-2xl border border-accent/30 bg-accent/10 px-4 py-2.5 text-right sm:py-3 shadow-cyan">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                          Flagship Price
+                        </p>
+                        <p className="mt-0.5 text-xl font-black tracking-tight text-accent sm:text-2xl">
+                          {formatPrice(featured.price)}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
 
                 {products.length > 1 ? (
                   <div className="mt-4 flex items-center justify-center gap-1.5 pt-1">
                     {products.map((item, idx) => (
-                      <button
+                      <div
                         key={item.id}
-                        type="button"
-                        onClick={() => setActiveIndex(idx)}
-                        aria-label={`Show ${item.name}`}
-                        className={`h-2 rounded-full transition-all duration-300 ${
-                          idx === activeIndex
-                            ? "w-7 bg-accent"
-                            : "w-2 bg-line hover:bg-muted"
+                        className={`h-2 rounded-full transition-all duration-500 ${
+                          idx === activeIndex ? "w-8 bg-accent shadow-cyan" : "w-2 bg-line/60"
                         }`}
                       />
                     ))}
@@ -207,27 +197,6 @@ export function HeroSection({ productState }: HeroSectionProps) {
               <HeroSkeleton />
             )}
           </div>
-        </div>
-      </div>
-
-      <div className="mx-auto mt-14 max-w-content border-t border-line/60 px-5 pt-8">
-        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-xs sm:text-sm font-semibold text-muted">
-          {[
-            { icon: BadgeCheck, label: "Official Warranty" },
-            { icon: ShieldCheck, label: "Secure Checkout" },
-            { icon: Zap, label: "Express Delivery" }
-          ].map((item) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={item.label}
-                className="inline-flex items-center gap-2 rounded-full border border-line/60 bg-surface/50 px-4 py-2 text-ink/90 backdrop-blur shadow-2xs transition hover:border-accent/40 hover:text-accent"
-              >
-                <Icon aria-hidden="true" size={18} className="text-accent" />
-                <span>{item.label}</span>
-              </div>
-            );
-          })}
         </div>
       </div>
     </section>

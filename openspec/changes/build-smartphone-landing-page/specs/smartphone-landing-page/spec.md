@@ -72,7 +72,7 @@ The system SHALL optimize frontend loading behavior and media handling to suppor
 
 ### Requirement: Newsletter registration form
 
-The system SHALL provide a newsletter registration form with client-side validation and a clear success or failure state.
+The system SHALL provide a newsletter registration form with client-side validation, a clear success or failure state, and optional webhook delivery when a webhook URL is configured.
 
 #### Scenario: Valid newsletter submission
 
@@ -83,6 +83,16 @@ The system SHALL provide a newsletter registration form with client-side validat
 
 - **WHEN** a visitor submits an empty or invalid email address
 - **THEN** the form MUST show a validation message and MUST NOT show a success state
+
+#### Scenario: Webhook newsletter submission is configured
+
+- **WHEN** a visitor submits a valid email address and a newsletter webhook URL is configured
+- **THEN** the form MUST send the submission payload to the configured webhook and show a clear success or failure state based on the result
+
+#### Scenario: Webhook newsletter submission is not configured
+
+- **WHEN** a visitor submits a valid email address and no newsletter webhook URL is configured
+- **THEN** the form MUST keep the required landing page flow usable with a local success or demo state
 
 ### Requirement: Interactive bonus features
 
@@ -98,9 +108,38 @@ The system SHALL include lightweight interactive enhancements that improve the s
 - **WHEN** a visitor marks a product as favorite, adds it to a cart preview, or views product details
 - **THEN** the interaction MUST update visible UI state and MAY persist locally in the browser
 
+#### Scenario: Scrollytelling and parallax enhance product story
+
+- **WHEN** a visitor scrolls through the landing page
+- **THEN** the page MUST present a coherent product story with lightweight parallax or scroll-linked visual transitions that respect reduced-motion preferences
+
+#### Scenario: Behavior tracking is visible
+
+- **WHEN** a visitor clicks an interactive element or crosses a tracked scroll-depth milestone
+- **THEN** the page MUST send the behavior event to the backend and show a short non-blocking notification confirming the interaction was tracked
+
+#### Scenario: Behavior events are retained for demo evidence
+
+- **WHEN** behavior events are submitted through the tracking endpoint
+- **THEN** the backend MUST retain a bounded recent-event summary that can be inspected during verification
+
+### Requirement: Optional product assistant chatbot
+
+The system SHALL provide an optional product assistant chatbot for smartphone questions when OpenAI or Gemini credentials are configured, while keeping the landing page functional when credentials are absent.
+
+#### Scenario: Chatbot credentials are configured
+
+- **WHEN** a visitor asks a smartphone product question through the chatbot
+- **THEN** the chatbot MUST respond using the available product context and the configured AI provider
+
+#### Scenario: Chatbot credentials are absent
+
+- **WHEN** a visitor opens the chatbot without configured AI credentials
+- **THEN** the chatbot MUST show a graceful disabled, demo, or setup-needed state without breaking the landing page
+
 ### Requirement: Tooling and deploy readiness
 
-The system SHALL include frontend project tooling for TypeScript, ESLint, Prettier, Tailwind CSS, and deployment-ready scripts.
+The system SHALL include frontend project tooling for TypeScript, ESLint, Prettier, Tailwind CSS, deployment-ready scripts, and final submission evidence.
 
 #### Scenario: Developer checks run
 
@@ -111,3 +150,8 @@ The system SHALL include frontend project tooling for TypeScript, ESLint, Pretti
 
 - **WHEN** the project is deployed to a free cloud platform that supports Next.js
 - **THEN** the landing page MUST render the same product experience using the public DummyJSON API
+
+#### Scenario: Final submission checklist is prepared
+
+- **WHEN** the project is ready to submit
+- **THEN** the delivery package MUST include a public GitHub repository link, a live landing page link, Google PageSpeed Insights Mobile screenshot or evidence, and proof of completed bonus features

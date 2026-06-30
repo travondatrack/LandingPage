@@ -8,7 +8,15 @@ export type BehaviorEventName =
   | "scroll_depth"
   | "newsletter_submit"
   | "chatbot_open"
-  | "chatbot_message";
+  | "chatbot_message"
+  | "search_products"
+  | "filter_products"
+  | "sort_products"
+  | "compare_product"
+  | "open_compare_drawer"
+  | "view_product_details"
+  | "view_product_detail"
+  | "switch_tab";
 
 export function trackBehavior(event: BehaviorEventName, detail: Record<string, unknown> = {}) {
   const payload = JSON.stringify({

@@ -1,6 +1,7 @@
 "use client";
 
-import { Heart, Menu, ShoppingBag, Smartphone, X } from "lucide-react";
+import Image from "next/image";
+import { Heart, Menu, ShoppingBag, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -21,8 +22,8 @@ export function SiteHeader() {
   useEffect(() => {
     function readCounts() {
       setCounts({
-        favorites: readStoredCount("heliphone-favorites"),
-        cart: readStoredCount("heliphone-cart")
+        favorites: readStoredCount("qtphone-favorites"),
+        cart: readStoredCount("qtphone-cart")
       });
     }
 
@@ -45,12 +46,12 @@ export function SiteHeader() {
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("storage", readCounts);
-    window.addEventListener("heliphone-storage", readCounts);
+    window.addEventListener("qtphone-storage", readCounts);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("storage", readCounts);
-      window.removeEventListener("heliphone-storage", readCounts);
+      window.removeEventListener("qtphone-storage", readCounts);
     };
   }, []);
 
@@ -63,11 +64,19 @@ export function SiteHeader() {
       }`}
     >
       <div className="mx-auto flex min-h-16 max-w-content items-center justify-between gap-4 px-5">
-        <a className="inline-flex min-w-0 items-center gap-2 font-semibold text-ink" href="#">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent text-white shadow-soft">
-            <Smartphone aria-hidden="true" size={20} />
+        <a className="inline-flex min-w-0 items-center gap-2.5 font-bold text-ink" href="#">
+          <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-accent/10 p-1.5 border border-accent/20 shadow-2xs">
+            <Image
+              src="/qtphone-logo-transparent.png"
+              alt="QTPhone Logo"
+              fill
+              className="object-contain p-1"
+              priority
+            />
+          </div>
+          <span className="truncate text-xl font-extrabold tracking-tight bg-gradient-to-r from-ink to-accent bg-clip-text text-transparent">
+            QTPhone
           </span>
-          <span className="truncate text-lg tracking-tight">HeliPhone</span>
         </a>
 
         <nav aria-label="Primary navigation" className="hidden items-center gap-1 text-sm lg:flex">

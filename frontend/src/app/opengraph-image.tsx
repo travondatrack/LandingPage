@@ -31,7 +31,8 @@ export default function Image() {
         <div
           style={{ marginTop: 28, maxWidth: 760, fontSize: 30, lineHeight: 1.4, color: "#5b677b" }}
         >
-          Next-generation mobile devices engineered for pro-grade imaging, extreme endurance, and seamless connectivity.
+          Next-generation mobile devices engineered for pro-grade imaging, extreme endurance, and
+          seamless connectivity.
         </div>
       </div>
       <div style={{ display: "flex", gap: 18, fontSize: 24, color: "#5b677b" }}>

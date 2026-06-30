@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
 
-const storageKey = "heliphone-theme";
+const storageKey = "qtphone-theme";
 
 function applyTheme(theme: Theme) {
   document.documentElement.classList.toggle("dark", theme === "dark");
@@ -17,10 +17,7 @@ export function ThemeToggle() {
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem(storageKey) as Theme | null;
-    const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-    const nextTheme = savedTheme ?? preferredTheme;
+    const nextTheme = savedTheme ?? "light";
 
     setTheme(nextTheme);
     applyTheme(nextTheme);

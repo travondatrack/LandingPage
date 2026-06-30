@@ -31,7 +31,10 @@ export function SpecsSection({ productState }: SpecsSectionProps) {
   const specs = selectedProduct ? buildSpecs(selectedProduct) : curatedSpecs;
 
   return (
-    <section id="specs" className="bg-gradient-to-b from-surface via-elevated to-surface py-16 sm:py-20 lg:py-24">
+    <section
+      id="specs"
+      className="bg-gradient-to-b from-surface via-elevated to-surface py-16 sm:py-20 lg:py-24"
+    >
       <div className="mx-auto grid max-w-content gap-10 px-5 lg:grid-cols-[0.84fr_1.16fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-accent">
@@ -41,7 +44,9 @@ export function SpecsSection({ productState }: SpecsSectionProps) {
             Precision engineered down to the smallest detail.
           </h2>
           <p className="mt-5 text-base leading-8 text-muted">
-            Explore comprehensive hardware specifications across our lineup. Compare processor performance, display technologies, optical sensor systems, and power ratings with absolute transparency.
+            Explore comprehensive hardware specifications across our lineup. Compare processor
+            performance, display technologies, optical sensor systems, and power ratings with
+            absolute transparency.
           </p>
 
           <div className="mt-8 grid grid-cols-2 gap-3">
