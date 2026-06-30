@@ -7,10 +7,10 @@
 
 ## 2. Product Data Layer
 
-- [ ] 2.1 Define TypeScript types for the DummyJSON smartphone category response and normalized product model.
-- [ ] 2.2 Implement a typed fetch helper for `https://dummyjson.com/products/category/smartphones`.
-- [ ] 2.3 Add loading, empty, and error handling paths for product data.
-- [ ] 2.4 Add reusable formatting helpers for price, discount, rating, and product specification display.
+- [x] 2.1 Define TypeScript types for the DummyJSON smartphone category response and normalized product model.
+- [x] 2.2 Implement a typed fetch helper for `https://dummyjson.com/products/category/smartphones`.
+- [x] 2.3 Add loading, empty, and error handling paths for product data.
+- [x] 2.4 Add reusable formatting helpers for price, discount, rating, and product specification display.
 
 ## 3. Landing Page Sections
 
