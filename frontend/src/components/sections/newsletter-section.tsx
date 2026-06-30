@@ -1,31 +1,40 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { Mail, Send } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckCircle2, Mail, Send } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { trackBehavior } from "@/lib/behavior";
 
-type SubmitState = "idle" | "submitting" | "success" | "error";
+const newsletterSchema = z.object({
+  email: z.string().min(1, "Email is required.").email("Enter a valid email address."),
+  updates: z.boolean()
+});
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+type NewsletterValues = z.infer<typeof newsletterSchema>;
+type SubmitState = "idle" | "success" | "error";
 
 export function NewsletterSection() {
-  const [email, setEmail] = useState("");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
-  const [message, setMessage] = useState("");
-
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const normalizedEmail = email.trim().toLowerCase();
-
-    if (!emailPattern.test(normalizedEmail)) {
-      setSubmitState("error");
-      setMessage("Enter a valid email address.");
-      return;
+  const [message, setMessage] = useState("No spam, only launch updates and price drops.");
+  const {
+    formState: { errors, isSubmitting },
+    handleSubmit,
+    register,
+    reset
+  } = useForm<NewsletterValues>({
+    resolver: zodResolver(newsletterSchema),
+    defaultValues: {
+      email: "",
+      updates: true
     }
+  });
 
-    setSubmitState("submitting");
-    setMessage("");
+  async function onSubmit(values: NewsletterValues) {
+    const normalizedEmail = values.email.trim().toLowerCase();
+    setSubmitState("idle");
+    setMessage("Sending your subscription...");
 
     try {
       const response = await fetch("/api/newsletter", {
@@ -35,7 +44,8 @@ export function NewsletterSection() {
         },
         body: JSON.stringify({
           email: normalizedEmail,
-          source: "smartphone-landing-page"
+          source: "smartphone-landing-page",
+          updates: values.updates
         })
       });
 
@@ -44,7 +54,7 @@ export function NewsletterSection() {
       }
 
       trackBehavior("newsletter_submit", { emailDomain: normalizedEmail.split("@")[1] });
-      setEmail("");
+      reset({ email: "", updates: true });
       setSubmitState("success");
       setMessage("Thanks. You are on the smartphone update list.");
     } catch {
@@ -53,25 +63,27 @@ export function NewsletterSection() {
     }
   }
 
+  const errorMessage = errors.email?.message;
+
   return (
-    <section id="newsletter" className="border-t border-line bg-canvas py-16 sm:py-20">
+    <section id="newsletter" className="border-t border-line bg-canvas py-16 sm:py-20 lg:py-24">
       <div className="mx-auto grid max-w-content gap-8 px-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div className="soft-reveal">
           <p className="text-sm font-semibold uppercase tracking-wide text-accent">
             Launch updates
           </p>
-          <h2 className="mt-3 text-3xl font-semibold text-ink sm:text-4xl">
-            Get notified when new smartphone picks arrive.
+          <h2 className="mt-3 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+            Get alerts when the right phone becomes obvious.
           </h2>
           <p className="mt-5 max-w-xl text-base leading-8 text-muted">
-            Receive product refreshes, deal notes, and availability changes without leaving the
-            landing page.
+            Receive product refreshes, price-drop notes, and availability changes through a
+            server-validated form that can forward to a real webhook.
           </p>
         </div>
 
         <form
-          className="soft-reveal rounded-lg border border-line bg-elevated p-5 shadow-sm sm:p-6"
-          onSubmit={handleSubmit}
+          className="premium-panel soft-reveal rounded-[1.75rem] p-5 sm:p-6"
+          onSubmit={handleSubmit(onSubmit)}
           noValidate
         >
           <label className="text-sm font-semibold text-ink" htmlFor="newsletter-email">
@@ -81,38 +93,44 @@ export function NewsletterSection() {
             <div className="relative flex-1">
               <Mail
                 aria-hidden="true"
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted"
                 size={18}
               />
               <input
                 id="newsletter-email"
-                className="min-h-12 w-full rounded-md border border-line bg-surface py-3 pl-10 pr-3 text-ink placeholder:text-muted/75 transition focus:border-accent"
+                className="min-h-[3.25rem] w-full rounded-2xl border border-line bg-surface py-4 pl-12 pr-4 text-ink placeholder:text-muted/75 transition focus:border-accent"
                 type="email"
-                value={email}
                 placeholder="you@example.com"
-                aria-describedby="newsletter-message"
-                aria-invalid={submitState === "error"}
-                onChange={(event) => {
-                  setEmail(event.target.value);
-                  if (submitState !== "submitting") {
-                    setSubmitState("idle");
-                    setMessage("");
-                  }
-                }}
+                aria-describedby="newsletter-message newsletter-email-error"
+                aria-invalid={Boolean(errorMessage)}
+                {...register("email")}
               />
             </div>
             <button
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-accent px-5 text-sm font-semibold text-white transition hover:bg-accentStrong disabled:cursor-not-allowed disabled:opacity-70"
+              className="premium-button inline-flex min-h-[3.25rem] items-center justify-center gap-2 rounded-2xl bg-accent px-6 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
               type="submit"
-              disabled={submitState === "submitting"}
+              disabled={isSubmitting}
             >
               <Send aria-hidden="true" size={17} />
-              {submitState === "submitting" ? "Sending" : "Notify me"}
+              {isSubmitting ? "Sending" : "Notify me"}
             </button>
           </div>
+          <label className="mt-4 flex items-start gap-3 text-sm text-muted">
+            <input
+              className="mt-1 h-4 w-4 rounded border-line accent-[rgb(var(--color-accent))]"
+              type="checkbox"
+              {...register("updates")}
+            />
+            Send me launch updates and price drops.
+          </label>
+          {errorMessage ? (
+            <p id="newsletter-email-error" className="mt-3 text-sm font-medium text-danger">
+              {errorMessage}
+            </p>
+          ) : null}
           <p
             id="newsletter-message"
-            className={`mt-3 min-h-6 text-sm ${
+            className={`mt-4 flex min-h-6 items-center gap-2 text-sm ${
               submitState === "success"
                 ? "text-success"
                 : submitState === "error"
@@ -121,7 +139,8 @@ export function NewsletterSection() {
             }`}
             aria-live="polite"
           >
-            {message || "No spam, only relevant product updates."}
+            {submitState === "success" ? <CheckCircle2 aria-hidden="true" size={17} /> : null}
+            {message}
           </p>
         </form>
       </div>
