@@ -11,8 +11,15 @@
 - Playwright Chrome viewport audit:
   - Mobile `390x844`: no horizontal overflow; required sections present.
   - Desktop `1440x1000`: no horizontal overflow; required sections present.
-  - Theme toggle persisted dark mode class.
-  - Newsletter invalid email validation returned a visible error.
+- Theme toggle persisted dark mode class.
+- Newsletter invalid email validation returned a visible error.
+- Backend API routes added for newsletter validation, behavior tracking, and chatbot replies.
+- Scrollytelling section, restrained parallax, and fixed chatbot widget added.
+- Upgraded audit:
+  - Mobile `390x844`: no horizontal overflow; story, features, products, specs, and newsletter sections present.
+  - Desktop `1440x1000`: no horizontal overflow; story, features, products, specs, and newsletter sections present.
+  - Chatbot opened, sent a message, and returned an automated warranty response.
+  - Newsletter invalid email validation remained visible after chatbot flow.
 
 ## API States
 

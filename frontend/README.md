@@ -20,7 +20,13 @@ Deploy the `frontend` directory as the project root on Vercel.
 Optional environment variables:
 
 - `NEXT_PUBLIC_SITE_URL`: public deployment URL used by metadata.
-- `NEXT_PUBLIC_NEWSLETTER_WEBHOOK_URL`: webhook endpoint for newsletter submissions.
+- `NEWSLETTER_WEBHOOK_URL`: server-side webhook endpoint for newsletter submissions.
+
+Backend routes included:
+
+- `POST /api/newsletter`: validates email, stores the submission in memory, and forwards to webhook when configured.
+- `POST /api/behavior`: stores recent click, scroll, chat, and ecommerce behavior events in memory.
+- `POST /api/chat`: returns automated product advisory replies for the chatbot widget.
 
 The page uses the public DummyJSON endpoint:
 

@@ -2,6 +2,7 @@ import { Smartphone } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const navItems = [
+  { href: "#story", label: "Story" },
   { href: "#features", label: "Features" },
   { href: "#products", label: "Products" },
   { href: "#specs", label: "Specs" },

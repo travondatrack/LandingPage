@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Eye, Heart, RefreshCcw, ShoppingBag, Star } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { formatDiscount, formatPrice, formatRating, formatStock } from "@/lib/format";
+import { trackBehavior } from "@/lib/behavior";
 import type { ProductLoadState, SmartphoneProduct } from "@/lib/products";
 
 type ProductShowcaseProps = {
@@ -22,6 +23,10 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
       .filter((product): product is SmartphoneProduct => Boolean(product))
       .slice(0, 3);
   }, [productState, recentlyViewedIds]);
+  const products = productState.status === "success" ? productState.products : [];
+  const cartProducts = cartIds
+    .map((id) => products.find((product) => product.id === id))
+    .filter((product): product is SmartphoneProduct => Boolean(product));
 
   function toggleId(id: number, ids: number[], updateIds: (nextIds: number[]) => void) {
     updateIds(ids.includes(id) ? ids.filter((item) => item !== id) : [...ids, id]);
@@ -29,6 +34,21 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
 
   function markViewed(id: number) {
     setRecentlyViewedIds([id, ...recentlyViewedIds.filter((item) => item !== id)].slice(0, 3));
+  }
+
+  function handleFavorite(product: SmartphoneProduct) {
+    toggleId(product.id, favoriteIds, setFavoriteIds);
+    trackBehavior("favorite_product", { id: product.id, name: product.name });
+  }
+
+  function handleCart(product: SmartphoneProduct) {
+    toggleId(product.id, cartIds, setCartIds);
+    trackBehavior("cart_product", { id: product.id, name: product.name });
+  }
+
+  function handleViewed(product: SmartphoneProduct) {
+    markViewed(product.id);
+    trackBehavior("view_product", { id: product.id, name: product.name });
   }
 
   return (
@@ -57,6 +77,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
             <>
               <InteractionSummary
                 cartCount={cartIds.length}
+                cartProducts={cartProducts}
                 favoriteCount={favoriteIds.length}
                 recentlyViewed={recentlyViewed}
               />
@@ -67,9 +88,9 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                     product={product}
                     isFavorite={favoriteIds.includes(product.id)}
                     isInCart={cartIds.includes(product.id)}
-                    onAddToCart={() => toggleId(product.id, cartIds, setCartIds)}
-                    onToggleFavorite={() => toggleId(product.id, favoriteIds, setFavoriteIds)}
-                    onView={() => markViewed(product.id)}
+                    onAddToCart={() => handleCart(product)}
+                    onToggleFavorite={() => handleFavorite(product)}
+                    onView={() => handleViewed(product)}
                   />
                 ))}
               </div>
@@ -180,22 +201,41 @@ function ProductCard({
 
 function InteractionSummary({
   cartCount,
+  cartProducts,
   favoriteCount,
   recentlyViewed
 }: {
   cartCount: number;
+  cartProducts: SmartphoneProduct[];
   favoriteCount: number;
   recentlyViewed: SmartphoneProduct[];
 }) {
+  const cartTotal = cartProducts.reduce((total, product) => total + product.price, 0);
+
   return (
     <div className="mb-5 rounded-lg border border-line bg-elevated p-4 text-sm text-muted">
       <div className="flex flex-wrap gap-3">
         <span className="rounded-full bg-surface px-3 py-1">Favorites: {favoriteCount}</span>
-        <span className="rounded-full bg-surface px-3 py-1">Cart preview: {cartCount}</span>
+        <span className="rounded-full bg-surface px-3 py-1">
+          Cart preview: {cartCount} item{cartCount === 1 ? "" : "s"}
+        </span>
+        <span className="rounded-full bg-surface px-3 py-1">
+          Cart total: {formatPrice(cartTotal)}
+        </span>
         <span className="rounded-full bg-surface px-3 py-1">
           Recently viewed: {recentlyViewed.length || "None"}
         </span>
       </div>
+      {cartProducts.length > 0 ? (
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {cartProducts.slice(0, 3).map((product) => (
+            <div key={product.id} className="rounded-md border border-line bg-surface px-3 py-2">
+              <p className="truncate font-semibold text-ink">{product.name}</p>
+              <p className="mt-1 text-xs text-muted">{formatPrice(product.price)}</p>
+            </div>
+          ))}
+        </div>
+      ) : null}
       {recentlyViewed.length > 0 ? (
         <p className="mt-3 truncate">
           Last viewed: {recentlyViewed.map((product) => product.name).join(", ")}
