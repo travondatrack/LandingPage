@@ -39,7 +39,7 @@
 
 ## 6. Verification and Delivery
 
-- [ ] 6.1 Run lint, format check, type check, and production build commands successfully.
-- [ ] 6.2 Test the landing page against successful API, loading, and failed API states.
+- [x] 6.1 Run lint, format check, type check, and production build commands successfully.
+- [x] 6.2 Test the landing page against successful API, loading, and failed API states.
 - [ ] 6.3 Deploy the frontend to a free Next.js-compatible cloud platform, preferably Vercel.
 - [ ] 6.4 Capture delivery evidence: public GitHub repository link, live deployment URL, PageSpeed screenshot, and screenshots or notes for any bonus features.
