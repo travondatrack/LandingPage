@@ -1,0 +1,140 @@
+"use client";
+
+import { FormEvent, useState } from "react";
+import { Bot, MessageCircle, Send, X } from "lucide-react";
+import { trackBehavior } from "@/lib/behavior";
+
+type ChatMessage = {
+  role: "assistant" | "user";
+  content: string;
+};
+
+const initialMessages: ChatMessage[] = [
+  {
+    role: "assistant",
+    content:
+      "Hi, I can help compare phone price, discounts, warranty, shipping, favorites, and cart preview."
+  }
+];
+
+export function ChatbotWidget() {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const message = input.trim();
+
+    if (!message) {
+      return;
+    }
+
+    setInput("");
+    setMessages((current) => [...current, { role: "user", content: message }]);
+    setLoading(true);
+    trackBehavior("chatbot_message", { message });
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+      const data = (await response.json()) as { reply?: string };
+
+      setMessages((current) => [
+        ...current,
+        { role: "assistant", content: data.reply ?? "I could not answer that yet." }
+      ]);
+    } catch {
+      setMessages((current) => [
+        ...current,
+        { role: "assistant", content: "Chat is temporarily unavailable. Please try again." }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function toggleOpen() {
+    const nextOpen = !open;
+    setOpen(nextOpen);
+    if (nextOpen) {
+      trackBehavior("chatbot_open");
+    }
+  }
+
+  return (
+    <div className="fixed bottom-4 right-4 z-40 flex max-w-[calc(100vw-2rem)] flex-col items-end gap-3 sm:bottom-5 sm:right-5">
+      {open ? (
+        <section className="w-[min(88vw,360px)] rounded-lg border border-line bg-elevated shadow-soft sm:w-[min(92vw,380px)]">
+          <div className="flex items-center justify-between border-b border-line px-4 py-3">
+            <div className="flex items-center gap-2">
+              <span className="flex h-9 w-9 items-center justify-center rounded-md bg-accent text-white">
+                <Bot aria-hidden="true" size={18} />
+              </span>
+              <div>
+                <h2 className="text-sm font-semibold text-ink">Product advisor</h2>
+                <p className="text-xs text-muted">Automated support</p>
+              </div>
+            </div>
+            <button
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-line bg-surface text-ink"
+              type="button"
+              aria-label="Close chatbot"
+              onClick={() => setOpen(false)}
+            >
+              <X aria-hidden="true" size={17} />
+            </button>
+          </div>
+
+          <div className="flex max-h-64 flex-col gap-3 overflow-y-auto px-4 py-4 sm:max-h-80">
+            {messages.map((message, index) => (
+              <p
+                key={`${message.role}-${index}`}
+                className={`max-w-[88%] rounded-md px-3 py-2 text-sm leading-6 ${
+                  message.role === "user" ? "ml-auto bg-accent text-white" : "bg-surface text-muted"
+                }`}
+              >
+                {message.content}
+              </p>
+            ))}
+            {loading ? <p className="text-sm text-muted">Typing...</p> : null}
+          </div>
+
+          <form className="flex gap-2 border-t border-line p-3" onSubmit={handleSubmit}>
+            <label className="sr-only" htmlFor="chatbot-message">
+              Chat message
+            </label>
+            <input
+              id="chatbot-message"
+              className="min-h-11 flex-1 rounded-md border border-line bg-surface px-3 text-sm text-ink"
+              value={input}
+              placeholder="Ask about price or warranty"
+              onChange={(event) => setInput(event.target.value)}
+            />
+            <button
+              className="inline-flex h-11 w-11 items-center justify-center rounded-md bg-accent text-white"
+              type="submit"
+              aria-label="Send chat message"
+            >
+              <Send aria-hidden="true" size={17} />
+            </button>
+          </form>
+        </section>
+      ) : null}
+
+      <button
+        className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-soft transition hover:bg-accentStrong"
+        type="button"
+        aria-label={open ? "Close chatbot" : "Open chatbot"}
+        title={open ? "Close chatbot" : "Open chatbot"}
+        onClick={toggleOpen}
+      >
+        <MessageCircle aria-hidden="true" size={24} />
+      </button>
+    </div>
+  );
+}

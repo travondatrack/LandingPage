@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { Mail, Send } from "lucide-react";
+import { trackBehavior } from "@/lib/behavior";
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
@@ -27,27 +28,22 @@ export function NewsletterSection() {
     setMessage("");
 
     try {
-      const webhookUrl = process.env.NEXT_PUBLIC_NEWSLETTER_WEBHOOK_URL;
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: normalizedEmail,
+          source: "smartphone-landing-page"
+        })
+      });
 
-      if (webhookUrl) {
-        const response = await fetch(webhookUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            email: normalizedEmail,
-            source: "smartphone-landing-page"
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error("Newsletter webhook returned an error.");
-        }
-      } else {
-        await new Promise((resolve) => window.setTimeout(resolve, 350));
+      if (!response.ok) {
+        throw new Error("Newsletter API returned an error.");
       }
 
+      trackBehavior("newsletter_submit", { emailDomain: normalizedEmail.split("@")[1] });
       setEmail("");
       setSubmitState("success");
       setMessage("Thanks. You are on the smartphone update list.");
