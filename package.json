@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "cd frontend && npm install",
+    "postinstall": "npm --prefix frontend install",
     "dev": "cd frontend && npm run dev",
-    "build": "cd frontend && npm run build && node -e \"const fs=require('fs'); if(fs.existsSync('frontend/.next')){fs.cpSync('frontend/.next', '.next', {recursive:true});} if(fs.existsSync('frontend/public')){fs.cpSync('frontend/public', 'public', {recursive:true});}\"",
+    "build": "npm --prefix frontend run build && node -e \"const fs=require('fs'); fs.cpSync('frontend/.next', '.next', {recursive:true}); if(fs.existsSync('frontend/public')){fs.cpSync('frontend/public', 'public', {recursive:true});} if(fs.existsSync('frontend/next.config.ts')){fs.copyFileSync('frontend/next.config.ts', 'next.config.ts');}\"",
     "start": "cd frontend && npm run start",
     "lint": "cd frontend && npm run lint",
     "typecheck": "cd frontend && npm run typecheck"
