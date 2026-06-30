@@ -58,7 +58,9 @@ export function HeroSection({ productState }: HeroSectionProps) {
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-sm text-muted">{featured.brand}</p>
-                    <h2 className="mt-1 text-2xl font-semibold text-ink">{featured.name}</h2>
+                    <h2 className="mt-1 break-words text-2xl font-semibold text-ink">
+                      {featured.name}
+                    </h2>
                   </div>
                   <span className="rounded-full bg-accent/10 px-3 py-1 text-sm font-semibold text-accent">
                     {formatDiscount(featured.discountPercentage)}

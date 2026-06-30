@@ -15,7 +15,7 @@ export function LandingPage() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-canvas text-ink">
       <SiteHeader />
-      <main>
+      <main id="main-content">
         <HeroSection productState={productState} />
         <FeatureSection />
         <ProductShowcase productState={productState} />

@@ -31,11 +31,11 @@
 
 ## 5. SEO, Performance, and Accessibility
 
-- [ ] 5.1 Add title, description, and Open Graph metadata for the smartphone landing page.
-- [ ] 5.2 Ensure product images have stable dimensions, meaningful alternate text, and no avoidable layout shift.
-- [ ] 5.3 Verify keyboard access, visible focus states, form labels, and sufficient color contrast.
-- [ ] 5.4 Audit mobile and desktop layouts for clipped text, horizontal overflow, and broken frames.
-- [ ] 5.5 Optimize code and media so the page is suitable for a Google PageSpeed Insights Mobile target of at least 85/100.
+- [x] 5.1 Add title, description, and Open Graph metadata for the smartphone landing page.
+- [x] 5.2 Ensure product images have stable dimensions, meaningful alternate text, and no avoidable layout shift.
+- [x] 5.3 Verify keyboard access, visible focus states, form labels, and sufficient color contrast.
+- [x] 5.4 Audit mobile and desktop layouts for clipped text, horizontal overflow, and broken frames.
+- [x] 5.5 Optimize code and media so the page is suitable for a Google PageSpeed Insights Mobile target of at least 85/100.
 
 ## 6. Verification and Delivery
 

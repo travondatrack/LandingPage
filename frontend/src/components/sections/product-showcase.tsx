@@ -111,13 +111,15 @@ function ProductCard({
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-sm text-muted">{product.brand}</p>
-            <h3 className="mt-1 text-lg font-semibold text-ink">{product.name}</h3>
+            <h3 className="mt-1 break-words text-lg font-semibold text-ink">{product.name}</h3>
           </div>
           <span className="shrink-0 rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent">
             {formatDiscount(product.discountPercentage)}
           </span>
         </div>
-        <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted">{product.description}</p>
+        <p className="mt-3 line-clamp-2 break-words text-sm leading-6 text-muted">
+          {product.description}
+        </p>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <span className="text-2xl font-semibold text-ink">{formatPrice(product.price)}</span>
           <span className="inline-flex items-center gap-1 text-sm text-muted">

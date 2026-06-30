@@ -12,11 +12,11 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-surface/95 backdrop-blur">
       <div className="mx-auto flex min-h-16 max-w-content items-center justify-between gap-4 px-5">
-        <a className="inline-flex items-center gap-2 font-semibold text-ink" href="#">
+        <a className="inline-flex min-w-0 items-center gap-2 font-semibold text-ink" href="#">
           <span className="flex h-9 w-9 items-center justify-center rounded-md bg-accent text-white">
             <Smartphone aria-hidden="true" size={19} />
           </span>
-          <span>HeliPhone</span>
+          <span className="truncate">HeliPhone</span>
         </a>
 
         <nav aria-label="Primary navigation" className="hidden items-center gap-6 text-sm sm:flex">
