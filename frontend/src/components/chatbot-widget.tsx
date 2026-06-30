@@ -17,6 +17,12 @@ const initialMessages: ChatMessage[] = [
   }
 ];
 
+const suggestedQuestions = [
+  "Which phone has the best camera?",
+  "Compare iPhone 6 and iPhone 13 Pro",
+  "Show best discount"
+];
+
 export function ChatbotWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
@@ -25,7 +31,11 @@ export function ChatbotWidget() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const message = input.trim();
+    await sendMessage(input);
+  }
+
+  async function sendMessage(rawMessage: string) {
+    const message = rawMessage.trim();
 
     if (!message) {
       return;
@@ -104,6 +114,19 @@ export function ChatbotWidget() {
             {loading ? <p className="text-sm text-muted">Typing...</p> : null}
           </div>
 
+          <div className="flex gap-2 overflow-x-auto border-t border-line px-3 py-3">
+            {suggestedQuestions.map((question) => (
+              <button
+                key={question}
+                className="shrink-0 rounded-full border border-line bg-surface px-3 py-2 text-xs font-semibold text-muted transition hover:border-accent hover:text-ink"
+                type="button"
+                onClick={() => void sendMessage(question)}
+              >
+                {question}
+              </button>
+            ))}
+          </div>
+
           <form className="flex gap-2 border-t border-line p-3" onSubmit={handleSubmit}>
             <label className="sr-only" htmlFor="chatbot-message">
               Chat message
@@ -127,7 +150,7 @@ export function ChatbotWidget() {
       ) : null}
 
       <button
-        className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-soft transition hover:bg-accentStrong"
+        className="chatbot-pulse inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-soft transition hover:bg-accentStrong"
         type="button"
         aria-label={open ? "Close chatbot" : "Open chatbot"}
         title={open ? "Close chatbot" : "Open chatbot"}

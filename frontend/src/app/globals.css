@@ -4,28 +4,28 @@
 
 :root {
   color-scheme: light;
-  --color-canvas: 246 248 251;
+  --color-canvas: 247 250 252;
   --color-surface: 255 255 255;
-  --color-elevated: 255 255 255;
-  --color-ink: 18 24 38;
-  --color-muted: 91 103 123;
-  --color-line: 214 221 232;
-  --color-accent: 0 119 182;
-  --color-accent-strong: 0 78 137;
-  --color-success: 31 122 68;
+  --color-elevated: 252 254 255;
+  --color-ink: 10 15 28;
+  --color-muted: 83 96 120;
+  --color-line: 218 226 236;
+  --color-accent: 0 105 190;
+  --color-accent-strong: 5 55 130;
+  --color-success: 22 130 92;
   --color-danger: 185 28 28;
 }
 
 .dark {
   color-scheme: dark;
   --color-canvas: 12 16 24;
-  --color-surface: 18 24 35;
-  --color-elevated: 25 33 47;
-  --color-ink: 237 242 247;
-  --color-muted: 168 180 196;
-  --color-line: 56 68 85;
-  --color-accent: 45 156 219;
-  --color-accent-strong: 117 203 255;
+  --color-surface: 16 23 34;
+  --color-elevated: 20 29 43;
+  --color-ink: 241 246 251;
+  --color-muted: 163 177 198;
+  --color-line: 49 63 83;
+  --color-accent: 54 179 245;
+  --color-accent-strong: 139 219 255;
   --color-success: 86 171 115;
   --color-danger: 248 113 113;
 }
@@ -41,14 +41,24 @@ html {
 body {
   min-width: 320px;
   margin: 0;
-  background: rgb(var(--color-canvas));
+  background:
+    radial-gradient(circle at 20% 0%, rgb(var(--color-accent) / 0.12), transparent 28rem),
+    radial-gradient(circle at 90% 20%, rgb(99 102 241 / 0.1), transparent 24rem),
+    rgb(var(--color-canvas));
   color: rgb(var(--color-ink));
   font-family:
-    Arial,
-    Helvetica Neue,
-    Helvetica,
+    Inter,
+    Geist,
+    Manrope,
+    Sora,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
     sans-serif;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -111,8 +121,62 @@ input {
   animation: soft-rise 0.6s ease both;
 }
 
+.premium-panel {
+  border: 1px solid rgb(var(--color-line) / 0.82);
+  background:
+    linear-gradient(135deg, rgb(var(--color-elevated) / 0.94), rgb(var(--color-surface) / 0.78)),
+    rgb(var(--color-elevated));
+  box-shadow: 0 24px 80px rgb(15 23 42 / 0.1);
+  backdrop-filter: blur(18px);
+}
+
+.premium-button {
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease;
+}
+
+.premium-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px rgb(var(--color-accent) / 0.18);
+}
+
+.product-sheen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgb(255 255 255 / 0.34), transparent);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+
+.product-sheen:hover::before {
+  transform: translateX(120%);
+}
+
+@keyframes chatbot-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(var(--color-accent) / 0.28);
+  }
+
+  50% {
+    box-shadow: 0 0 0 12px rgb(var(--color-accent) / 0);
+  }
+}
+
+.chatbot-pulse {
+  animation: chatbot-pulse 2.4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .soft-reveal {
+    animation: none;
+  }
+
+  .chatbot-pulse {
     animation: none;
   }
 }

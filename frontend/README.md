@@ -26,7 +26,7 @@ Backend routes included:
 
 - `POST /api/newsletter`: validates email, stores the submission in memory, and forwards to webhook when configured.
 - `POST /api/behavior`: stores recent click, scroll, chat, and ecommerce behavior events in memory.
-- `POST /api/chat`: returns automated product advisory replies for the chatbot widget.
+- `POST /api/chat`: returns automated product advisory replies using live DummyJSON smartphone data when available.
 
 The page uses the public DummyJSON endpoint:
 
