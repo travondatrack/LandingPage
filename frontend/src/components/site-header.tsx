@@ -1,4 +1,5 @@
 import { Smartphone } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const navItems = [
   { href: "#features", label: "Features" },
@@ -30,12 +31,15 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <a
-          className="inline-flex min-h-10 items-center justify-center rounded-md border border-line bg-canvas px-4 text-sm font-semibold text-ink transition hover:border-accent"
-          href="#newsletter"
-        >
-          Get updates
-        </a>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <a
+            className="hidden min-h-10 items-center justify-center rounded-md border border-line bg-canvas px-4 text-sm font-semibold text-ink transition hover:border-accent sm:inline-flex"
+            href="#newsletter"
+          >
+            Get updates
+          </a>
+        </div>
       </div>
     </header>
   );

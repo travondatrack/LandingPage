@@ -46,7 +46,10 @@ export function SpecsSection({ productState }: SpecsSectionProps) {
               const Icon = item.icon;
 
               return (
-                <div key={item.label} className="rounded-lg border border-line bg-elevated p-4">
+                <div
+                  key={item.label}
+                  className="soft-reveal rounded-lg border border-line bg-elevated p-4"
+                >
                   <Icon aria-hidden="true" size={20} className="text-accent" />
                   <p className="mt-3 text-sm font-semibold text-ink">{item.label}</p>
                   <p className="mt-1 text-sm text-muted">{item.value}</p>
@@ -56,7 +59,7 @@ export function SpecsSection({ productState }: SpecsSectionProps) {
           </div>
         </div>
 
-        <div className="rounded-lg border border-line bg-elevated p-4 shadow-sm sm:p-6">
+        <div className="soft-reveal rounded-lg border border-line bg-elevated p-4 shadow-sm sm:p-6">
           {sourceProduct ? (
             <p className="mb-4 text-sm font-semibold text-accent">Based on {sourceProduct.name}</p>
           ) : null}

@@ -60,7 +60,7 @@ export function NewsletterSection() {
   return (
     <section id="newsletter" className="border-t border-line bg-canvas py-16 sm:py-20">
       <div className="mx-auto grid max-w-content gap-8 px-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-        <div>
+        <div className="soft-reveal">
           <p className="text-sm font-semibold uppercase tracking-wide text-accent">
             Launch updates
           </p>
@@ -74,7 +74,7 @@ export function NewsletterSection() {
         </div>
 
         <form
-          className="rounded-lg border border-line bg-elevated p-5 shadow-sm sm:p-6"
+          className="soft-reveal rounded-lg border border-line bg-elevated p-5 shadow-sm sm:p-6"
           onSubmit={handleSubmit}
           noValidate
         >

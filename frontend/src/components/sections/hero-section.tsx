@@ -13,7 +13,7 @@ export function HeroSection({ productState }: HeroSectionProps) {
   return (
     <section className="relative bg-canvas py-16 sm:py-20 lg:py-24">
       <div className="mx-auto grid max-w-content items-center gap-10 px-5 lg:grid-cols-[1fr_440px]">
-        <div>
+        <div className="soft-reveal">
           <p className="text-sm font-semibold uppercase tracking-wide text-accent">
             HeliPhone collection
           </p>
@@ -41,7 +41,7 @@ export function HeroSection({ productState }: HeroSectionProps) {
           </div>
         </div>
 
-        <div className="rounded-lg border border-line bg-elevated p-5 shadow-soft">
+        <div className="soft-reveal rounded-lg border border-line bg-elevated p-5 shadow-soft">
           {featured ? (
             <article>
               <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-surface">

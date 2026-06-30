@@ -24,10 +24,10 @@
 
 ## 4. Interactive Enhancements
 
-- [ ] 4.1 Implement a light/dark theme toggle and persist the selected preference locally.
-- [ ] 4.2 Implement lightweight product interactions such as favorites, cart preview, or recently viewed products.
-- [ ] 4.3 Add skeleton loading states for API-backed product areas.
-- [ ] 4.4 Add restrained micro-interactions and scroll animations that respect reduced-motion preferences.
+- [x] 4.1 Implement a light/dark theme toggle and persist the selected preference locally.
+- [x] 4.2 Implement lightweight product interactions such as favorites, cart preview, or recently viewed products.
+- [x] 4.3 Add skeleton loading states for API-backed product areas.
+- [x] 4.4 Add restrained micro-interactions and scroll animations that respect reduced-motion preferences.
 
 ## 5. SEO, Performance, and Accessibility
 

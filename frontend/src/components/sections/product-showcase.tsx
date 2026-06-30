@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
-import { RefreshCcw, Star } from "lucide-react";
+import { Eye, Heart, RefreshCcw, ShoppingBag, Star } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { formatDiscount, formatPrice, formatRating, formatStock } from "@/lib/format";
 import type { ProductLoadState, SmartphoneProduct } from "@/lib/products";
 
@@ -8,6 +11,26 @@ type ProductShowcaseProps = {
 };
 
 export function ProductShowcase({ productState }: ProductShowcaseProps) {
+  const [favoriteIds, setFavoriteIds] = useStoredIds("heliphone-favorites");
+  const [cartIds, setCartIds] = useStoredIds("heliphone-cart");
+  const [recentlyViewedIds, setRecentlyViewedIds] = useStoredIds("heliphone-recently-viewed");
+  const recentlyViewed = useMemo(() => {
+    const products = productState.status === "success" ? productState.products : [];
+
+    return recentlyViewedIds
+      .map((id) => products.find((product) => product.id === id))
+      .filter((product): product is SmartphoneProduct => Boolean(product))
+      .slice(0, 3);
+  }, [productState, recentlyViewedIds]);
+
+  function toggleId(id: number, ids: number[], updateIds: (nextIds: number[]) => void) {
+    updateIds(ids.includes(id) ? ids.filter((item) => item !== id) : [...ids, id]);
+  }
+
+  function markViewed(id: number) {
+    setRecentlyViewedIds([id, ...recentlyViewedIds.filter((item) => item !== id)].slice(0, 3));
+  }
+
   return (
     <section id="products" className="bg-canvas py-16 sm:py-20">
       <div className="mx-auto max-w-content px-5">
@@ -31,11 +54,26 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
           {productState.status === "empty" ? <EmptyState /> : null}
           {productState.status === "error" ? <ErrorState message={productState.message} /> : null}
           {productState.status === "success" ? (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {productState.products.slice(0, 6).map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            <>
+              <InteractionSummary
+                cartCount={cartIds.length}
+                favoriteCount={favoriteIds.length}
+                recentlyViewed={recentlyViewed}
+              />
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {productState.products.slice(0, 6).map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    isFavorite={favoriteIds.includes(product.id)}
+                    isInCart={cartIds.includes(product.id)}
+                    onAddToCart={() => toggleId(product.id, cartIds, setCartIds)}
+                    onToggleFavorite={() => toggleId(product.id, favoriteIds, setFavoriteIds)}
+                    onView={() => markViewed(product.id)}
+                  />
+                ))}
+              </div>
+            </>
           ) : null}
         </div>
       </div>
@@ -43,9 +81,23 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
   );
 }
 
-function ProductCard({ product }: { product: SmartphoneProduct }) {
+function ProductCard({
+  product,
+  isFavorite,
+  isInCart,
+  onAddToCart,
+  onToggleFavorite,
+  onView
+}: {
+  product: SmartphoneProduct;
+  isFavorite: boolean;
+  isInCart: boolean;
+  onAddToCart: () => void;
+  onToggleFavorite: () => void;
+  onView: () => void;
+}) {
   return (
-    <article className="rounded-lg border border-line bg-elevated p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-soft motion-reduce:transform-none">
+    <article className="soft-reveal rounded-lg border border-line bg-elevated p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-soft motion-reduce:transform-none">
       <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-surface">
         <Image
           src={product.image}
@@ -76,9 +128,104 @@ function ProductCard({ product }: { product: SmartphoneProduct }) {
         <div className="mt-4 rounded-md border border-line bg-surface px-3 py-2 text-sm font-medium text-muted">
           {formatStock(product.stock)}
         </div>
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          <button
+            className={`inline-flex min-h-10 items-center justify-center rounded-md border text-sm font-semibold transition ${
+              isFavorite
+                ? "border-danger bg-danger/10 text-danger"
+                : "border-line bg-surface text-ink hover:border-accent"
+            }`}
+            type="button"
+            aria-label={
+              isFavorite ? `Remove ${product.name} from favorites` : `Favorite ${product.name}`
+            }
+            title={isFavorite ? "Remove favorite" : "Favorite"}
+            onClick={onToggleFavorite}
+          >
+            <Heart aria-hidden="true" size={17} className={isFavorite ? "fill-current" : ""} />
+          </button>
+          <button
+            className={`inline-flex min-h-10 items-center justify-center rounded-md border text-sm font-semibold transition ${
+              isInCart
+                ? "border-success bg-success/10 text-success"
+                : "border-line bg-surface text-ink hover:border-accent"
+            }`}
+            type="button"
+            aria-label={
+              isInCart
+                ? `Remove ${product.name} from cart preview`
+                : `Add ${product.name} to cart preview`
+            }
+            title={isInCart ? "Remove from cart" : "Add to cart"}
+            onClick={onAddToCart}
+          >
+            <ShoppingBag aria-hidden="true" size={17} />
+          </button>
+          <button
+            className="inline-flex min-h-10 items-center justify-center rounded-md border border-line bg-surface text-sm font-semibold text-ink transition hover:border-accent"
+            type="button"
+            aria-label={`Mark ${product.name} as recently viewed`}
+            title="Mark viewed"
+            onClick={onView}
+          >
+            <Eye aria-hidden="true" size={17} />
+          </button>
+        </div>
       </div>
     </article>
   );
+}
+
+function InteractionSummary({
+  cartCount,
+  favoriteCount,
+  recentlyViewed
+}: {
+  cartCount: number;
+  favoriteCount: number;
+  recentlyViewed: SmartphoneProduct[];
+}) {
+  return (
+    <div className="mb-5 rounded-lg border border-line bg-elevated p-4 text-sm text-muted">
+      <div className="flex flex-wrap gap-3">
+        <span className="rounded-full bg-surface px-3 py-1">Favorites: {favoriteCount}</span>
+        <span className="rounded-full bg-surface px-3 py-1">Cart preview: {cartCount}</span>
+        <span className="rounded-full bg-surface px-3 py-1">
+          Recently viewed: {recentlyViewed.length || "None"}
+        </span>
+      </div>
+      {recentlyViewed.length > 0 ? (
+        <p className="mt-3 truncate">
+          Last viewed: {recentlyViewed.map((product) => product.name).join(", ")}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function useStoredIds(key: string) {
+  const [ids, setIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(key);
+    if (!stored) {
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(stored) as number[];
+      setIds(Array.isArray(parsed) ? parsed.filter((id) => Number.isInteger(id)) : []);
+    } catch {
+      setIds([]);
+    }
+  }, [key]);
+
+  function updateIds(nextIds: number[]) {
+    setIds(nextIds);
+    window.localStorage.setItem(key, JSON.stringify(nextIds));
+  }
+
+  return [ids, updateIds] as const;
 }
 
 function ProductSkeletonGrid() {

@@ -43,7 +43,7 @@ export function FeatureSection() {
             return (
               <article
                 key={feature.title}
-                className="rounded-lg border border-line bg-elevated p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-soft motion-reduce:transform-none"
+                className="soft-reveal rounded-lg border border-line bg-elevated p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-soft motion-reduce:transform-none"
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 text-accent">
                   <Icon aria-hidden="true" size={22} />
