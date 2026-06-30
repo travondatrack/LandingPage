@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --color-canvas: 246 248 251;
+  --color-surface: 255 255 255;
+  --color-elevated: 255 255 255;
+  --color-ink: 18 24 38;
+  --color-muted: 91 103 123;
+  --color-line: 214 221 232;
+  --color-accent: 0 119 182;
+  --color-accent-strong: 0 78 137;
+  --color-success: 31 122 68;
+  --color-danger: 185 28 28;
+}
+
+.dark {
+  color-scheme: dark;
+  --color-canvas: 12 16 24;
+  --color-surface: 18 24 35;
+  --color-elevated: 25 33 47;
+  --color-ink: 237 242 247;
+  --color-muted: 168 180 196;
+  --color-line: 56 68 85;
+  --color-accent: 45 156 219;
+  --color-accent-strong: 117 203 255;
+  --color-success: 86 171 115;
+  --color-danger: 248 113 113;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: rgb(var(--color-canvas));
+  color: rgb(var(--color-ink));
+  font-family:
+    Arial,
+    Helvetica Neue,
+    Helvetica,
+    sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid rgb(var(--color-accent));
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
