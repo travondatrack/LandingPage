@@ -3,7 +3,8 @@ import { Smartphone } from "lucide-react";
 const navItems = [
   { href: "#features", label: "Features" },
   { href: "#products", label: "Products" },
-  { href: "#specs", label: "Specs" }
+  { href: "#specs", label: "Specs" },
+  { href: "#newsletter", label: "Updates" }
 ];
 
 export function SiteHeader() {
@@ -31,9 +32,9 @@ export function SiteHeader() {
 
         <a
           className="inline-flex min-h-10 items-center justify-center rounded-md border border-line bg-canvas px-4 text-sm font-semibold text-ink transition hover:border-accent"
-          href="#products"
+          href="#newsletter"
         >
-          Shop picks
+          Get updates
         </a>
       </div>
     </header>

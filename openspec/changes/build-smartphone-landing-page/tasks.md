@@ -19,7 +19,7 @@
 - [x] 3.3 Build the standout features section with concise product benefit cards.
 - [x] 3.4 Build the product showcase using DummyJSON product names, images, pricing, discounts, ratings, and details.
 - [x] 3.5 Build the technical specifications section using product-derived or curated smartphone specs.
-- [ ] 3.6 Build the newsletter registration form with client-side email validation and success/error states.
+- [x] 3.6 Build the newsletter registration form with client-side email validation and success/error states.
 - [x] 3.7 Build the footer with assignment-appropriate product or brand links.
 
 ## 4. Interactive Enhancements

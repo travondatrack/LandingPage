@@ -1,4 +1,9 @@
-const footerLinks = ["Products", "Features", "Specs", "Support"];
+const footerLinks = [
+  { label: "Products", href: "#products" },
+  { label: "Features", href: "#features" },
+  { label: "Specs", href: "#specs" },
+  { label: "Newsletter", href: "#newsletter" }
+];
 
 export function SiteFooter() {
   return (
@@ -10,8 +15,8 @@ export function SiteFooter() {
         </div>
         <nav aria-label="Footer navigation" className="flex flex-wrap gap-4 text-sm text-muted">
           {footerLinks.map((link) => (
-            <a key={link} className="transition hover:text-accent" href={`#${link.toLowerCase()}`}>
-              {link}
+            <a key={link.href} className="transition hover:text-accent" href={link.href}>
+              {link.label}
             </a>
           ))}
         </nav>
