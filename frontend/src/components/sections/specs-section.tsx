@@ -31,7 +31,7 @@ export function SpecsSection({ productState }: SpecsSectionProps) {
   const specs = selectedProduct ? buildSpecs(selectedProduct) : curatedSpecs;
 
   return (
-    <section id="specs" className="bg-surface py-16 sm:py-20 lg:py-24">
+    <section id="specs" className="bg-gradient-to-b from-surface via-elevated to-surface py-16 sm:py-20 lg:py-24">
       <div className="mx-auto grid max-w-content gap-10 px-5 lg:grid-cols-[0.84fr_1.16fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-accent">

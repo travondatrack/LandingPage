@@ -29,7 +29,7 @@ const features = [
 
 export function FeatureSection() {
   return (
-    <section id="features" className="border-y border-line bg-canvas py-16 sm:py-20 lg:py-24">
+    <section id="features" className="border-y border-line bg-surface/60 py-16 sm:py-20 lg:py-24 backdrop-blur">
       <div className="mx-auto max-w-content px-5">
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="max-w-3xl">

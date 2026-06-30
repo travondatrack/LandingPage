@@ -53,8 +53,8 @@ export function HeroSection({ productState }: HeroSectionProps) {
   }
 
   return (
-    <section className="relative isolate overflow-hidden bg-canvas py-14 sm:py-20 lg:min-h-[calc(100vh-4rem)] lg:py-24">
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(110deg,transparent_0%,rgb(var(--color-accent)/0.10)_44%,transparent_70%)]" />
+    <section className="relative isolate overflow-hidden bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,119,182,0.15),transparent)] bg-canvas py-14 sm:py-20 lg:min-h-[calc(100vh-4rem)] lg:py-24">
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(110deg,transparent_0%,rgb(var(--color-accent)/0.12)_44%,transparent_70%)]" />
       <div className="mx-auto grid max-w-content items-center gap-10 px-5 lg:grid-cols-[1.02fr_0.98fr]">
         <div className="soft-reveal">
           <div className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/78 px-3 py-2 text-sm font-semibold text-accent shadow-sm backdrop-blur">
@@ -173,16 +173,13 @@ export function HeroSection({ productState }: HeroSectionProps) {
                 <div className="mt-5 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
                   <div key={`info-${featured.id}`} className="animate-in fade-in duration-300">
                     <p className="text-xs font-semibold uppercase tracking-wider text-accent sm:text-sm">{featured.brand}</p>
-                    <h2 className="mt-1 break-words text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+                    <h2 className="mt-1 break-words text-2xl font-bold tracking-tight text-ink sm:text-3xl">
                       {featured.name}
                     </h2>
-                    <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted sm:text-sm sm:leading-6">
-                      {featured.description}
-                    </p>
                   </div>
                   <div className="rounded-2xl border border-line bg-surface px-4 py-2.5 text-right sm:py-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">From</p>
-                    <p className="mt-0.5 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">Price</p>
+                    <p className="mt-0.5 text-2xl font-extrabold tracking-tight text-accent sm:text-3xl">
                       {formatPrice(featured.price)}
                     </p>
                   </div>
@@ -205,30 +202,32 @@ export function HeroSection({ productState }: HeroSectionProps) {
                     ))}
                   </div>
                 ) : null}
-
-                <div className="mt-5 grid gap-2.5 sm:grid-cols-3 sm:gap-3">
-                  {[
-                    { icon: BadgeCheck, label: "Official Warranty" },
-                    { icon: ShieldCheck, label: "Secure Checkout" },
-                    { icon: Zap, label: "Express Delivery" }
-                  ].map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <div
-                        key={item.label}
-                        className="rounded-2xl border border-line bg-surface/78 p-2.5 text-xs font-semibold text-ink sm:p-3 sm:text-sm"
-                      >
-                        <Icon aria-hidden="true" size={16} className="mb-1.5 text-accent sm:mb-2 sm:size-[18px]" />
-                        {item.label}
-                      </div>
-                    );
-                  })}
-                </div>
               </article>
             ) : (
               <HeroSkeleton />
             )}
           </div>
+        </div>
+      </div>
+
+      <div className="mx-auto mt-14 max-w-content border-t border-line/60 px-5 pt-8">
+        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-xs sm:text-sm font-semibold text-muted">
+          {[
+            { icon: BadgeCheck, label: "Official Warranty" },
+            { icon: ShieldCheck, label: "Secure Checkout" },
+            { icon: Zap, label: "Express Delivery" }
+          ].map((item) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.label}
+                className="inline-flex items-center gap-2 rounded-full border border-line/60 bg-surface/50 px-4 py-2 text-ink/90 backdrop-blur shadow-2xs transition hover:border-accent/40 hover:text-accent"
+              >
+                <Icon aria-hidden="true" size={18} className="text-accent" />
+                <span>{item.label}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

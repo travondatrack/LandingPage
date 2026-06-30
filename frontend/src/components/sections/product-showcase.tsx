@@ -13,8 +13,7 @@ import {
   X
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ReactNode } from "react";
-import { formatDiscount, formatPrice, formatRating, formatStock } from "@/lib/format";
+import { formatDiscount, formatPrice, formatRating } from "@/lib/format";
 import { trackBehavior } from "@/lib/behavior";
 import type { ProductLoadState, SmartphoneProduct } from "@/lib/products";
 
@@ -41,6 +40,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
   const [query, setQuery] = useState("");
   const [sortMode, setSortMode] = useState<SortMode>("recommended");
   const [quickViewProduct, setQuickViewProduct] = useState<SmartphoneProduct | null>(null);
+  const [visibleLimit, setVisibleLimit] = useState(6);
   const products = useMemo(
     () => (productState.status === "success" ? productState.products : []),
     [productState]
@@ -116,7 +116,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
   }
 
   return (
-    <section id="products" className="bg-canvas py-16 sm:py-20 lg:py-24">
+    <section id="products" className="bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-elevated/90 via-canvas to-canvas border-t border-line/60 py-16 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-content px-5">
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="max-w-3xl">
@@ -183,7 +183,10 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                   : "border border-line bg-surface text-muted hover:border-accent hover:text-ink"
               }`}
               type="button"
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                setActiveTab(tab.id);
+                setVisibleLimit(6);
+              }}
             >
               {tab.label}
             </button>
@@ -203,22 +206,35 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                 recentlyViewed={recentlyViewed}
               />
               {visibleProducts.length > 0 ? (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  {visibleProducts.slice(0, 12).map((product, index) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      index={index}
-                      isFavorite={favoriteIds.includes(product.id)}
-                      isInCart={cartIds.includes(product.id)}
-                      isCompared={compareIds.includes(product.id)}
-                      onAddToCart={() => handleCart(product)}
-                      onCompare={() => handleCompare(product)}
-                      onQuickView={() => openQuickView(product)}
-                      onToggleFavorite={() => handleFavorite(product)}
-                    />
-                  ))}
-                </div>
+                <>
+                  <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {visibleProducts.slice(0, visibleLimit).map((product, index) => (
+                      <ProductCard
+                        key={product.id}
+                        product={product}
+                        index={index}
+                        isFavorite={favoriteIds.includes(product.id)}
+                        isInCart={cartIds.includes(product.id)}
+                        isCompared={compareIds.includes(product.id)}
+                        onAddToCart={() => handleCart(product)}
+                        onCompare={() => handleCompare(product)}
+                        onQuickView={() => openQuickView(product)}
+                        onToggleFavorite={() => handleFavorite(product)}
+                      />
+                    ))}
+                  </div>
+                  {visibleProducts.length > visibleLimit ? (
+                    <div className="mt-12 flex justify-center">
+                      <button
+                        type="button"
+                        onClick={() => setVisibleLimit((prev) => prev + 6)}
+                        className="premium-button inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-line bg-surface px-8 text-sm font-semibold text-ink shadow-sm transition hover:border-accent hover:bg-accent hover:text-white"
+                      >
+                        View more products ({visibleProducts.length - visibleLimit} remaining)
+                      </button>
+                    </div>
+                  ) : null}
+                </>
               ) : (
                 <EmptyState message="No products match the selected filter." />
               )}
@@ -243,9 +259,7 @@ function ProductCard({
   product,
   index,
   isFavorite,
-  isInCart,
   isCompared,
-  onAddToCart,
   onCompare,
   onQuickView,
   onToggleFavorite
@@ -253,132 +267,99 @@ function ProductCard({
   product: SmartphoneProduct;
   index: number;
   isFavorite: boolean;
-  isInCart: boolean;
+  isInCart?: boolean;
   isCompared: boolean;
-  onAddToCart: () => void;
+  onAddToCart?: () => void;
   onCompare: () => void;
   onQuickView: () => void;
   onToggleFavorite: () => void;
 }) {
   return (
     <article
-      className="soft-reveal group flex flex-col justify-between rounded-2xl border border-line bg-elevated p-3.5 shadow-sm transition hover:-translate-y-1 hover:border-accent/70 hover:shadow-soft motion-reduce:transform-none"
+      className="soft-reveal group flex flex-col justify-between rounded-2xl border border-line bg-elevated p-4 shadow-sm transition hover:-translate-y-1 hover:border-accent hover:shadow-soft motion-reduce:transform-none"
       style={{ animationDelay: `${index * 45}ms` }}
     >
       <div>
-        <button
-          className="product-sheen relative block aspect-[16/11] w-full overflow-hidden rounded-xl bg-[linear-gradient(135deg,rgb(var(--color-surface)),rgb(var(--color-accent)/0.08))]"
-          type="button"
-          onClick={onQuickView}
-        >
-          <Image
-            src={product.image}
-            alt={`${product.name} smartphone product image`}
-            fill
-            sizes="(min-width: 1280px) 280px, (min-width: 640px) 45vw, 92vw"
-            className="object-contain p-4 transition duration-500 group-hover:scale-[1.045]"
-          />
-        </button>
-        <div className="mt-3">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="text-xs text-muted">{product.brand}</p>
-              <h3 className="mt-0.5 line-clamp-1 break-words text-base font-semibold tracking-tight text-ink">
-                {product.name}
-              </h3>
-            </div>
-            <span className="shrink-0 rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-semibold text-accent">
-              {formatDiscount(product.discountPercentage)}
-            </span>
-          </div>
-          <p className="mt-1.5 line-clamp-2 break-words text-xs leading-5 text-muted">
+        <div className="relative aspect-[16/11] w-full overflow-hidden rounded-xl bg-[linear-gradient(135deg,rgb(var(--color-surface)),rgb(var(--color-accent)/0.08))]">
+          <button
+            className="product-sheen relative block h-full w-full"
+            type="button"
+            onClick={onQuickView}
+          >
+            <Image
+              src={product.image}
+              alt={`${product.name} smartphone product image`}
+              fill
+              sizes="(min-width: 1280px) 320px, (min-width: 640px) 45vw, 92vw"
+              className="object-contain p-4 transition duration-500 group-hover:scale-[1.045]"
+            />
+          </button>
+          <span className="absolute top-3 left-3 rounded-full bg-accent px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+            {formatDiscount(product.discountPercentage)}
+          </span>
+          <button
+            type="button"
+            onClick={onToggleFavorite}
+            aria-label={isFavorite ? `Remove ${product.name} from favorites` : `Favorite ${product.name}`}
+            className={`absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full border shadow-sm transition ${
+              isFavorite
+                ? "border-red-500 bg-red-500 text-white"
+                : "border-line/80 bg-surface/85 text-muted hover:border-accent hover:text-accent backdrop-blur"
+            }`}
+          >
+            <Heart aria-hidden="true" size={16} className={isFavorite ? "fill-current" : ""} />
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-accent">{product.brand}</p>
+          <h3 className="mt-1 line-clamp-1 break-words text-lg font-bold tracking-tight text-ink group-hover:text-accent transition-colors">
+            {product.name}
+          </h3>
+          <p className="mt-2 line-clamp-2 break-words text-xs sm:text-sm leading-relaxed text-muted">
             {product.description}
           </p>
         </div>
       </div>
 
-      <div className="mt-3 pt-1 border-t border-line/50">
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-lg font-semibold tracking-tight text-ink">
+      <div className="mt-4 pt-3 border-t border-line/60">
+        <div className="flex items-baseline justify-between gap-2">
+          <span className="text-xl font-extrabold tracking-tight text-ink">
             {formatPrice(product.price)}
           </span>
           <span className="inline-flex items-center gap-1 text-xs font-semibold text-muted">
-            <Star aria-hidden="true" size={14} className="fill-accent text-accent" />
+            <Star aria-hidden="true" size={15} className="fill-amber-400 text-amber-400" />
             {formatRating(product.rating)}
           </span>
         </div>
-        <div className="mt-2.5 rounded-xl border border-line bg-surface px-2.5 py-1 text-xs font-medium text-muted truncate">
-          {formatStock(product.stock)}
-        </div>
-        <div className="mt-2.5 grid grid-cols-4 gap-1.5">
-          <IconAction
-            active={isFavorite}
-            icon={
-              <Heart aria-hidden="true" size={15} className={isFavorite ? "fill-current" : ""} />
-            }
-            label={
-              isFavorite ? `Remove ${product.name} from favorites` : `Favorite ${product.name}`
-            }
-            onClick={onToggleFavorite}
-          />
-          <IconAction
-            active={isInCart}
-            icon={<ShoppingBag aria-hidden="true" size={15} />}
-            label={isInCart ? `Remove ${product.name} from cart` : `Add ${product.name} to cart`}
-            onClick={onAddToCart}
-            tone="success"
-          />
-          <IconAction
-            active={isCompared}
-            icon={<GitCompare aria-hidden="true" size={15} />}
-            label={
-              isCompared ? `Remove ${product.name} from compare` : `Add ${product.name} to compare`
-            }
+
+        <div className="mt-3.5 flex items-center gap-2.5">
+          <button
+            type="button"
             onClick={onCompare}
-          />
-          <IconAction
-            icon={<Eye aria-hidden="true" size={15} />}
-            label={`Quick view ${product.name}`}
+            title={isCompared ? "Remove from comparison" : "Add to comparison"}
+            className={`flex h-10 w-11 shrink-0 items-center justify-center rounded-xl border text-xs font-semibold transition ${
+              isCompared
+                ? "border-accent bg-accent/15 text-accent"
+                : "border-line bg-surface text-muted hover:border-accent hover:text-ink"
+            }`}
+          >
+            <GitCompare size={16} />
+          </button>
+          <button
+            type="button"
             onClick={onQuickView}
-          />
+            className="flex-1 flex min-h-10 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs transition hover:bg-accent/90"
+          >
+            <Eye size={15} />
+            <span>View Details</span>
+          </button>
         </div>
       </div>
     </article>
   );
 }
 
-function IconAction({
-  active = false,
-  icon,
-  label,
-  onClick,
-  tone = "accent"
-}: {
-  active?: boolean;
-  icon: ReactNode;
-  label: string;
-  onClick: () => void;
-  tone?: "accent" | "success";
-}) {
-  const activeClass =
-    tone === "success"
-      ? "border-success bg-success/10 text-success"
-      : "border-accent bg-accent/10 text-accent";
-
-  return (
-    <button
-      className={`inline-flex min-h-9 items-center justify-center rounded-xl border text-xs font-semibold transition hover:border-accent ${
-        active ? activeClass : "border-line bg-surface text-ink"
-      }`}
-      type="button"
-      aria-label={label}
-      title={label}
-      onClick={onClick}
-    >
-      {icon}
-    </button>
-  );
-}
 
 function InteractionSummary({
   cartProducts,
@@ -394,32 +375,54 @@ function InteractionSummary({
   const cartTotal = cartProducts.reduce((total, product) => total + product.price, 0);
 
   return (
-    <div className="mb-5 rounded-3xl border border-line bg-elevated p-4 text-sm text-muted shadow-sm">
-      <div className="flex flex-wrap gap-3">
-        <span className="rounded-full bg-surface px-3 py-1">Favorites: {favoriteCount}</span>
-        <span className="rounded-full bg-surface px-3 py-1">Compare: {compareCount}</span>
-        <span className="rounded-full bg-surface px-3 py-1">
-          Cart preview: {cartProducts.length} item{cartProducts.length === 1 ? "" : "s"}
-        </span>
-        <span className="rounded-full bg-surface px-3 py-1">
-          Cart total: {formatPrice(cartTotal)}
-        </span>
-        <span className="rounded-full bg-surface px-3 py-1">
-          Recently viewed: {recentlyViewed.length || "None"}
-        </span>
+    <div className="mb-6 rounded-3xl border border-line bg-elevated p-4 sm:p-5 text-sm text-muted shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 font-medium text-ink">
+            <Heart size={14} className="text-red-500 fill-red-500" /> Favorites: {favoriteCount}
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 font-medium text-ink">
+            <GitCompare size={14} className="text-accent" /> Compare: {compareCount}
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 font-medium text-ink">
+            <ShoppingBag size={14} className="text-emerald-500" /> Cart: {cartProducts.length} item{cartProducts.length === 1 ? "" : "s"} ({formatPrice(cartTotal)})
+          </span>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {compareCount > 0 ? (
+            <a
+              href="#specs"
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-accent px-4 py-1.5 text-xs font-semibold text-white shadow-xs transition hover:bg-accent/90"
+            >
+              <GitCompare size={14} />
+              Compare Selected ({compareCount})
+            </a>
+          ) : null}
+          {cartProducts.length > 0 ? (
+            <a
+              href="#newsletter"
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-line bg-surface px-4 py-1.5 text-xs font-semibold text-ink hover:border-accent"
+            >
+              <ShoppingBag size={14} />
+              Checkout Now
+            </a>
+          ) : null}
+        </div>
       </div>
+
       {cartProducts.length > 0 ? (
-        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 pt-3 border-t border-line/60">
           {cartProducts.slice(0, 3).map((product) => (
-            <div key={product.id} className="rounded-2xl border border-line bg-surface px-3 py-2">
+            <div key={product.id} className="flex items-center justify-between rounded-2xl border border-line bg-surface px-3.5 py-2">
               <p className="truncate font-semibold text-ink">{product.name}</p>
-              <p className="mt-1 text-xs text-muted">{formatPrice(product.price)}</p>
+              <p className="ml-2 shrink-0 font-bold text-xs text-accent">{formatPrice(product.price)}</p>
             </div>
           ))}
         </div>
       ) : null}
       {recentlyViewed.length > 0 ? (
-        <p className="mt-3 truncate">
+        <p className="mt-3 text-xs text-muted truncate">
           Last viewed: {recentlyViewed.map((product) => product.name).join(", ")}
         </p>
       ) : null}
