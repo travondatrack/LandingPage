@@ -1,5 +1,19 @@
+"use client";
+
 import Image from "next/image";
-import { ArrowRight, BadgeCheck, ShieldCheck, Sparkles, Star, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  ArrowRight,
+  BadgeCheck,
+  ChevronLeft,
+  ChevronRight,
+  Pause,
+  Play,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Zap
+} from "lucide-react";
 import type { ProductLoadState } from "@/lib/products";
 import { formatDiscount, formatPrice, formatRating } from "@/lib/format";
 
@@ -9,12 +23,34 @@ type HeroSectionProps = {
 
 const trustStats = [
   { label: "Products", value: "20+" },
-  { label: "Real API data", value: "Live" },
-  { label: "Compare faster", value: "<30s" }
+  { label: "Satisfaction", value: "99.4%" },
+  { label: "Warranty", value: "2 Years" }
 ];
 
 export function HeroSection({ productState }: HeroSectionProps) {
-  const featured = productState.status === "success" ? productState.products[0] : undefined;
+  const products = productState.status === "success" ? productState.products.slice(0, 6) : [];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (products.length <= 1 || isPaused) return;
+    const interval = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % products.length);
+    }, 4500);
+    return () => window.clearInterval(interval);
+  }, [products.length, isPaused]);
+
+  const featured = products[activeIndex] ?? (productState.status === "success" ? productState.products[0] : undefined);
+
+  function handlePrev() {
+    if (products.length === 0) return;
+    setActiveIndex((current) => (current - 1 + products.length) % products.length);
+  }
+
+  function handleNext() {
+    if (products.length === 0) return;
+    setActiveIndex((current) => (current + 1) % products.length);
+  }
 
   return (
     <section className="relative isolate overflow-hidden bg-canvas py-14 sm:py-20 lg:min-h-[calc(100vh-4rem)] lg:py-24">
@@ -26,11 +62,10 @@ export function HeroSection({ productState }: HeroSectionProps) {
             Premium Smart Device Commerce
           </div>
           <h1 className="mt-6 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight text-ink sm:text-6xl lg:text-7xl">
-            Find your next smart device with real product data.
+            Experience next-generation smartphone innovation.
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-8 text-muted sm:text-lg">
-            Compare specs, price, ratings, discounts, warranty, and shipping details in one fast,
-            premium buying flow powered by DummyJSON smartphones.
+            Discover flagship smartphones engineered for pro-grade optical clarity, extreme battery endurance, and lightning-fast connectivity. Compare specifications and shop the latest models seamlessly.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
@@ -65,63 +100,125 @@ export function HeroSection({ productState }: HeroSectionProps) {
           </dl>
         </div>
 
-        <div className="soft-reveal relative">
+        <div
+          className="soft-reveal relative"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
           <div className="premium-panel product-sheen relative overflow-hidden rounded-[1.75rem] p-4 sm:p-6">
             {featured ? (
-              <article>
+              <article className="transition-all duration-500 ease-out">
                 <div className="flex items-center justify-between gap-3">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-3 py-1.5 text-sm font-semibold text-accent">
-                    <Zap aria-hidden="true" size={15} />
-                    {formatDiscount(featured.discountPercentage)}
-                  </span>
-                  <span className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-3 py-1.5 text-sm font-semibold text-muted">
-                    <Star aria-hidden="true" size={15} className="fill-accent text-accent" />
-                    {formatRating(featured.rating)}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent sm:text-sm sm:py-1.5">
+                      <Zap aria-hidden="true" size={14} />
+                      {formatDiscount(featured.discountPercentage)}
+                    </span>
+                    <span className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-3 py-1 text-xs font-semibold text-muted sm:text-sm sm:py-1.5">
+                      <Star aria-hidden="true" size={14} className="fill-accent text-accent" />
+                      {formatRating(featured.rating)}
+                    </span>
+                  </div>
+
+                  {products.length > 1 ? (
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setIsPaused(!isPaused)}
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-line bg-surface text-muted transition hover:border-accent hover:text-ink"
+                        title={isPaused ? "Resume auto slide" : "Pause auto slide"}
+                        aria-label={isPaused ? "Resume auto slide" : "Pause auto slide"}
+                      >
+                        {isPaused ? <Play size={14} /> : <Pause size={14} />}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handlePrev}
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-line bg-surface text-muted transition hover:border-accent hover:text-ink"
+                        title="Previous product"
+                        aria-label="Previous product"
+                      >
+                        <ChevronLeft size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleNext}
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-line bg-surface text-muted transition hover:border-accent hover:text-ink"
+                        title="Next product"
+                        aria-label="Next product"
+                      >
+                        <ChevronRight size={16} />
+                      </button>
+                    </div>
+                  ) : null}
                 </div>
 
-                <div className="relative mt-5 aspect-[1/0.9] overflow-hidden rounded-[1.25rem] bg-[linear-gradient(140deg,rgb(var(--color-surface)),rgb(var(--color-accent)/0.10))]">
+                <div className="relative mt-4 aspect-[16/11] overflow-hidden rounded-[1.25rem] bg-[linear-gradient(140deg,rgb(var(--color-surface)),rgb(var(--color-accent)/0.10))] sm:aspect-[4/3]">
                   <Image
+                    key={featured.id}
                     src={featured.image}
                     alt={`${featured.name} smartphone product spotlight`}
                     fill
                     priority
                     sizes="(min-width: 1024px) 520px, 92vw"
-                    className="object-contain p-8 transition duration-500 hover:scale-[1.035]"
+                    className="animate-in fade-in zoom-in-95 duration-500 object-contain p-6 transition hover:scale-[1.035] sm:p-8"
                   />
+                  {products.length > 1 ? (
+                    <div className="absolute bottom-3 right-3 rounded-full bg-surface/90 px-2.5 py-1 text-xs font-medium text-ink shadow-sm backdrop-blur">
+                      {activeIndex + 1} / {products.length}
+                    </div>
+                  ) : null}
                 </div>
 
-                <div className="mt-6 grid gap-5 sm:grid-cols-[1fr_auto] sm:items-end">
-                  <div>
-                    <p className="text-sm font-medium text-muted">{featured.brand}</p>
-                    <h2 className="mt-1 break-words text-3xl font-semibold tracking-tight text-ink">
+                <div className="mt-5 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
+                  <div key={`info-${featured.id}`} className="animate-in fade-in duration-300">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-accent sm:text-sm">{featured.brand}</p>
+                    <h2 className="mt-1 break-words text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
                       {featured.name}
                     </h2>
-                    <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted">
+                    <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted sm:text-sm sm:leading-6">
                       {featured.description}
                     </p>
                   </div>
-                  <div className="rounded-2xl border border-line bg-surface px-4 py-3 text-right">
+                  <div className="rounded-2xl border border-line bg-surface px-4 py-2.5 text-right sm:py-3">
                     <p className="text-xs font-semibold uppercase tracking-wide text-muted">From</p>
-                    <p className="mt-1 text-3xl font-semibold tracking-tight text-ink">
+                    <p className="mt-0.5 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
                       {formatPrice(featured.price)}
                     </p>
                   </div>
                 </div>
 
-                <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                {products.length > 1 ? (
+                  <div className="mt-4 flex items-center justify-center gap-1.5 pt-1">
+                    {products.map((item, idx) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setActiveIndex(idx)}
+                        aria-label={`Show ${item.name}`}
+                        className={`h-2 rounded-full transition-all duration-300 ${
+                          idx === activeIndex
+                            ? "w-7 bg-accent"
+                            : "w-2 bg-line hover:bg-muted"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                ) : null}
+
+                <div className="mt-5 grid gap-2.5 sm:grid-cols-3 sm:gap-3">
                   {[
-                    { icon: BadgeCheck, label: "Verified data" },
-                    { icon: ShieldCheck, label: "Warranty shown" },
-                    { icon: Zap, label: "Fast compare" }
+                    { icon: BadgeCheck, label: "Official Warranty" },
+                    { icon: ShieldCheck, label: "Secure Checkout" },
+                    { icon: Zap, label: "Express Delivery" }
                   ].map((item) => {
                     const Icon = item.icon;
                     return (
                       <div
                         key={item.label}
-                        className="rounded-2xl border border-line bg-surface/78 p-3 text-sm font-semibold text-ink"
+                        className="rounded-2xl border border-line bg-surface/78 p-2.5 text-xs font-semibold text-ink sm:p-3 sm:text-sm"
                       >
-                        <Icon aria-hidden="true" size={18} className="mb-2 text-accent" />
+                        <Icon aria-hidden="true" size={16} className="mb-1.5 text-accent sm:mb-2 sm:size-[18px]" />
                         {item.label}
                       </div>
                     );
@@ -145,7 +242,7 @@ function HeroSkeleton() {
         <div className="h-8 w-32 rounded-full bg-line/50" />
         <div className="h-8 w-24 rounded-full bg-line/50" />
       </div>
-      <div className="mt-5 aspect-[1/0.9] rounded-[1.25rem] bg-line/40" />
+      <div className="mt-5 aspect-[16/11] rounded-[1.25rem] bg-line/40 sm:aspect-[4/3]" />
       <div className="mt-6 h-8 w-3/4 rounded bg-line/50" />
       <div className="mt-3 h-4 w-full rounded bg-line/40" />
     </div>

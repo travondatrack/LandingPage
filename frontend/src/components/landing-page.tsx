@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { BehaviorToast } from "@/components/behavior-toast";
 import { BrandStorySection } from "@/components/sections/brand-story-section";
 import { FeatureSection } from "@/components/sections/feature-section";
 import { HeroSection } from "@/components/sections/hero-section";
@@ -31,11 +30,10 @@ const NewsletterSection = dynamic(
 
 export function LandingPage() {
   const productState = useSmartphones();
-  const behaviorNotice = useBehaviorTracker();
+  useBehaviorTracker();
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-canvas text-ink">
-      <BehaviorToast message={behaviorNotice} />
       <SiteHeader />
       <main id="main-content">
         <HeroSection productState={productState} />

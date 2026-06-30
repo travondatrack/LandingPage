@@ -11,7 +11,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-content flex-col gap-6 px-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-lg font-semibold text-ink">HeliPhone</p>
-          <p className="mt-1 text-sm text-muted">Smartphone landing page for HELICORP round 2.</p>
+          <p className="mt-1 text-sm text-muted">Flagship smartphones crafted for performance, design, and intelligent everyday living.</p>
         </div>
         <nav aria-label="Footer navigation" className="flex flex-wrap gap-4 text-sm text-muted">
           {footerLinks.map((link) => (

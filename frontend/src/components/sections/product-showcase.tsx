@@ -124,11 +124,11 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
               Product showcase
             </p>
             <h2 className="mt-3 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-              Shop-like comparison without checkout complexity.
+              Explore the flagship HeliPhone collection.
             </h2>
           </div>
           <p className="max-w-sm text-sm leading-6 text-muted">
-            Search, sort, save, compare, quick view, and revisit products from live DummyJSON data.
+            Compare specifications, discover exclusive online offers, and find the perfect smartphone tailored to your lifestyle.
           </p>
         </div>
 
@@ -203,8 +203,8 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                 recentlyViewed={recentlyViewed}
               />
               {visibleProducts.length > 0 ? (
-                <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                  {visibleProducts.slice(0, 9).map((product, index) => (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {visibleProducts.slice(0, 12).map((product, index) => (
                     <ProductCard
                       key={product.id}
                       product={product}
@@ -262,54 +262,59 @@ function ProductCard({
 }) {
   return (
     <article
-      className="soft-reveal group rounded-3xl border border-line bg-elevated p-4 shadow-sm transition hover:-translate-y-1 hover:border-accent/70 hover:shadow-soft motion-reduce:transform-none"
-      style={{ animationDelay: `${index * 55}ms` }}
+      className="soft-reveal group flex flex-col justify-between rounded-2xl border border-line bg-elevated p-3.5 shadow-sm transition hover:-translate-y-1 hover:border-accent/70 hover:shadow-soft motion-reduce:transform-none"
+      style={{ animationDelay: `${index * 45}ms` }}
     >
-      <button
-        className="product-sheen relative block aspect-[4/3] w-full overflow-hidden rounded-2xl bg-[linear-gradient(135deg,rgb(var(--color-surface)),rgb(var(--color-accent)/0.08))]"
-        type="button"
-        onClick={onQuickView}
-      >
-        <Image
-          src={product.image}
-          alt={`${product.name} smartphone product image`}
-          fill
-          sizes="(min-width: 1280px) 360px, (min-width: 640px) 45vw, 92vw"
-          className="object-contain p-5 transition duration-500 group-hover:scale-[1.045]"
-        />
-      </button>
-      <div className="mt-4">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-sm text-muted">{product.brand}</p>
-            <h3 className="mt-1 break-words text-xl font-semibold tracking-tight text-ink">
-              {product.name}
-            </h3>
+      <div>
+        <button
+          className="product-sheen relative block aspect-[16/11] w-full overflow-hidden rounded-xl bg-[linear-gradient(135deg,rgb(var(--color-surface)),rgb(var(--color-accent)/0.08))]"
+          type="button"
+          onClick={onQuickView}
+        >
+          <Image
+            src={product.image}
+            alt={`${product.name} smartphone product image`}
+            fill
+            sizes="(min-width: 1280px) 280px, (min-width: 640px) 45vw, 92vw"
+            className="object-contain p-4 transition duration-500 group-hover:scale-[1.045]"
+          />
+        </button>
+        <div className="mt-3">
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <p className="text-xs text-muted">{product.brand}</p>
+              <h3 className="mt-0.5 line-clamp-1 break-words text-base font-semibold tracking-tight text-ink">
+                {product.name}
+              </h3>
+            </div>
+            <span className="shrink-0 rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-semibold text-accent">
+              {formatDiscount(product.discountPercentage)}
+            </span>
           </div>
-          <span className="shrink-0 rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent">
-            {formatDiscount(product.discountPercentage)}
-          </span>
+          <p className="mt-1.5 line-clamp-2 break-words text-xs leading-5 text-muted">
+            {product.description}
+          </p>
         </div>
-        <p className="mt-3 line-clamp-2 break-words text-sm leading-6 text-muted">
-          {product.description}
-        </p>
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-          <span className="text-2xl font-semibold tracking-tight text-ink">
+      </div>
+
+      <div className="mt-3 pt-1 border-t border-line/50">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-lg font-semibold tracking-tight text-ink">
             {formatPrice(product.price)}
           </span>
-          <span className="inline-flex items-center gap-1 text-sm font-semibold text-muted">
-            <Star aria-hidden="true" size={16} className="fill-accent text-accent" />
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-muted">
+            <Star aria-hidden="true" size={14} className="fill-accent text-accent" />
             {formatRating(product.rating)}
           </span>
         </div>
-        <div className="mt-4 rounded-2xl border border-line bg-surface px-3 py-2 text-sm font-medium text-muted">
+        <div className="mt-2.5 rounded-xl border border-line bg-surface px-2.5 py-1 text-xs font-medium text-muted truncate">
           {formatStock(product.stock)}
         </div>
-        <div className="mt-4 grid grid-cols-4 gap-2">
+        <div className="mt-2.5 grid grid-cols-4 gap-1.5">
           <IconAction
             active={isFavorite}
             icon={
-              <Heart aria-hidden="true" size={17} className={isFavorite ? "fill-current" : ""} />
+              <Heart aria-hidden="true" size={15} className={isFavorite ? "fill-current" : ""} />
             }
             label={
               isFavorite ? `Remove ${product.name} from favorites` : `Favorite ${product.name}`
@@ -318,21 +323,21 @@ function ProductCard({
           />
           <IconAction
             active={isInCart}
-            icon={<ShoppingBag aria-hidden="true" size={17} />}
+            icon={<ShoppingBag aria-hidden="true" size={15} />}
             label={isInCart ? `Remove ${product.name} from cart` : `Add ${product.name} to cart`}
             onClick={onAddToCart}
             tone="success"
           />
           <IconAction
             active={isCompared}
-            icon={<GitCompare aria-hidden="true" size={17} />}
+            icon={<GitCompare aria-hidden="true" size={15} />}
             label={
               isCompared ? `Remove ${product.name} from compare` : `Add ${product.name} to compare`
             }
             onClick={onCompare}
           />
           <IconAction
-            icon={<Eye aria-hidden="true" size={17} />}
+            icon={<Eye aria-hidden="true" size={15} />}
             label={`Quick view ${product.name}`}
             onClick={onQuickView}
           />
@@ -362,7 +367,7 @@ function IconAction({
 
   return (
     <button
-      className={`inline-flex min-h-11 items-center justify-center rounded-2xl border text-sm font-semibold transition hover:border-accent ${
+      className={`inline-flex min-h-9 items-center justify-center rounded-xl border text-xs font-semibold transition hover:border-accent ${
         active ? activeClass : "border-line bg-surface text-ink"
       }`}
       type="button"

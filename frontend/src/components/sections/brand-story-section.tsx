@@ -13,16 +13,16 @@ type BrandStorySectionProps = {
 
 const storySteps = [
   {
-    title: "Start with the hero phone",
-    copy: "Lead with a large, inspectable product image and live pricing signals so visitors understand the offer instantly."
+    title: "Aerospace-Grade Engineering",
+    copy: "Built with ultra-durable titanium and precision Corning Gorilla Armor to withstand daily impact while maintaining an exceptionally lightweight feel."
   },
   {
-    title: "Compare what matters",
-    copy: "Bring ratings, discounts, stock, warranty, and shipping together so the page feels useful, not just decorative."
+    title: "Pro-Grade Optical System",
+    copy: "Capture cinematic 4K video and stunning low-light photography powered by next-gen computational imaging sensors."
   },
   {
-    title: "Save, track, and decide",
-    copy: "Favorites, cart preview, recently viewed products, chatbot support, and newsletter updates keep momentum inside the landing page."
+    title: "All-Day Intelligent Power",
+    copy: "Experience extended battery life paired with ultra-fast HyperCharge technology that replenishes your device in minutes."
   }
 ];
 
@@ -93,17 +93,16 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
       <div className="mx-auto grid max-w-content gap-12 px-5 lg:grid-cols-[0.92fr_1.08fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-accent">
-            Scrollytelling
+            The HeliPhone Experience
           </p>
           <h2
             id="story-title"
             className="mt-3 text-4xl font-semibold tracking-tight text-ink sm:text-5xl"
           >
-            A guided buying story with product context at every step.
+            Crafted for excellence, designed for your everyday life.
           </h2>
           <p className="mt-5 max-w-2xl text-base leading-8 text-muted">
-            The page moves from brand promise to product proof, then into comparison and saved
-            actions. It feels premium without relying on heavy video or animation libraries.
+            Every HeliPhone is built with precision aerospace-grade materials, pro-grade imaging systems, and intelligent power management designed to elevate how you connect and create.
           </p>
 
           <div className="relative mt-10 grid gap-4">
@@ -160,7 +159,7 @@ function StoryPreview({
   return (
     <div className="premium-panel overflow-hidden rounded-[1.75rem] p-5 sm:p-6">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold uppercase tracking-wide text-accent">Live preview</p>
+        <p className="text-sm font-semibold uppercase tracking-wide text-accent">Featured Specification</p>
         {product ? (
           <span className="rounded-full bg-accent/10 px-3 py-1 text-sm font-semibold text-accent">
             {formatDiscount(product.discountPercentage)}

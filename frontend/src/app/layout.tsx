@@ -2,16 +2,16 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://heliphone.example.com";
-const title = "HeliPhone | Live Smartphone Product Landing Page";
+const title = "HeliPhone | Flagship Smartphone Collection";
 const description =
-  "Compare smartphone picks with live DummyJSON product data, stable visuals, ratings, discounts, specs, dark mode, and newsletter updates.";
+  "Explore the flagship HeliPhone series. Discover next-generation smartphones engineered for pro-grade photography, all-day battery endurance, and exceptional AI performance.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title,
   description,
   applicationName: "HeliPhone",
-  keywords: ["smartphone landing page", "DummyJSON smartphones", "responsive product page"],
+  keywords: ["flagship smartphone", "HeliPhone", "next-gen smartphones", "premium mobile devices"],
   openGraph: {
     title,
     description,

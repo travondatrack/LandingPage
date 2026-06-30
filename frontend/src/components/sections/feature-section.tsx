@@ -2,27 +2,27 @@ import { BatteryCharging, Camera, Gauge, ShieldCheck } from "lucide-react";
 
 const features = [
   {
-    title: "AI-ready confidence",
+    title: "Next-Gen AI Performance",
     description:
-      "Surface the clearest buying signals first: rating, discount, availability, warranty, and shipping.",
+      "Powered by our latest neural processing unit for instantaneous app launches, on-device AI assistance, and ultra-smooth multitasking.",
     icon: Gauge
   },
   {
-    title: "Camera-ready",
+    title: "Cinematic Pro Optics",
     description:
-      "Large product media and quick-view details help visitors inspect each phone before deciding.",
+      "Multi-lens camera arrays with optical image stabilization let you capture professional portraits and crisp high-resolution video.",
     icon: Camera
   },
   {
-    title: "Fast decisions",
+    title: "All-Day Endurance",
     description:
-      "Search, sort, tabs, favorites, cart preview, and recently viewed items reduce comparison friction.",
+      "High-density silicon-carbon battery cells deliver multi-day battery life with lightning-fast wired and wireless charging capabilities.",
     icon: BatteryCharging
   },
   {
-    title: "Reliable ownership",
+    title: "Enterprise Security",
     description:
-      "Warranty and fulfillment details stay visible so the landing page feels trustworthy, not generic.",
+      "Dedicated hardware encryption and biometric authentication keep your personal data, passwords, and digital identity completely secure.",
     icon: ShieldCheck
   }
 ];
@@ -34,15 +34,14 @@ export function FeatureSection() {
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-wide text-accent">
-              Standout features
+              Why Choose HeliPhone
             </p>
             <h2 className="mt-3 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-              Premium utility, not decorative noise.
+              Engineered without compromise.
             </h2>
           </div>
           <p className="max-w-sm text-sm leading-6 text-muted">
-            Every interaction is designed to help visitors compare, save, and act without leaving
-            the story.
+            Discover cutting-edge innovations designed to empower your creativity, boost productivity, and secure your digital life.
           </p>
         </div>
 

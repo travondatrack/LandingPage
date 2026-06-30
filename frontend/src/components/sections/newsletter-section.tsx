@@ -70,14 +70,13 @@ export function NewsletterSection() {
       <div className="mx-auto grid max-w-content gap-8 px-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div className="soft-reveal">
           <p className="text-sm font-semibold uppercase tracking-wide text-accent">
-            Launch updates
+            VIP Updates
           </p>
           <h2 className="mt-3 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            Get alerts when the right phone becomes obvious.
+            Stay ahead with exclusive HeliPhone announcements.
           </h2>
           <p className="mt-5 max-w-xl text-base leading-8 text-muted">
-            Receive product refreshes, price-drop notes, and availability changes through a
-            server-validated form that can forward to a real webhook.
+            Be the first to know about new flagship releases, software upgrades, exclusive online promotions, and VIP launch event invitations.
           </p>
         </div>
 

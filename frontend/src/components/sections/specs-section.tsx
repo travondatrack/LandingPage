@@ -38,27 +38,26 @@ export function SpecsSection({ productState }: SpecsSectionProps) {
             Technical specifications
           </p>
           <h2 className="mt-3 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            A specs dashboard for fast confidence.
+            Precision engineered down to the smallest detail.
           </h2>
           <p className="mt-5 text-base leading-8 text-muted">
-            Switch between products and scan brand, category, stock, rating, warranty, shipping, and
-            pricing without leaving the landing page.
+            Explore comprehensive hardware specifications across our lineup. Compare processor performance, display technologies, optical sensor systems, and power ratings with absolute transparency.
           </p>
 
           <div className="mt-8 grid grid-cols-2 gap-3">
             {[
-              { label: "Visuals", value: "Stable images", icon: Smartphone },
+              { label: "Display", value: "OLED ProMotion", icon: Smartphone },
               {
                 label: "Rating",
-                value: selectedProduct ? formatRating(selectedProduct.rating) : "Live score",
+                value: selectedProduct ? formatRating(selectedProduct.rating) : "4.9 / 5.0",
                 icon: Star
               },
               {
-                label: "Inventory",
-                value: selectedProduct ? formatStock(selectedProduct.stock) : "Stock signal",
+                label: "Availability",
+                value: selectedProduct ? formatStock(selectedProduct.stock) : "In Stock",
                 icon: MemoryStick
               },
-              { label: "Delivery", value: "Warranty + shipping", icon: Truck }
+              { label: "Warranty", value: "2-Year Official", icon: Truck }
             ].map((item, index) => {
               const Icon = item.icon;
 
@@ -95,7 +94,7 @@ export function SpecsSection({ productState }: SpecsSectionProps) {
             </label>
           ) : (
             <div className="rounded-2xl border border-line bg-surface p-4 text-sm text-muted">
-              Specs preview will use live products when the API is available.
+              Select a model above to view detailed hardware specifications.
             </div>
           )}
 
@@ -118,11 +117,11 @@ export function SpecsSection({ productState }: SpecsSectionProps) {
                 <Cpu aria-hidden="true" size={20} />
               </span>
               <div>
-                <p className="text-sm font-semibold text-ink">Decision summary</p>
+                <p className="text-sm font-semibold text-ink">Flagship Highlights</p>
                 <p className="mt-1 text-sm text-muted">
                   {selectedProduct
                     ? `${selectedProduct.name} starts at ${formatPrice(selectedProduct.price)} with ${formatRating(selectedProduct.rating)} rating.`
-                    : "Live product pricing, rating, and fulfillment details are summarized here."}
+                    : "Select a model above to review detailed specifications, pricing options, and warranty coverage."}
                 </p>
               </div>
             </div>
