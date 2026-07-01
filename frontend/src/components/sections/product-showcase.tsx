@@ -21,7 +21,14 @@ import {
   Smartphone,
   CheckCircle2
 } from "lucide-react";
-import { formatDiscount, formatPrice, formatRating, getDiscountedPrice } from "@/lib/format";
+import {
+  formatDiscount,
+  formatPrice,
+  formatRating,
+  formatSpecValue,
+  formatStock,
+  getDiscountedPrice
+} from "@/lib/format";
 import { trackBehavior } from "@/lib/behavior";
 import type { ProductLoadState, SmartphoneProduct } from "@/lib/products";
 
@@ -887,7 +894,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={() => setQuickViewProduct(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 overflow-hidden bg-slate-950/45 backdrop-blur-xl before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.18),transparent_55%)] before:pointer-events-none"
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-slate-950/55 px-3 py-4 backdrop-blur-md before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.16),transparent_56%)] sm:px-5 sm:py-6"
           >
             <motion.div
               initial={{ opacity: 0, y: 24, scale: 0.96 }}
@@ -895,102 +902,94 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
               exit={{ opacity: 0, y: 16, scale: 0.96 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-[92vw] max-w-5xl max-h-[90vh] md:max-h-[86vh] overflow-y-auto md:overflow-hidden rounded-[2rem] bg-white/85 dark:bg-slate-950/80 backdrop-blur-2xl border border-sky-400/20 shadow-[0_30px_100px_rgba(14,165,233,0.22)] p-5 md:p-8"
+              className="relative max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-[1.75rem] border border-white/15 bg-slate-950/88 p-4 text-white shadow-[0_30px_100px_rgba(14,165,233,0.22)] backdrop-blur-2xl sm:p-5 md:max-h-[86vh] md:p-6"
             >
-              <div className="flex flex-col h-full min-w-0">
+              <div className="flex max-h-[calc(90vh-2rem)] min-w-0 flex-col md:max-h-[calc(86vh-3rem)]">
                 {/* Top row */}
-                <div className="flex items-center justify-between gap-4 border-b border-line/60 pb-3.5 shrink-0">
+                <div className="flex shrink-0 items-center justify-between gap-4 border-b border-white/10 pb-3.5">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest text-accent border border-accent/20">
                     <Sparkles size={12} />
-                    <span>QTPHONE FLAGSHIP STUDIO</span>
+                    <span>Product Detail</span>
                   </span>
                   <button
                     type="button"
                     onClick={() => setQuickViewProduct(null)}
                     aria-label="Close modal"
-                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-line bg-surface/80 text-muted transition hover:border-accent hover:bg-accent hover:text-white shrink-0 shadow-2xs"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-slate-200 shadow-2xs transition hover:border-accent hover:bg-accent hover:text-white"
                   >
                     <X size={18} />
                   </button>
                 </div>
 
                 {/* Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] gap-6 md:gap-8 min-w-0 mt-5 items-center flex-1 md:overflow-hidden">
+                <div className="mt-5 grid min-h-0 min-w-0 flex-1 grid-cols-1 gap-5 overflow-y-auto overflow-x-hidden pr-1 md:grid-cols-[0.92fr_1.08fr] md:gap-7">
                   {/* Left column: Image inside soft glass card */}
-                  <div className="relative aspect-[4/3] md:aspect-square w-full overflow-hidden rounded-2xl border border-white/10 bg-[radial-gradient(circle_at_50%_50%,rgba(56,189,248,0.15),transparent_70%)] bg-surface/60 flex items-center justify-center p-6 shrink-0">
+                  <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-[radial-gradient(circle_at_50%_50%,rgba(56,189,248,0.18),rgba(255,255,255,0.08)_48%,transparent_78%)] md:sticky md:top-0 md:aspect-square">
                     <Image
                       src={quickViewProduct.image}
                       alt={quickViewProduct.name}
                       fill
-                      className="object-contain max-h-[42vh] md:max-h-[50vh] p-6 transition-transform duration-500 hover:scale-105"
+                      sizes="(min-width: 768px) 44vw, 92vw"
+                      className="object-contain p-5 transition-transform duration-500 hover:scale-105 sm:p-7"
                     />
                   </div>
 
                   {/* Right column: Details */}
-                  <div className="min-w-0 flex flex-col justify-between h-full space-y-4">
+                  <div className="flex min-w-0 flex-col">
                     <div className="min-w-0">
-                      <h3 className="text-3xl md:text-5xl font-black tracking-tight text-ink line-clamp-2 break-words">
+                      <h3 className="line-clamp-2 break-words text-2xl font-black tracking-tight text-white sm:text-3xl md:text-4xl">
                         {quickViewProduct.name}
                       </h3>
 
                       {/* Meta row */}
                       <div className="flex items-baseline justify-between gap-3 mt-3 flex-wrap">
-                        <PriceStack product={quickViewProduct} />
+                        <PriceStack product={quickViewProduct} contrast />
                         <div className="flex items-center gap-2">
                           <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 text-xs font-bold text-amber-500">
                             <Star size={13} className="fill-amber-400 text-amber-400" />
                             <span>{formatRating(quickViewProduct.rating)}</span>
                           </span>
-                          <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-3 py-0.5 text-xs font-bold text-emerald-400">
-                            {quickViewProduct.stock} in stock
+                          <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-3 py-0.5 text-xs font-bold text-emerald-400">
+                            {formatStock(quickViewProduct.stock)}
                           </span>
                         </div>
                       </div>
 
                       {/* Short description */}
-                      <p className="text-sm leading-relaxed text-muted line-clamp-3 break-words mt-3">
+                      <p className="mt-3 line-clamp-3 break-words text-sm leading-relaxed text-slate-300">
                         {quickViewProduct.description}
                       </p>
 
-                      {/* 4 compact specification chips */}
-                      <div className="grid grid-cols-2 gap-2.5 mt-4 min-w-0">
-                        <div className="rounded-xl border border-line/60 bg-surface/80 p-3 min-w-0">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent block">
-                            Brand
-                          </span>
-                          <p className="mt-0.5 text-xs font-extrabold text-ink truncate">
-                            {quickViewProduct.brand}
+                      <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.06] p-3.5 backdrop-blur-xl sm:p-4">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-xs font-black uppercase tracking-widest text-accent">
+                            Precision Details
                           </p>
-                        </div>
-                        <div className="rounded-xl border border-line/60 bg-surface/80 p-3 min-w-0">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent block">
-                            Category
+                          <span className="rounded-full border border-accent/25 bg-accent/10 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest text-accent">
+                            Signature Specs
                           </span>
-                          <p className="mt-0.5 text-xs font-extrabold text-ink truncate">
-                            Flagship Smartphone
-                          </p>
                         </div>
-                        <div className="rounded-xl border border-line/60 bg-surface/80 p-3 min-w-0">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent block">
-                            Rating
-                          </span>
-                          <p className="mt-0.5 text-xs font-extrabold text-ink truncate">
-                            Tier-1 Neural Device
-                          </p>
-                        </div>
-                        <div className="rounded-xl border border-line/60 bg-surface/80 p-3 min-w-0">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent block">
-                            Warranty
-                          </span>
-                          <p className="mt-0.5 text-xs font-extrabold text-ink truncate">
-                            Official VIP Care
-                          </p>
-                        </div>
+
+                        <dl className="mt-3 grid min-w-0 grid-cols-1 gap-2.5 sm:grid-cols-2">
+                          {buildDetailSpecs(quickViewProduct).map((spec) => (
+                            <div
+                              key={spec.label}
+                              className="min-w-0 rounded-xl border border-white/10 bg-white/[0.055] p-3 shadow-sm"
+                            >
+                              <dt className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                {spec.label}
+                              </dt>
+                              <dd className="mt-1 break-words text-xs font-extrabold leading-5 text-white">
+                                {spec.value}
+                              </dd>
+                            </div>
+                          ))}
+                        </dl>
                       </div>
                     </div>
 
                     {/* CTA row */}
-                    <div className="mt-5 pt-4 border-t border-line/60 shrink-0">
+                    <div className="mt-5 shrink-0 border-t border-white/10 pt-4">
                       <div className="flex items-center gap-3">
                         <button
                           type="button"
@@ -1011,7 +1010,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border transition ${
                             favoriteIds.includes(quickViewProduct.id)
                               ? "border-pink-500 bg-pink-500/20 text-pink-400 shadow-sm"
-                              : "border-line bg-surface/90 text-muted hover:border-pink-500/50 hover:text-ink"
+                              : "border-white/15 bg-white/10 text-slate-300 hover:border-pink-500/50 hover:text-white"
                           }`}
                         >
                           <Heart
@@ -1032,6 +1031,34 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
       </AnimatePresence>
     </section>
   );
+}
+
+function buildDetailSpecs(product: SmartphoneProduct) {
+  const specMap = new Map(product.specs.map((spec) => [spec.label.toLowerCase(), spec.value]));
+  const dimensions = specMap.get("dimensions");
+  const warranty = specMap.get("warranty");
+  const shipping = specMap.get("shipping");
+
+  return [
+    { label: "Brand", value: product.brand },
+    { label: "Category", value: formatSpecValue(product.category) },
+    {
+      label: "Stock / Availability",
+      value: `${formatStock(product.stock)} (${product.stock} units)`
+    },
+    { label: "Rating", value: formatRating(product.rating) },
+    {
+      label: "Deal Price / Discount",
+      value: `${formatPrice(getDiscountedPrice(product.price, product.discountPercentage))} after ${formatDiscount(product.discountPercentage)}`
+    },
+    { label: "Dimensions", value: dimensions },
+    { label: "Warranty", value: warranty },
+    { label: "Shipping", value: shipping },
+    { label: "Display", value: product.display },
+    { label: "Processor / Performance", value: product.processor },
+    { label: "Camera / Optics", value: product.camera },
+    { label: "Battery / Endurance", value: product.battery }
+  ].filter((spec): spec is { label: string; value: string } => Boolean(spec.value));
 }
 
 function ProductCardItem({
@@ -1055,9 +1082,10 @@ function ProductCardItem({
 }) {
   return (
     <motion.article
+      id={`product-${product.id}`}
       layout
       variants={cardVariants}
-      className="group relative flex flex-col justify-between overflow-hidden rounded-[2rem] border border-white/10 bg-elevated/70 p-5 backdrop-blur-xl shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-accent/50 hover:shadow-cyan"
+      className="group relative scroll-mt-24 flex flex-col justify-between overflow-hidden rounded-[2rem] border border-white/10 bg-elevated/70 p-5 backdrop-blur-xl shadow-sm transition-all duration-300 target:border-accent target:shadow-cyan hover:-translate-y-1.5 hover:border-accent/50 hover:shadow-cyan"
     >
       <div>
         <div className="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-[linear-gradient(135deg,rgb(var(--color-surface)),rgb(var(--color-accent)/0.08))]">
@@ -1152,11 +1180,13 @@ function ProductCardItem({
 function PriceStack({
   product,
   align = "left",
-  compact = false
+  compact = false,
+  contrast = false
 }: {
   product: SmartphoneProduct;
   align?: "left" | "center" | "right";
   compact?: boolean;
+  contrast?: boolean;
 }) {
   const discountedPrice = getDiscountedPrice(product.price, product.discountPercentage);
   const alignmentClass =
@@ -1180,7 +1210,11 @@ function PriceStack({
           {formatDiscount(product.discountPercentage)}
         </span>
       </div>
-      <span className={`${compact ? "text-xs" : "text-sm"} font-bold text-muted line-through`}>
+      <span
+        className={`${compact ? "text-xs" : "text-sm"} font-bold ${
+          contrast ? "text-slate-400" : "text-muted"
+        } line-through`}
+      >
         {formatPrice(product.price)}
       </span>
     </div>

@@ -6,7 +6,7 @@
 - Targeted Prettier check for updated files: passed.
 - `npm run typecheck`: passed.
 - `npm run build`: passed.
-- DummyJSON endpoint check from PowerShell: `200`.
+- Catalog source check from PowerShell: `200`.
 - Local production server `/`: `200`.
 - Playwright Chrome viewport audit:
   - Mobile `390x844`: no horizontal overflow; required sections present.
@@ -16,8 +16,8 @@
 - Backend API routes added for newsletter validation, behavior tracking, and chatbot replies.
 - Scrollytelling section, restrained parallax, and fixed chatbot widget added.
 - Upgraded audit:
-  - Mobile `390x844`: no horizontal overflow; story, features, products, specs, and newsletter sections present.
-  - Desktop `1440x1000`: no horizontal overflow; story, features, products, specs, and newsletter sections present.
+  - Mobile `390x844`: no horizontal overflow; story, features, products, and newsletter sections present.
+  - Desktop `1440x1000`: no horizontal overflow; story, features, products, and newsletter sections present.
   - Chatbot opened, sent a message, and returned an automated warranty response.
   - Newsletter invalid email validation remained visible after chatbot flow.
 - Premium polish audit:
@@ -29,17 +29,18 @@
   - Premium prompt-style polish added: global grain overlay, editorial hero typography, and an infinite trust-signal marquee.
   - Hero scale reduced for a cleaner first viewport, and the main headline now uses a lightweight typing cursor effect that respects reduced motion.
   - `Why Choose QTPhone` section redesigned with the selected `M011T0831 C` smartphone image, optimized to a lightweight WebP asset, left-side product image, compact 2x2 feature cards, spec badges, hover lift, glowing border, and responsive swipe behavior on mobile.
+  - Standalone technical specifications section removed; product-specific precision details now live inside the Product Detail modal.
   - Scrollytelling flow uses the `BrandStorySection` to connect hero, product story, product proof, specifications, and newsletter conversion.
   - Lightweight parallax is implemented with transform-based motion and respects `prefers-reduced-motion`.
   - `POST /api/newsletter` accepts valid email submissions without a webhook configured and returns `{"ok":true,"stored":1}`.
   - `POST /api/newsletter` supports real webhook forwarding through `NEWSLETTER_WEBHOOK_URL` or `WEBHOOK_URL`, optional `NEWSLETTER_WEBHOOK_SECRET`, and returns sanitized delivery status for demo proof.
   - `POST /api/newsletter` rejects invalid email submissions with `422`.
-  - `POST /api/chat` returns demo product advice from live DummyJSON context when no AI key is configured.
+  - `POST /api/chat` returns polished product advice from the QTPhone catalog context when no AI key is configured.
   - `POST /api/chat` is ready to call Groq when `GROQ_API_KEY` is configured, OpenAI when `OPENAI_API_KEY` is configured, or Gemini when `GEMINI_API_KEY` is configured.
   - Click and scroll-depth tracking now shows non-blocking on-page toast notifications.
-  - `POST /api/behavior` stores bounded recent behavior events in memory for demo evidence.
+  - `POST /api/behavior` stores bounded recent behavior events in memory for review.
   - `GET /api/behavior` returns an event summary and recent behavior events when inspected.
-  - `GET /api/newsletter` returns recent validated newsletter submissions for demo evidence.
+  - `GET /api/newsletter` returns recent validated newsletter submissions for review.
 
 ## Live Deployment
 

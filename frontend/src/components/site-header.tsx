@@ -9,8 +9,7 @@ const navItems = [
   { href: "#story", label: "Story" },
   { href: "#features", label: "Features" },
   { href: "#products", label: "Products" },
-  { href: "#specs", label: "Specs" },
-  { href: "#newsletter", label: "Updates" }
+  { href: "#newsletter", label: "Newsletter" }
 ];
 
 export function SiteHeader() {

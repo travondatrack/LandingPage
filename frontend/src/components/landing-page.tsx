@@ -5,7 +5,6 @@ import { BrandStorySection } from "@/components/sections/brand-story-section";
 import { FeatureSection } from "@/components/sections/feature-section";
 import { HeroSection } from "@/components/sections/hero-section";
 import { ProductShowcase } from "@/components/sections/product-showcase";
-import { SpecsSection } from "@/components/sections/specs-section";
 import { TrustedBrandsSection } from "@/components/sections/trusted-brands-section";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -40,7 +39,6 @@ export function LandingPage() {
         <BrandStorySection productState={productState} />
         <FeatureSection />
         <ProductShowcase productState={productState} />
-        <SpecsSection productState={productState} />
         <NewsletterSection />
       </main>
       <SiteFooter />

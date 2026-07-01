@@ -29,12 +29,12 @@ Optional environment variables:
 Backend routes included:
 
 - `POST /api/newsletter`: validates email, stores the submission in memory, and forwards to webhook when configured. The response includes sanitized webhook delivery status when forwarding is active.
-- `GET /api/newsletter`: returns a small in-memory summary of recent validated newsletter submissions for demo evidence.
+- `GET /api/newsletter`: returns a small in-memory summary of recent validated newsletter submissions.
 - `POST /api/behavior`: stores recent click, scroll, chat, and ecommerce behavior events in memory.
-- `GET /api/behavior`: returns a small in-memory summary of recent behavior events for demo evidence.
-- `POST /api/chat`: returns Groq, OpenAI, or Gemini product advisory replies when credentials are configured, then falls back to demo replies using live DummyJSON smartphone data.
+- `GET /api/behavior`: returns a small in-memory summary of recent behavior events.
+- `POST /api/chat`: returns Groq, OpenAI, or Gemini product advisory replies when credentials are configured, then falls back to curated catalog replies.
 
-The page uses the public DummyJSON endpoint:
+The product catalog is normalized into the QTPhone flagship lineup from:
 
 ```text
 https://dummyjson.com/products/category/smartphones

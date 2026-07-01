@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json({
       reply:
-        "I can still help with the page: use search, tabs, quick view, favorites, cart preview, specs, and dark mode to compare products.",
+        "I can still help with the page: use search, tabs, product detail, favorites, cart preview, and dark mode to compare products.",
       provider: "demo",
       configured: false
     });
@@ -254,7 +254,7 @@ function buildProductReply(
   }
 
   if (message.includes("warranty") || message.includes("shipping")) {
-    return "Warranty and shipping are shown in the specs dashboard and quick view when the API provides those fields.";
+    return "Warranty and shipping are shown in each Product Detail modal with the selected model's precision details.";
   }
 
   const topRated = [...products].sort((a, b) => b.rating - a.rating)[0];

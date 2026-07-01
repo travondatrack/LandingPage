@@ -78,7 +78,7 @@ export function HeroSection({ productState }: HeroSectionProps) {
           </h1>
           <p className="mt-5 max-w-2xl text-sm leading-7 text-muted sm:text-base">
             Experience next-generation titanium engineering, studio optics, and neural architecture.
-            Powered by live external product API data.
+            Curated for creators, executives, and power users who expect more from every tap.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <a
@@ -87,12 +87,6 @@ export function HeroSection({ productState }: HeroSectionProps) {
             >
               Explore Flagship Series
               <ArrowRight aria-hidden="true" size={18} />
-            </a>
-            <a
-              className="premium-button inline-flex min-h-12 items-center justify-center rounded-full border border-line bg-surface/86 px-6 text-sm font-semibold text-ink backdrop-blur hover:border-accent hover:shadow-soft transition"
-              href="#compare"
-            >
-              Compare Matrix
             </a>
           </div>
 
@@ -142,21 +136,25 @@ export function HeroSection({ productState }: HeroSectionProps) {
                     exit={{ opacity: 0, y: -15, scale: 0.97 }}
                     transition={{ duration: 0.38, ease: "easeOut" }}
                   >
-                    <div className="relative mt-4 aspect-[16/10] overflow-hidden rounded-[1.25rem] bg-[radial-gradient(ellipse_at_center,rgb(var(--color-accent)/0.15),transparent_70%)] bg-elevated border border-white/5 sm:aspect-[16/11]">
+                    <a
+                      href={`#product-${featured.id}`}
+                      aria-label={`View ${featured.name} in the product collection`}
+                      className="group relative mt-4 block aspect-[16/10] overflow-hidden rounded-[1.25rem] border border-white/5 bg-[radial-gradient(ellipse_at_center,rgb(var(--color-accent)/0.15),transparent_70%)] bg-elevated transition hover:border-accent/55 hover:shadow-cyan sm:aspect-[16/11]"
+                    >
                       <Image
                         src={featured.image}
                         alt={`${featured.name} smartphone product spotlight`}
                         fill
                         priority
                         sizes="(min-width: 1024px) 520px, 92vw"
-                        className="object-contain p-5 transition duration-500 hover:scale-[1.05] sm:p-7 drop-shadow-[0_15px_30px_rgba(56,189,248,0.25)]"
+                        className="object-contain p-5 drop-shadow-[0_15px_30px_rgba(56,189,248,0.25)] transition duration-500 group-hover:scale-[1.05] sm:p-7"
                       />
                       {products.length > 1 ? (
                         <div className="absolute bottom-3 right-3 rounded-full bg-surface/90 border border-line/60 px-3 py-1 text-xs font-semibold text-ink shadow-sm backdrop-blur">
                           {activeIndex + 1} / {products.length}
                         </div>
                       ) : null}
-                    </div>
+                    </a>
 
                     <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
                       <div>
