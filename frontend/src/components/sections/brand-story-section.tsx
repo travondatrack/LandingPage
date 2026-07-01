@@ -58,7 +58,6 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
 
       <div className="mx-auto max-w-content px-5">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:min-h-[560px] lg:max-h-[80vh] lg:items-center">
-          
           {/* Header Block: Order 1 on Mobile & Desktop Col 1 Row 1 */}
           <div className="order-1 flex flex-col lg:col-start-1 lg:row-start-1">
             <div className="inline-flex w-max items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-accent shadow-2xs">
@@ -74,8 +73,8 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
             </h2>
 
             <p className="mt-3.5 max-w-lg text-sm sm:text-base leading-7 text-muted">
-              Every element of QTPhone is crafted not as a mere device, but as a seamless extension of
-              human potential—balanced, enduring, and remarkably intuitive.
+              Every element of QTPhone is crafted not as a mere device, but as a seamless extension
+              of human potential—balanced, enduring, and remarkably intuitive.
             </p>
           </div>
 
@@ -86,7 +85,7 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
                 <div className="flex items-center gap-2">
                   <span className="h-2.5 w-2.5 rounded-full bg-accent animate-pulse" />
                   <span className="text-[11px] font-bold uppercase tracking-widest text-muted">
-                    Visual Showcase
+                    Product Detail
                   </span>
                 </div>
                 <span className="rounded-full border border-accent/40 bg-accent/15 px-3 py-0.5 text-[11px] font-extrabold text-accent">
@@ -111,7 +110,7 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
                     >
                       <Image
                         src={activeProduct.image}
-                        alt={`QTPhone ${currentStory.badge} visual preview`}
+                        alt={`QTPhone ${currentStory.badge} product preview`}
                         fill
                         priority
                         sizes="(min-width: 1024px) 480px, 90vw"
@@ -120,7 +119,7 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
                     </motion.div>
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-line/20 animate-pulse">
-                      <span className="text-xs font-semibold text-muted">Loading visual...</span>
+                      <span className="text-xs font-semibold text-muted">Loading product...</span>
                     </div>
                   )}
                 </motion.div>
@@ -149,7 +148,11 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
           {/* Story Tabs & Active Story Detail: Order 3 on Mobile & Desktop Col 1 Row 2 */}
           <div className="order-3 flex flex-col lg:col-start-1 lg:row-start-2 lg:self-start">
             {/* Horizontal Compact Tabs */}
-            <div className="flex flex-wrap items-center gap-2.5" role="tablist" aria-label="Story sections">
+            <div
+              className="flex flex-wrap items-center gap-2.5"
+              role="tablist"
+              aria-label="Story sections"
+            >
               {storySteps.map((step, index) => {
                 const isActive = activeStep === index;
                 return (
@@ -195,7 +198,6 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
               </AnimatePresence>
             </div>
           </div>
-
         </div>
       </div>
     </section>

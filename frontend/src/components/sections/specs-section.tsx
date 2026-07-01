@@ -2,7 +2,14 @@
 
 import { Cpu, MemoryStick, Smartphone, Star, Truck } from "lucide-react";
 import { useMemo, useState } from "react";
-import { formatPrice, formatRating, formatSpecValue, formatStock } from "@/lib/format";
+import {
+  formatDiscount,
+  formatPrice,
+  formatRating,
+  formatSpecValue,
+  formatStock,
+  getDiscountedPrice
+} from "@/lib/format";
 import type { ProductLoadState, ProductSpec, SmartphoneProduct } from "@/lib/products";
 
 type SpecsSectionProps = {
@@ -125,7 +132,12 @@ export function SpecsSection({ productState }: SpecsSectionProps) {
                 <p className="text-sm font-semibold text-ink">Flagship Highlights</p>
                 <p className="mt-1 text-sm text-muted">
                   {selectedProduct
-                    ? `${selectedProduct.name} starts at ${formatPrice(selectedProduct.price)} with ${formatRating(selectedProduct.rating)} rating.`
+                    ? `${selectedProduct.name} is now ${formatPrice(
+                        getDiscountedPrice(
+                          selectedProduct.price,
+                          selectedProduct.discountPercentage
+                        )
+                      )} after ${formatDiscount(selectedProduct.discountPercentage)}, with ${formatRating(selectedProduct.rating)} rating.`
                     : "Select a model above to review detailed specifications, pricing options, and warranty coverage."}
                 </p>
               </div>
@@ -143,7 +155,10 @@ function buildSpecs(product: SmartphoneProduct): ProductSpec[] {
     { label: "Category", value: "Smartphones" },
     { label: "Stock", value: formatStock(product.stock) },
     { label: "Rating", value: formatRating(product.rating) },
-    { label: "Price", value: formatPrice(product.price) },
+    {
+      label: "Deal Price",
+      value: `${formatPrice(getDiscountedPrice(product.price, product.discountPercentage))} after ${formatDiscount(product.discountPercentage)}`
+    },
     ...product.specs.filter((spec) => ["Warranty", "Shipping", "Dimensions"].includes(spec.label))
   ];
 }

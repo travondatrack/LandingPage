@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { Bot, MessageCircle, Send, X } from "lucide-react";
+import { Bot, MessageCircle, Send, Sparkles, X } from "lucide-react";
 import { trackBehavior } from "@/lib/behavior";
 
 type ChatMessage = {
@@ -11,23 +11,17 @@ type ChatMessage = {
 
 type ChatResponse = {
   reply?: string;
-  provider?: "openai" | "gemini" | "demo";
-  configured?: boolean;
 };
 
 const initialMessages: ChatMessage[] = [
   {
     role: "assistant",
     content:
-      "Hi, I can help compare phone price, discounts, warranty, shipping, favorites, and cart preview. AI mode activates when OpenAI or Gemini credentials are configured."
+      "Hi, I am your QTPhone advisor. Ask me about camera picks, pricing, discounts, warranty, shipping, favorites, or cart options."
   }
 ];
 
-const suggestedQuestions = [
-  "Which phone has the best camera?",
-  "Compare iPhone 6 and iPhone 13 Pro",
-  "Show best discount"
-];
+const suggestedQuestions = ["Best camera pick", "Compare two phones", "Show best discount"];
 
 export function ChatbotWidget() {
   const [open, setOpen] = useState(false);
@@ -59,14 +53,12 @@ export function ChatbotWidget() {
         body: JSON.stringify({ message })
       });
       const data = (await response.json()) as ChatResponse;
-      const providerLabel =
-        data.provider && data.provider !== "demo" ? ` (${data.provider.toUpperCase()})` : "";
 
       setMessages((current) => [
         ...current,
         {
           role: "assistant",
-          content: `${data.reply ?? "I could not answer that yet."}${providerLabel}`
+          content: data.reply ?? "I could not answer that yet."
         }
       ]);
     } catch {
@@ -90,19 +82,20 @@ export function ChatbotWidget() {
   return (
     <div className="fixed bottom-4 right-4 z-40 flex max-w-[calc(100vw-2rem)] flex-col items-end gap-3 sm:bottom-5 sm:right-5">
       {open ? (
-        <section className="w-[min(88vw,360px)] rounded-lg border border-line bg-elevated shadow-soft sm:w-[min(92vw,380px)]">
-          <div className="flex items-center justify-between border-b border-line px-4 py-3">
+        <section className="w-[min(91vw,380px)] overflow-hidden rounded-2xl border border-accent/20 bg-elevated/95 shadow-cyanStrong backdrop-blur-xl sm:w-[min(92vw,400px)]">
+          <div className="relative overflow-hidden border-b border-line px-4 py-4">
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgb(var(--color-accent)/0.18),transparent_55%)]" />
             <div className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-md bg-accent text-white">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-accent text-white shadow-cyan">
                 <Bot aria-hidden="true" size={18} />
               </span>
               <div>
-                <h2 className="text-sm font-semibold text-ink">Product advisor</h2>
-                <p className="text-xs text-muted">AI-ready demo support</p>
+                <h2 className="text-sm font-extrabold text-ink">QTPhone advisor</h2>
+                <p className="text-xs font-medium text-muted">Premium product guidance</p>
               </div>
             </div>
             <button
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-line bg-surface text-ink"
+              className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-xl border border-line bg-surface/90 text-ink transition hover:border-accent hover:text-accent"
               type="button"
               aria-label="Close chatbot"
               onClick={() => setOpen(false)}
@@ -111,25 +104,37 @@ export function ChatbotWidget() {
             </button>
           </div>
 
-          <div className="flex max-h-64 flex-col gap-3 overflow-y-auto px-4 py-4 sm:max-h-80">
+          <div className="flex max-h-72 flex-col gap-3 overflow-y-auto bg-surface/35 px-4 py-4 sm:max-h-80">
             {messages.map((message, index) => (
-              <p
+              <div
                 key={`${message.role}-${index}`}
-                className={`max-w-[88%] rounded-md px-3 py-2 text-sm leading-6 ${
-                  message.role === "user" ? "ml-auto bg-accent text-white" : "bg-surface text-muted"
+                className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm leading-6 shadow-sm ${
+                  message.role === "user"
+                    ? "ml-auto rounded-br-md bg-accent text-white"
+                    : "rounded-bl-md border border-line bg-elevated text-muted"
                 }`}
               >
+                {message.role === "assistant" ? (
+                  <span className="mb-1 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-accent">
+                    <Sparkles aria-hidden="true" size={12} />
+                    Advisor
+                  </span>
+                ) : null}
                 {message.content}
-              </p>
+              </div>
             ))}
-            {loading ? <p className="text-sm text-muted">Typing...</p> : null}
+            {loading ? (
+              <div className="w-fit rounded-2xl rounded-bl-md border border-line bg-elevated px-3.5 py-2.5 text-sm text-muted shadow-sm">
+                Thinking...
+              </div>
+            ) : null}
           </div>
 
-          <div className="flex gap-2 overflow-x-auto border-t border-line px-3 py-3">
+          <div className="flex gap-2 overflow-x-auto border-t border-line bg-elevated px-3 py-3">
             {suggestedQuestions.map((question) => (
               <button
                 key={question}
-                className="shrink-0 rounded-full border border-line bg-surface px-3 py-2 text-xs font-semibold text-muted transition hover:border-accent hover:text-ink"
+                className="shrink-0 rounded-full border border-line bg-surface px-3 py-2 text-xs font-bold text-muted transition hover:border-accent hover:bg-accent/10 hover:text-ink"
                 type="button"
                 onClick={() => void sendMessage(question)}
               >
@@ -138,21 +143,22 @@ export function ChatbotWidget() {
             ))}
           </div>
 
-          <form className="flex gap-2 border-t border-line p-3" onSubmit={handleSubmit}>
+          <form className="flex gap-2 border-t border-line bg-elevated p-3" onSubmit={handleSubmit}>
             <label className="sr-only" htmlFor="chatbot-message">
               Chat message
             </label>
             <input
               id="chatbot-message"
-              className="min-h-11 flex-1 rounded-md border border-line bg-surface px-3 text-sm text-ink"
+              className="min-h-12 flex-1 rounded-2xl border border-line bg-surface px-4 text-sm text-ink placeholder:text-muted/70 transition focus:border-accent focus:ring-2 focus:ring-accent/20"
               value={input}
-              placeholder="Ask about price or warranty"
+              placeholder="Ask QTPhone advisor..."
               onChange={(event) => setInput(event.target.value)}
             />
             <button
-              className="inline-flex h-11 w-11 items-center justify-center rounded-md bg-accent text-white"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-white shadow-cyan transition hover:bg-accentStrong"
               type="submit"
               aria-label="Send chat message"
+              disabled={loading}
             >
               <Send aria-hidden="true" size={17} />
             </button>

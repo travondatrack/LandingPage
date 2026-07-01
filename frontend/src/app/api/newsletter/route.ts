@@ -9,6 +9,12 @@ type NewsletterSubscription = {
   delivery: "webhook" | "local";
 };
 
+type WebhookDelivery = {
+  ok: boolean;
+  status: number;
+  endpoint: string;
+};
+
 const subscriptions: NewsletterSubscription[] = [];
 
 export async function POST(request: NextRequest) {
@@ -32,22 +38,35 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
       delivery: "local"
     };
+    let webhookDelivery: WebhookDelivery | undefined;
 
     const webhookUrl =
-      process.env.NEWSLETTER_WEBHOOK_URL ?? process.env.NEXT_PUBLIC_NEWSLETTER_WEBHOOK_URL;
+      process.env.NEWSLETTER_WEBHOOK_URL ??
+      process.env.WEBHOOK_URL ??
+      process.env.NEXT_PUBLIC_NEWSLETTER_WEBHOOK_URL;
 
     if (webhookUrl) {
+      const webhookSecret = process.env.NEWSLETTER_WEBHOOK_SECRET;
       const response = await fetch(webhookUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(webhookSecret ? { "X-QTPhone-Webhook-Secret": webhookSecret } : {})
+        },
         body: JSON.stringify(subscription)
       });
+      webhookDelivery = {
+        ok: response.ok,
+        status: response.status,
+        endpoint: sanitizeWebhookEndpoint(webhookUrl)
+      };
 
       if (!response.ok) {
         return NextResponse.json(
           {
             ok: false,
             delivery: "webhook",
+            webhook: webhookDelivery,
             message: "Webhook rejected the newsletter submission."
           },
           { status: 502 }
@@ -66,6 +85,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       ok: true,
       delivery: subscription.delivery,
+      webhook: webhookDelivery,
       stored: subscriptions.length
     });
   } catch {
@@ -73,6 +93,15 @@ export async function POST(request: NextRequest) {
       { ok: false, message: "Invalid newsletter payload." },
       { status: 400 }
     );
+  }
+}
+
+function sanitizeWebhookEndpoint(webhookUrl: string) {
+  try {
+    const url = new URL(webhookUrl);
+    return `${url.origin}${url.pathname}`;
+  } catch {
+    return "configured";
   }
 }
 

@@ -3,13 +3,9 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowRight,
-  Star,
-  Zap
-} from "lucide-react";
+import { ArrowRight, Star, Zap } from "lucide-react";
 import type { ProductLoadState } from "@/lib/products";
-import { formatDiscount, formatPrice, formatRating } from "@/lib/format";
+import { formatDiscount, formatPrice, formatRating, getDiscountedPrice } from "@/lib/format";
 
 type HeroSectionProps = {
   productState: ProductLoadState;
@@ -81,7 +77,8 @@ export function HeroSection({ productState }: HeroSectionProps) {
             />
           </h1>
           <p className="mt-5 max-w-2xl text-sm leading-7 text-muted sm:text-base">
-            Experience next-generation titanium engineering, studio optics, and neural architecture. Powered by live external product API data.
+            Experience next-generation titanium engineering, studio optics, and neural architecture.
+            Powered by live external product API data.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <a
@@ -117,7 +114,6 @@ export function HeroSection({ productState }: HeroSectionProps) {
         </div>
 
         <div className="soft-reveal relative">
-
           <div className="premium-panel product-sheen relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-surface/75 backdrop-blur-xl p-4 sm:p-5 shadow-cyanStrong">
             {featured ? (
               <article>
@@ -128,11 +124,14 @@ export function HeroSection({ productState }: HeroSectionProps) {
                       {formatDiscount(featured.discountPercentage)}
                     </span>
                     <span className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-3 py-1 text-xs font-semibold text-ink sm:text-sm">
-                      <Star aria-hidden="true" size={14} className="fill-amber-400 text-amber-400" />
+                      <Star
+                        aria-hidden="true"
+                        size={14}
+                        className="fill-amber-400 text-amber-400"
+                      />
                       {formatRating(featured.rating)}
                     </span>
                   </div>
-
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -170,10 +169,15 @@ export function HeroSection({ productState }: HeroSectionProps) {
                       </div>
                       <div className="rounded-2xl border border-accent/30 bg-accent/10 px-4 py-2.5 text-right sm:py-3 shadow-cyan">
                         <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-                          Flagship Price
+                          Launch Deal
                         </p>
-                        <p className="mt-0.5 text-xl font-black tracking-tight text-accent sm:text-2xl">
+                        <p className="mt-0.5 text-xs font-bold text-muted line-through">
                           {formatPrice(featured.price)}
+                        </p>
+                        <p className="text-xl font-black tracking-tight text-accent sm:text-2xl">
+                          {formatPrice(
+                            getDiscountedPrice(featured.price, featured.discountPercentage)
+                          )}
                         </p>
                       </div>
                     </div>

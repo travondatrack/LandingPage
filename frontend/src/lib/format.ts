@@ -12,6 +12,11 @@ export function formatPrice(value: number) {
   return currencyFormatter.format(value);
 }
 
+export function getDiscountedPrice(price: number, discountPercentage: number) {
+  const normalizedDiscount = Math.min(Math.max(discountPercentage, 0), 100);
+  return Math.round(price * (1 - normalizedDiscount / 100));
+}
+
 export function formatDiscount(value: number) {
   return `${percentFormatter.format(value)}% off`;
 }

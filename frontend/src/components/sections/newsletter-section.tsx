@@ -194,19 +194,21 @@ export function NewsletterSection() {
                 <div className="mt-4 rounded-2xl border border-emerald-500/30 bg-canvas/90 p-4 font-mono text-[11px] text-emerald-400 shadow-inner animate-in fade-in duration-300">
                   <div className="flex items-center justify-between pb-2 border-b border-white/10 mb-2 text-muted">
                     <span>WEBHOOK PAYLOAD INSPECTOR</span>
-                    <span className="text-emerald-400 font-bold">POST /api/newsletter • 200 OK</span>
+                    <span className="text-emerald-400 font-bold">
+                      POST /api/newsletter • 200 OK
+                    </span>
                   </div>
                   <pre className="overflow-x-auto text-ink">
-{JSON.stringify(
-  {
-    event: "VIP_PREORDER_WEBHOOK",
-    deliveryStatus: "DELIVERED",
-    timestamp: new Date().toISOString(),
-    channel: "QTPhone Flagship Webhook"
-  },
-  null,
-  2
-)}
+                    {JSON.stringify(
+                      {
+                        event: "VIP_PREORDER_WEBHOOK",
+                        deliveryStatus: "DELIVERED",
+                        timestamp: new Date().toISOString(),
+                        channel: "QTPhone Flagship Webhook"
+                      },
+                      null,
+                      2
+                    )}
                   </pre>
                 </div>
               )}

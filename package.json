@@ -9,5 +9,11 @@
     "start": "cd frontend && npm run start",
     "lint": "cd frontend && npm run lint",
     "typecheck": "cd frontend && npm run typecheck"
+  },
+  "dependencies": {
+    "@gltf-transform/core": "^4.4.0",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "three": "^0.185.0"
   }
 }

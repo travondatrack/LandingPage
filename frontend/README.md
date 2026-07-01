@@ -20,17 +20,19 @@ Deploy the `frontend` directory as the project root on Vercel.
 Optional environment variables:
 
 - `NEXT_PUBLIC_SITE_URL`: public deployment URL used by metadata.
-- `NEWSLETTER_WEBHOOK_URL`: server-side webhook endpoint for newsletter submissions.
+- `NEWSLETTER_WEBHOOK_URL` or `WEBHOOK_URL`: server-side webhook endpoint for newsletter submissions.
+- `NEWSLETTER_WEBHOOK_SECRET`: optional shared secret sent as `X-QTPhone-Webhook-Secret`.
+- `GROQ_API_KEY` and optional `GROQ_MODEL`: enable Groq-backed chatbot responses. Groq is tried before OpenAI and Gemini.
 - `OPENAI_API_KEY` and optional `OPENAI_MODEL`: enable OpenAI-backed chatbot responses.
 - `GEMINI_API_KEY` and optional `GEMINI_MODEL`: enable Gemini-backed chatbot responses when OpenAI is not configured.
 
 Backend routes included:
 
-- `POST /api/newsletter`: validates email, stores the submission in memory, and forwards to webhook when configured.
+- `POST /api/newsletter`: validates email, stores the submission in memory, and forwards to webhook when configured. The response includes sanitized webhook delivery status when forwarding is active.
 - `GET /api/newsletter`: returns a small in-memory summary of recent validated newsletter submissions for demo evidence.
 - `POST /api/behavior`: stores recent click, scroll, chat, and ecommerce behavior events in memory.
 - `GET /api/behavior`: returns a small in-memory summary of recent behavior events for demo evidence.
-- `POST /api/chat`: returns OpenAI or Gemini product advisory replies when credentials are configured, then falls back to demo replies using live DummyJSON smartphone data.
+- `POST /api/chat`: returns Groq, OpenAI, or Gemini product advisory replies when credentials are configured, then falls back to demo replies using live DummyJSON smartphone data.
 
 The page uses the public DummyJSON endpoint:
 

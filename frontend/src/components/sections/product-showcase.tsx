@@ -21,7 +21,7 @@ import {
   Smartphone,
   CheckCircle2
 } from "lucide-react";
-import { formatDiscount, formatPrice, formatRating } from "@/lib/format";
+import { formatDiscount, formatPrice, formatRating, getDiscountedPrice } from "@/lib/format";
 import { trackBehavior } from "@/lib/behavior";
 import type { ProductLoadState, SmartphoneProduct } from "@/lib/products";
 
@@ -74,13 +74,13 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
   const [favoriteIds, setFavoriteIds] = useStoredIds("qtphone-favorites");
   const [cartIds, setCartIds] = useStoredIds("qtphone-cart");
   const [compareIds, setCompareIds] = useStoredIds("qtphone-compare");
-  
+
   const [activeMainTab, setActiveMainTab] = useState<MainTab>("collection");
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortMode, setSortMode] = useState<SortMode>("recommended");
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   const [quickViewProduct, setQuickViewProduct] = useState<SmartphoneProduct | null>(null);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -140,9 +140,15 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
   );
 
   const cartTotal = useMemo(
+    () =>
+      cartProducts.reduce((sum, p) => sum + getDiscountedPrice(p.price, p.discountPercentage), 0),
+    [cartProducts]
+  );
+  const cartOriginalTotal = useMemo(
     () => cartProducts.reduce((sum, p) => sum + p.price, 0),
     [cartProducts]
   );
+  const cartSavings = cartOriginalTotal - cartTotal;
 
   const categories = useMemo(() => {
     return [
@@ -169,8 +175,10 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
     }
 
     return next.sort((a, b) => {
-      if (sortMode === "price-low") return a.price - b.price;
-      if (sortMode === "price-high") return b.price - a.price;
+      const discountedA = getDiscountedPrice(a.price, a.discountPercentage);
+      const discountedB = getDiscountedPrice(b.price, b.discountPercentage);
+      if (sortMode === "price-low") return discountedA - discountedB;
+      if (sortMode === "price-high") return discountedB - discountedA;
       if (sortMode === "rating") return b.rating - a.rating;
       return 0;
     });
@@ -205,7 +213,9 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
 
   function handleFavoriteToggle(product: SmartphoneProduct) {
     const isFav = favoriteIds.includes(product.id);
-    const nextIds = isFav ? favoriteIds.filter((id) => id !== product.id) : [...favoriteIds, product.id];
+    const nextIds = isFav
+      ? favoriteIds.filter((id) => id !== product.id)
+      : [...favoriteIds, product.id];
     setFavoriteIds(nextIds);
     if (!isFav) {
       showToast(`Added "${product.name}" to VIP Favorites`);
@@ -229,7 +239,9 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
 
   function handleCompareToggle(product: SmartphoneProduct) {
     const isComp = compareIds.includes(product.id);
-    const nextIds = isComp ? compareIds.filter((id) => id !== product.id) : [...compareIds, product.id];
+    const nextIds = isComp
+      ? compareIds.filter((id) => id !== product.id)
+      : [...compareIds, product.id];
     setCompareIds(nextIds.slice(0, 4));
     if (!isComp) {
       showToast(`Added "${product.name}" to Comparison Bar`);
@@ -261,7 +273,11 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
             transition={{ duration: 0.25 }}
             className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 rounded-full border border-accent/50 bg-elevated/95 px-5 py-3 text-xs sm:text-sm font-bold text-ink shadow-cyanStrong backdrop-blur-xl"
           >
-            <Sparkles size={16} className="text-accent shrink-0 animate-spin" style={{ animationDuration: "3s" }} />
+            <Sparkles
+              size={16}
+              className="text-accent shrink-0 animate-spin"
+              style={{ animationDuration: "3s" }}
+            />
             <span>{toastMessage}</span>
           </motion.div>
         ) : null}
@@ -284,7 +300,8 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
           </div>
 
           <p className="max-w-md text-sm leading-6 text-muted">
-            Experience precision engineering, aerospace titanium craftsmanship, and revolutionary neural intelligence across our flagship collection.
+            Experience precision engineering, aerospace titanium craftsmanship, and revolutionary
+            neural intelligence across our flagship collection.
           </p>
         </div>
 
@@ -304,7 +321,9 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
           >
             <Smartphone size={16} />
             <span>Flagship Collection</span>
-            <span className={`ml-1 rounded-full px-2 py-0.5 text-[10px] ${activeMainTab === "collection" ? "bg-white/20 text-white" : "bg-elevated text-muted"}`}>
+            <span
+              className={`ml-1 rounded-full px-2 py-0.5 text-[10px] ${activeMainTab === "collection" ? "bg-white/20 text-white" : "bg-elevated text-muted"}`}
+            >
               {products.length}
             </span>
           </button>
@@ -489,9 +508,13 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                   {totalPages > 1 ? (
                     <div className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-elevated/60 px-6 py-4 backdrop-blur-md">
                       <p className="text-xs font-bold text-muted">
-                        Showing <span className="text-ink">{(currentPage - 1) * PAGE_SIZE + 1}</span> -{" "}
-                        <span className="text-ink">{Math.min(currentPage * PAGE_SIZE, visibleProducts.length)}</span> of{" "}
-                        <span className="text-ink">{visibleProducts.length}</span> flagship models
+                        Showing{" "}
+                        <span className="text-ink">{(currentPage - 1) * PAGE_SIZE + 1}</span> -{" "}
+                        <span className="text-ink">
+                          {Math.min(currentPage * PAGE_SIZE, visibleProducts.length)}
+                        </span>{" "}
+                        of <span className="text-ink">{visibleProducts.length}</span> flagship
+                        models
                       </p>
 
                       <div className="flex items-center gap-1.5">
@@ -544,7 +567,8 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                 <Heart size={44} className="mx-auto text-pink-400/40" />
                 <h3 className="mt-4 text-xl font-extrabold text-ink">No saved VIP Favorites yet</h3>
                 <p className="mt-2 text-sm text-muted max-w-md mx-auto">
-                  Click the heart icon on any flagship smartphone to save it to your personal wishlist.
+                  Click the heart icon on any flagship smartphone to save it to your personal
+                  wishlist.
                 </p>
                 <button
                   type="button"
@@ -586,9 +610,12 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
             {cartProducts.length === 0 ? (
               <div className="rounded-[2rem] border border-white/10 bg-elevated/70 p-16 text-center backdrop-blur-xl">
                 <ShoppingBag size={44} className="mx-auto text-emerald-400/40" />
-                <h3 className="mt-4 text-xl font-extrabold text-ink">Your Shopping Cart is empty</h3>
+                <h3 className="mt-4 text-xl font-extrabold text-ink">
+                  Your Shopping Cart is empty
+                </h3>
                 <p className="mt-2 text-sm text-muted max-w-md mx-auto">
-                  Select flagship devices from the collection to claim exclusive online VIP packages.
+                  Select flagship devices from the collection to claim exclusive online VIP
+                  packages.
                 </p>
                 <button
                   type="button"
@@ -608,7 +635,12 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                     >
                       <div className="flex items-center gap-4 w-full sm:w-auto">
                         <div className="relative h-20 w-24 shrink-0 rounded-xl bg-surface p-2">
-                          <Image src={product.image} alt={product.name} fill className="object-contain p-1" />
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            fill
+                            className="object-contain p-1"
+                          />
                         </div>
                         <div>
                           <span className="text-[11px] font-bold uppercase tracking-wider text-accent">
@@ -620,8 +652,8 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                       </div>
 
                       <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-line">
-                        <span className="text-lg font-black text-ink">{formatPrice(product.price)}</span>
-                        
+                        <PriceStack product={product} align="right" compact />
+
                         <button
                           type="button"
                           onClick={() => handleCartToggle(product)}
@@ -643,6 +675,18 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
 
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between text-muted">
+                      <span>Original Subtotal</span>
+                      <span className="font-bold text-muted line-through">
+                        {formatPrice(cartOriginalTotal)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-muted">
+                      <span>Discount Savings</span>
+                      <span className="font-extrabold text-emerald-400">
+                        -{formatPrice(cartSavings)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-muted">
                       <span>Selected Items ({cartProducts.length})</span>
                       <span className="font-bold text-ink">{formatPrice(cartTotal)}</span>
                     </div>
@@ -658,7 +702,9 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
 
                   <div className="border-t border-line pt-4 flex justify-between items-baseline">
                     <span className="font-bold text-ink">Total Due</span>
-                    <span className="text-2xl font-black text-accent">{formatPrice(cartTotal)}</span>
+                    <span className="text-2xl font-black text-accent">
+                      {formatPrice(cartTotal)}
+                    </span>
                   </div>
 
                   <button
@@ -754,7 +800,9 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
               <div className="flex items-center justify-between border-b border-line/70 pb-4">
                 <div className="flex items-center gap-2">
                   <GitCompare className="text-accent" size={20} />
-                  <h3 className="text-xl font-extrabold text-ink">Side-by-Side Hardware Comparison</h3>
+                  <h3 className="text-xl font-extrabold text-ink">
+                    Side-by-Side Hardware Comparison
+                  </h3>
                 </div>
                 <button
                   type="button"
@@ -776,7 +824,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                             <Image src={p.image} alt={p.name} fill className="object-contain" />
                           </div>
                           <p className="mt-2 font-bold text-ink">{p.name}</p>
-                          <p className="text-accent font-extrabold mt-0.5">{formatPrice(p.price)}</p>
+                          <PriceStack product={p} align="center" compact />
                         </th>
                       ))}
                     </tr>
@@ -785,31 +833,41 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                     <tr>
                       <td className="p-3 font-bold text-muted">Processor</td>
                       {comparedProducts.map((p) => (
-                        <td key={p.id} className="p-3 text-center text-ink font-medium">{p.processor}</td>
+                        <td key={p.id} className="p-3 text-center text-ink font-medium">
+                          {p.processor}
+                        </td>
                       ))}
                     </tr>
                     <tr>
                       <td className="p-3 font-bold text-muted">Display</td>
                       {comparedProducts.map((p) => (
-                        <td key={p.id} className="p-3 text-center text-ink font-medium">{p.display}</td>
+                        <td key={p.id} className="p-3 text-center text-ink font-medium">
+                          {p.display}
+                        </td>
                       ))}
                     </tr>
                     <tr>
                       <td className="p-3 font-bold text-muted">Camera System</td>
                       {comparedProducts.map((p) => (
-                        <td key={p.id} className="p-3 text-center text-ink font-medium">{p.camera}</td>
+                        <td key={p.id} className="p-3 text-center text-ink font-medium">
+                          {p.camera}
+                        </td>
                       ))}
                     </tr>
                     <tr>
                       <td className="p-3 font-bold text-muted">Battery & Charge</td>
                       {comparedProducts.map((p) => (
-                        <td key={p.id} className="p-3 text-center text-ink font-medium">{p.battery}</td>
+                        <td key={p.id} className="p-3 text-center text-ink font-medium">
+                          {p.battery}
+                        </td>
                       ))}
                     </tr>
                     <tr>
                       <td className="p-3 font-bold text-muted">Rating</td>
                       {comparedProducts.map((p) => (
-                        <td key={p.id} className="p-3 text-center font-bold text-amber-400">★ {formatRating(p.rating)}</td>
+                        <td key={p.id} className="p-3 text-center font-bold text-amber-400">
+                          ★ {formatRating(p.rating)}
+                        </td>
                       ))}
                     </tr>
                   </tbody>
@@ -877,9 +935,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
 
                       {/* Meta row */}
                       <div className="flex items-baseline justify-between gap-3 mt-3 flex-wrap">
-                        <span className="text-2xl font-black text-ink">
-                          {formatPrice(quickViewProduct.price)}
-                        </span>
+                        <PriceStack product={quickViewProduct} />
                         <div className="flex items-center gap-2">
                           <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 text-xs font-bold text-amber-500">
                             <Star size={13} className="fill-amber-400 text-amber-400" />
@@ -899,20 +955,36 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                       {/* 4 compact specification chips */}
                       <div className="grid grid-cols-2 gap-2.5 mt-4 min-w-0">
                         <div className="rounded-xl border border-line/60 bg-surface/80 p-3 min-w-0">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent block">Brand</span>
-                          <p className="mt-0.5 text-xs font-extrabold text-ink truncate">{quickViewProduct.brand}</p>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent block">
+                            Brand
+                          </span>
+                          <p className="mt-0.5 text-xs font-extrabold text-ink truncate">
+                            {quickViewProduct.brand}
+                          </p>
                         </div>
                         <div className="rounded-xl border border-line/60 bg-surface/80 p-3 min-w-0">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent block">Category</span>
-                          <p className="mt-0.5 text-xs font-extrabold text-ink truncate">Flagship Smartphone</p>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent block">
+                            Category
+                          </span>
+                          <p className="mt-0.5 text-xs font-extrabold text-ink truncate">
+                            Flagship Smartphone
+                          </p>
                         </div>
                         <div className="rounded-xl border border-line/60 bg-surface/80 p-3 min-w-0">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent block">Rating</span>
-                          <p className="mt-0.5 text-xs font-extrabold text-ink truncate">Tier-1 Neural Device</p>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent block">
+                            Rating
+                          </span>
+                          <p className="mt-0.5 text-xs font-extrabold text-ink truncate">
+                            Tier-1 Neural Device
+                          </p>
                         </div>
                         <div className="rounded-xl border border-line/60 bg-surface/80 p-3 min-w-0">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent block">Warranty</span>
-                          <p className="mt-0.5 text-xs font-extrabold text-ink truncate">Official VIP Care</p>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent block">
+                            Warranty
+                          </span>
+                          <p className="mt-0.5 text-xs font-extrabold text-ink truncate">
+                            Official VIP Care
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -926,7 +998,11 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                           className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-accent py-3.5 text-xs sm:text-sm font-extrabold text-white shadow-cyan hover:bg-accent/90 transition transform active:scale-98"
                         >
                           <ShoppingBag size={17} />
-                          <span>{cartIds.includes(quickViewProduct.id) ? "Remove from Cart" : "Add to Cart"}</span>
+                          <span>
+                            {cartIds.includes(quickViewProduct.id)
+                              ? "Remove from Cart"
+                              : "Add to Cart"}
+                          </span>
                         </button>
                         <button
                           type="button"
@@ -938,7 +1014,12 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                               : "border-line bg-surface/90 text-muted hover:border-pink-500/50 hover:text-ink"
                           }`}
                         >
-                          <Heart size={18} className={favoriteIds.includes(quickViewProduct.id) ? "fill-current" : ""} />
+                          <Heart
+                            size={18}
+                            className={
+                              favoriteIds.includes(quickViewProduct.id) ? "fill-current" : ""
+                            }
+                          />
                         </button>
                       </div>
                     </div>
@@ -1020,9 +1101,7 @@ function ProductCardItem({
 
       <div className="mt-5 pt-3.5 border-t border-line/60">
         <div className="flex items-baseline justify-between">
-          <span className="text-xl font-black tracking-tight text-ink">
-            {formatPrice(product.price)}
-          </span>
+          <PriceStack product={product} compact />
           <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-400">
             <Star size={14} className="fill-current" />
             {formatRating(product.rating)}
@@ -1070,6 +1149,44 @@ function ProductCardItem({
   );
 }
 
+function PriceStack({
+  product,
+  align = "left",
+  compact = false
+}: {
+  product: SmartphoneProduct;
+  align?: "left" | "center" | "right";
+  compact?: boolean;
+}) {
+  const discountedPrice = getDiscountedPrice(product.price, product.discountPercentage);
+  const alignmentClass =
+    align === "right"
+      ? "items-end text-right"
+      : align === "center"
+        ? "items-center text-center"
+        : "items-start";
+
+  return (
+    <div className={`flex flex-col ${alignmentClass}`}>
+      <div className="flex flex-wrap items-center gap-2">
+        <span
+          className={`font-black tracking-tight text-accent ${
+            compact ? "text-lg" : "text-2xl md:text-3xl"
+          }`}
+        >
+          {formatPrice(discountedPrice)}
+        </span>
+        <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-extrabold text-accent">
+          {formatDiscount(product.discountPercentage)}
+        </span>
+      </div>
+      <span className={`${compact ? "text-xs" : "text-sm"} font-bold text-muted line-through`}>
+        {formatPrice(product.price)}
+      </span>
+    </div>
+  );
+}
+
 function useStoredIds(key: string) {
   const [ids, setIds] = useState<number[]>([]);
 
@@ -1112,4 +1229,3 @@ function ProductSkeletonGrid() {
     </div>
   );
 }
-

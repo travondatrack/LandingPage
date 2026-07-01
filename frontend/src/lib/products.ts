@@ -90,7 +90,8 @@ const QTPHONE_MODELS = [
     camera: "200MP Quad Matrix Optics + Leica Studio Lens",
     display: '6.82" 1Hz-144Hz 2K LTPO SuperAMOLED',
     battery: "5600mAh + 120W HyperCharge",
-    description: "Crafted with aerospace-grade titanium chassis and neural imaging processing. Delivers peerless photography with its 200MP Quad Matrix optics and all-day 5600mAh endurance."
+    description:
+      "Crafted with aerospace-grade titanium chassis and neural imaging processing. Delivers peerless photography with its 200MP Quad Matrix optics and all-day 5600mAh endurance."
   },
   {
     title: "QTPhone 16 Pro Cyber Edition",
@@ -98,7 +99,8 @@ const QTPHONE_MODELS = [
     camera: "48MP Pro Telephoto Matrix + Photonic Engine",
     display: '6.7" ProMotion XDR Retina OLED 120Hz',
     battery: "5200mAh + 90W FlashCharge",
-    description: "Engineered for futuristic aesthetic lovers and extreme mobile gaming. Featuring next-gen 3nm neural architecture, custom vapor cooling, and 120Hz ProMotion display."
+    description:
+      "Engineered for futuristic aesthetic lovers and extreme mobile gaming. Featuring next-gen 3nm neural architecture, custom vapor cooling, and 120Hz ProMotion display."
   },
   {
     title: "QTPhone Fold Apex 5G",
@@ -106,7 +108,8 @@ const QTPHONE_MODELS = [
     camera: "64MP Ultra-Wide FlexCam System + OIS",
     display: '7.9" Seamless Foldable Dynamic AMOLED 2X',
     battery: "5000mAh Dual-Cell Silicon Carbon",
-    description: "The pinnacle of foldable smartphone engineering. Seamless zero-gap hinge mechanism paired with dual-screen productivity and revolutionary 64MP Ultra-Wide FlexCam optics."
+    description:
+      "The pinnacle of foldable smartphone engineering. Seamless zero-gap hinge mechanism paired with dual-screen productivity and revolutionary 64MP Ultra-Wide FlexCam optics."
   },
   {
     title: "QTPhone Air Slim GT",
@@ -114,7 +117,8 @@ const QTPHONE_MODELS = [
     camera: "50MP Sony IMX989 Studio Optics",
     display: '6.55" Zero-Bezel FlowAMOLED 144Hz',
     battery: "4800mAh + 67W TurboCharge",
-    description: "Impossibly thin profile without compromising flagship power. Equipped with Dimensity 9300 architecture, studio acoustics, and a stunning 144Hz FlowAMOLED display."
+    description:
+      "Impossibly thin profile without compromising flagship power. Equipped with Dimensity 9300 architecture, studio acoustics, and a stunning 144Hz FlowAMOLED display."
   },
   {
     title: "QTPhone 15 Pro Quantum",
@@ -122,7 +126,8 @@ const QTPHONE_MODELS = [
     camera: "50MP AI Cinematic Portrait System",
     display: '6.7" Super Actua LTPO OLED HDR10+',
     battery: "5100mAh Wireless Reverse Charge",
-    description: "Powered by advanced neural AI processing for real-time live voice translation, generative photo studio tools, and cinematic 8K video recording."
+    description:
+      "Powered by advanced neural AI processing for real-time live voice translation, generative photo studio tools, and cinematic 8K video recording."
   },
   {
     title: "QTPhone Nova X AI Studio",
@@ -130,7 +135,8 @@ const QTPHONE_MODELS = [
     camera: "108MP Dual-Aperture Telephoto Pro System",
     display: '6.67" 120Hz Ultra-Bright 3000-Nit OLED',
     battery: "5000mAh Marathon Power Profile",
-    description: "Designed specifically for creators and studio photographers with dual-aperture 108MP sensors, AI lighting correction, and a marathon 3000-nit ultra-bright OLED display."
+    description:
+      "Designed specifically for creators and studio photographers with dual-aperture 108MP sensors, AI lighting correction, and a marathon 3000-nit ultra-bright OLED display."
   }
 ];
 
@@ -174,7 +180,10 @@ export async function fetchSmartphones(signal?: AbortSignal): Promise<Smartphone
   return data.products.map((product, index) => normalizeSmartphoneProduct(product, index));
 }
 
-export function normalizeSmartphoneProduct(product: DummyJsonProduct, index = 0): SmartphoneProduct {
+export function normalizeSmartphoneProduct(
+  product: DummyJsonProduct,
+  index = 0
+): SmartphoneProduct {
   const dimensions = product.dimensions
     ? `${product.dimensions.width} x ${product.dimensions.height} x ${product.dimensions.depth} cm`
     : "7.8 x 16.2 x 0.82 cm";

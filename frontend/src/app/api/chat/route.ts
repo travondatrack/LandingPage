@@ -5,8 +5,11 @@ import type { SmartphoneProduct } from "@/lib/products";
 
 type ChatProviderResult = {
   reply: string;
-  provider: "openai" | "gemini" | "demo";
+  provider: "groq" | "openai" | "gemini" | "demo";
 };
+
+const SYSTEM_INSTRUCTIONS =
+  "You are QTPhone advisor. Reply in the same language as the shopper. For QTPhone, smartphone, pricing, specs, warranty, shipping, discount, favorites, cart, or catalog questions, use the provided catalog context and do not invent missing product facts. For other general questions, answer normally and concisely as a helpful assistant. If the shopper asks for current date or time, use the provided runtime context. Keep replies premium, friendly, and under 120 words.";
 
 export async function POST(request: NextRequest) {
   const body = (await request.json()) as { message?: string };
@@ -47,6 +50,14 @@ async function getConfiguredProviderReply(
   message: string,
   products: SmartphoneProduct[]
 ): Promise<ChatProviderResult | null> {
+  if (process.env.GROQ_API_KEY) {
+    const reply = await callGroq(message, products);
+
+    if (reply) {
+      return { reply, provider: "groq" };
+    }
+  }
+
   if (process.env.OPENAI_API_KEY) {
     const reply = await callOpenAI(message, products);
 
@@ -66,6 +77,47 @@ async function getConfiguredProviderReply(
   return null;
 }
 
+async function callGroq(message: string, products: SmartphoneProduct[]) {
+  try {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: process.env.GROQ_MODEL ?? "llama-3.1-8b-instant",
+        messages: [
+          {
+            role: "system",
+            content: SYSTEM_INSTRUCTIONS
+          },
+          {
+            role: "user",
+            content: `${buildRuntimeContext()}\n\nCatalog context:\n${buildCatalogContext(
+              products
+            )}\n\nQuestion: ${message}`
+          }
+        ],
+        max_tokens: 180,
+        temperature: 0.35
+      })
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = (await response.json()) as {
+      choices?: Array<{ message?: { content?: string } }>;
+    };
+
+    return data.choices?.[0]?.message?.content?.trim() || null;
+  } catch {
+    return null;
+  }
+}
+
 async function callOpenAI(message: string, products: SmartphoneProduct[]) {
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -79,12 +131,13 @@ async function callOpenAI(message: string, products: SmartphoneProduct[]) {
         messages: [
           {
             role: "system",
-            content:
-              "You are a concise smartphone landing-page product assistant. Answer from the provided catalog context only. If information is missing, say what the shopper can inspect on the page."
+            content: SYSTEM_INSTRUCTIONS
           },
           {
             role: "user",
-            content: `Catalog context:\n${buildCatalogContext(products)}\n\nQuestion: ${message}`
+            content: `${buildRuntimeContext()}\n\nCatalog context:\n${buildCatalogContext(
+              products
+            )}\n\nQuestion: ${message}`
           }
         ],
         max_tokens: 180,
@@ -119,7 +172,7 @@ async function callGemini(message: string, products: SmartphoneProduct[]) {
             {
               parts: [
                 {
-                  text: `You are a concise smartphone landing-page product assistant. Answer from this catalog context only.\n\n${buildCatalogContext(
+                  text: `${SYSTEM_INSTRUCTIONS}\n\n${buildRuntimeContext()}\n\nCatalog context:\n${buildCatalogContext(
                     products
                   )}\n\nQuestion: ${message}`
                 }
@@ -146,6 +199,18 @@ async function callGemini(message: string, products: SmartphoneProduct[]) {
   } catch {
     return null;
   }
+}
+
+function buildRuntimeContext() {
+  const now = new Date();
+  const timeZone = "Asia/Ho_Chi_Minh";
+  const localDateTime = new Intl.DateTimeFormat("vi-VN", {
+    timeZone,
+    dateStyle: "full",
+    timeStyle: "medium"
+  }).format(now);
+
+  return `Runtime context:\n- Current UTC time: ${now.toISOString()}\n- Current local time (${timeZone}): ${localDateTime}`;
 }
 
 function buildCatalogContext(products: SmartphoneProduct[]) {
