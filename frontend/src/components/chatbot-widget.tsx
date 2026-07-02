@@ -82,11 +82,10 @@ export function ChatbotWidget() {
   return (
     <div className="fixed bottom-4 right-4 z-40 flex max-w-[calc(100vw-2rem)] flex-col items-end gap-3 sm:bottom-5 sm:right-5">
       {open ? (
-        <section className="w-[min(91vw,380px)] overflow-hidden rounded-2xl border border-accent/20 bg-elevated/95 shadow-cyanStrong backdrop-blur-xl sm:w-[min(92vw,400px)]">
+        <section className="w-[min(91vw,380px)] overflow-hidden rounded-2xl border border-line bg-white/95 shadow-[0_22px_60px_rgb(15_23_42/0.16)] backdrop-blur-xl sm:w-[min(92vw,400px)]">
           <div className="relative overflow-hidden border-b border-line px-4 py-4">
-            <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgb(var(--color-accent)/0.18),transparent_55%)]" />
             <div className="flex items-center gap-2">
-              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-accent text-white shadow-cyan">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-accent text-white shadow-sm">
                 <Bot aria-hidden="true" size={18} />
               </span>
               <div>
@@ -104,14 +103,14 @@ export function ChatbotWidget() {
             </button>
           </div>
 
-          <div className="flex max-h-72 flex-col gap-3 overflow-y-auto bg-surface/35 px-4 py-4 sm:max-h-80">
+          <div className="flex max-h-72 flex-col gap-3 overflow-y-auto bg-canvas/70 px-4 py-4 sm:max-h-80">
             {messages.map((message, index) => (
               <div
                 key={`${message.role}-${index}`}
                 className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm leading-6 shadow-sm ${
                   message.role === "user"
                     ? "ml-auto rounded-br-md bg-accent text-white"
-                    : "rounded-bl-md border border-line bg-elevated text-muted"
+                    : "rounded-bl-md border border-line bg-white text-muted"
                 }`}
               >
                 {message.role === "assistant" ? (
@@ -124,13 +123,13 @@ export function ChatbotWidget() {
               </div>
             ))}
             {loading ? (
-              <div className="w-fit rounded-2xl rounded-bl-md border border-line bg-elevated px-3.5 py-2.5 text-sm text-muted shadow-sm">
+              <div className="w-fit rounded-2xl rounded-bl-md border border-line bg-white px-3.5 py-2.5 text-sm text-muted shadow-sm">
                 Thinking...
               </div>
             ) : null}
           </div>
 
-          <div className="flex gap-2 overflow-x-auto border-t border-line bg-elevated px-3 py-3">
+          <div className="flex gap-2 overflow-x-auto border-t border-line bg-white px-3 py-3">
             {suggestedQuestions.map((question) => (
               <button
                 key={question}
@@ -143,7 +142,7 @@ export function ChatbotWidget() {
             ))}
           </div>
 
-          <form className="flex gap-2 border-t border-line bg-elevated p-3" onSubmit={handleSubmit}>
+          <form className="flex gap-2 border-t border-line bg-white p-3" onSubmit={handleSubmit}>
             <label className="sr-only" htmlFor="chatbot-message">
               Chat message
             </label>
@@ -155,7 +154,7 @@ export function ChatbotWidget() {
               onChange={(event) => setInput(event.target.value)}
             />
             <button
-              className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-white shadow-cyan transition hover:bg-accentStrong"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-white shadow-sm transition hover:bg-accentStrong"
               type="submit"
               aria-label="Send chat message"
               disabled={loading}

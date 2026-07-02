@@ -50,17 +50,16 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
   return (
     <section
       id="story"
-      className="relative isolate overflow-hidden bg-surface py-14 sm:py-20 border-t border-line/70"
+      className="relative isolate overflow-hidden border-t border-line/70 bg-white py-16 sm:py-24"
       aria-labelledby="story-title"
     >
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:28px_28px]" />
-      <div className="absolute top-1/2 right-10 -z-10 h-[420px] w-[420px] -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(56,189,248,0.18),transparent_70%)] blur-3xl pointer-events-none" />
+      <div className="absolute right-10 top-1/2 -z-10 h-[360px] w-[360px] -translate-y-1/2 rounded-full bg-accent/8 blur-3xl pointer-events-none" />
 
       <div className="mx-auto max-w-content px-5">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:min-h-[560px] lg:max-h-[80vh] lg:items-center">
           {/* Header Block: Order 1 on Mobile & Desktop Col 1 Row 1 */}
           <div className="order-1 flex flex-col lg:col-start-1 lg:row-start-1">
-            <div className="inline-flex w-max items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-accent shadow-2xs">
+            <div className="inline-flex w-max items-center gap-2 rounded-full border border-accent/20 bg-elevated px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-accent shadow-sm">
               <Sparkles size={14} />
               <span>QTPhone Philosophy</span>
             </div>
@@ -80,7 +79,7 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
 
           {/* Product Glass Visual Card: Order 2 on Mobile & Desktop Col 2 Row 1-2 */}
           <div className="order-2 lg:col-start-2 lg:row-span-2 lg:self-center">
-            <div className="premium-panel relative overflow-hidden rounded-[2rem] border border-white/15 bg-surface/85 p-6 sm:p-7 backdrop-blur-2xl shadow-cyanStrong">
+            <div className="premium-panel relative overflow-hidden rounded-2xl bg-white/88 p-6 shadow-[0_24px_70px_rgb(15_23_42/0.1)] backdrop-blur-xl sm:p-7">
               <div className="flex items-center justify-between border-b border-line/60 pb-3.5">
                 <div className="flex items-center gap-2">
                   <span className="h-2.5 w-2.5 rounded-full bg-accent animate-pulse" />
@@ -88,7 +87,7 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
                     Product Detail
                   </span>
                 </div>
-                <span className="rounded-full border border-accent/40 bg-accent/15 px-3 py-0.5 text-[11px] font-extrabold text-accent">
+                <span className="rounded-full border border-accent/20 bg-accent/10 px-3 py-0.5 text-[11px] font-extrabold text-accent">
                   {currentStory.badge}
                 </span>
               </div>
@@ -100,7 +99,7 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.96 }}
                   transition={{ duration: 0.35, ease: "easeOut" }}
-                  className="relative mt-5 aspect-[4/3] overflow-hidden rounded-[1.5rem] border border-white/10 bg-[radial-gradient(ellipse_at_center,rgb(var(--color-accent)/0.18),transparent_75%)] bg-elevated sm:aspect-[16/10]"
+                  className="relative mt-5 aspect-[4/3] overflow-hidden rounded-2xl border border-line/70 bg-[linear-gradient(135deg,#FFFFFF,#EAF6FF)] sm:aspect-[16/10]"
                 >
                   {activeProduct ? (
                     <motion.div
@@ -114,7 +113,7 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
                         fill
                         priority
                         sizes="(min-width: 1024px) 480px, 90vw"
-                        className="object-contain p-4 drop-shadow-[0_16px_30px_rgba(56,189,248,0.28)]"
+                        className="object-contain p-4 drop-shadow-[0_16px_28px_rgb(15_23_42/0.14)]"
                       />
                     </motion.div>
                   ) : (
@@ -132,7 +131,7 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.3 }}
-                  className="mt-5 rounded-xl border border-accent/30 bg-[linear-gradient(135deg,rgb(var(--color-accent)/0.12),transparent)] p-4 shadow-inner"
+                  className="mt-5 rounded-xl border border-line/70 bg-elevated/75 p-4"
                 >
                   <p className="text-[11px] font-bold uppercase tracking-widest text-accent">
                     {currentStory.highlightLabel}
@@ -163,8 +162,8 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
                     onClick={() => setActiveStep(index)}
                     className={`rounded-full px-5 py-2.5 text-xs sm:text-sm font-bold tracking-wide transition-all duration-300 ${
                       isActive
-                        ? "bg-accent text-white shadow-cyan border border-accent scale-105"
-                        : "bg-elevated/80 text-muted hover:text-ink hover:bg-surface border border-line/80"
+                        ? "bg-accent text-white shadow-[0_12px_28px_rgb(var(--color-accent)/0.2)] border border-accent scale-105"
+                        : "bg-white text-muted hover:text-ink hover:bg-elevated border border-line/80"
                     }`}
                   >
                     {step.tabLabel}
@@ -182,7 +181,7 @@ export function BrandStorySection({ productState }: BrandStorySectionProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.35, ease: "easeOut" }}
-                  className="rounded-2xl border border-white/10 bg-elevated/60 p-5 sm:p-6 backdrop-blur-md shadow-sm"
+                  className="rounded-2xl border border-line/70 bg-white p-5 shadow-sm sm:p-6"
                 >
                   <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-accent">
                     <StepIcon size={16} />

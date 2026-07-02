@@ -78,17 +78,15 @@ export function NewsletterSection() {
   return (
     <section
       id="newsletter"
-      className="relative isolate overflow-hidden bg-[radial-gradient(ellipse_80%_60%_at_50%_50%,rgba(0,119,182,0.12),transparent)] bg-surface border-t border-line/80 py-20 sm:py-24"
+      className="relative isolate overflow-hidden border-t border-line/80 bg-white py-20 sm:py-24"
     >
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px]" />
+      <div className="mx-auto max-w-content px-4 sm:px-5">
+        <div className="relative min-w-0 overflow-hidden rounded-2xl border border-line bg-elevated p-5 shadow-[0_24px_70px_rgb(15_23_42/0.08)] sm:p-12 lg:p-16">
+          <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-[min(24rem,92vw)] rounded-full bg-white/80 blur-3xl sm:h-96 sm:w-96" />
 
-      <div className="mx-auto max-w-content px-5">
-        <div className="relative overflow-hidden rounded-[2.5rem] border border-accent/30 bg-elevated/90 p-8 sm:p-12 lg:p-16 shadow-xl backdrop-blur">
-          <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-accent/15 blur-3xl pointer-events-none" />
-
-          <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
-            <div className="soft-reveal">
-              <div className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3.5 py-1.5 text-xs font-bold text-accent shadow-2xs">
+          <div className="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
+            <div className="soft-reveal min-w-0">
+              <div className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-white px-3.5 py-1.5 text-xs font-bold text-accent shadow-sm">
                 <Sparkles size={14} />
                 <span>Instant VIP Access</span>
               </div>
@@ -102,7 +100,7 @@ export function NewsletterSection() {
             </div>
 
             <form
-              className="rounded-3xl border border-line bg-surface/90 p-6 sm:p-8 shadow-md backdrop-blur relative z-10"
+              className="relative z-10 min-w-0 rounded-2xl border border-line bg-white p-4 shadow-[0_18px_45px_rgb(15_23_42/0.08)] sm:p-8"
               onSubmit={handleSubmit(onSubmit)}
               noValidate
             >
@@ -114,7 +112,7 @@ export function NewsletterSection() {
                 <span>Your Email Address</span>
               </label>
               <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-                <div className="relative flex-1">
+                <div className="relative min-w-0 flex-1">
                   <Mail
                     aria-hidden="true"
                     className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted"
@@ -122,7 +120,7 @@ export function NewsletterSection() {
                   />
                   <input
                     id="newsletter-email"
-                    className="min-h-[3.25rem] w-full rounded-2xl border border-line bg-canvas py-3.5 pl-12 pr-4 text-sm text-ink placeholder:text-muted/75 transition focus:border-accent focus:ring-2 focus:ring-accent/20"
+                    className="min-h-[3.25rem] w-full rounded-2xl border border-line bg-white py-3.5 pl-12 pr-4 text-sm text-ink placeholder:text-muted/75 transition focus:border-accent focus:ring-2 focus:ring-accent/20"
                     type="email"
                     placeholder="name@example.com"
                     disabled={isSubmitting || submitState === "success"}
@@ -132,7 +130,7 @@ export function NewsletterSection() {
                   />
                 </div>
                 <button
-                  className={`inline-flex min-h-[3.25rem] shrink-0 items-center justify-center gap-2 rounded-2xl px-6 text-sm font-bold text-white shadow-sm transition disabled:cursor-not-allowed ${
+                  className={`inline-flex min-h-[3.25rem] items-center justify-center gap-2 rounded-2xl px-5 text-sm font-bold text-white shadow-[0_14px_30px_rgb(var(--color-accent)/0.18)] transition disabled:cursor-not-allowed sm:shrink-0 sm:px-6 ${
                     submitState === "success"
                       ? "bg-emerald-600 hover:bg-emerald-700"
                       : "bg-accent hover:bg-accent/90"
@@ -191,8 +189,8 @@ export function NewsletterSection() {
               </p>
 
               {submitState === "success" && (
-                <div className="mt-4 rounded-2xl border border-emerald-500/30 bg-canvas/90 p-4 font-mono text-[11px] text-emerald-400 shadow-inner animate-in fade-in duration-300">
-                  <div className="flex items-center justify-between pb-2 border-b border-white/10 mb-2 text-muted">
+                <div className="mt-4 min-w-0 rounded-2xl border border-emerald-500/30 bg-canvas/90 p-4 font-mono text-[11px] text-emerald-400 shadow-inner animate-in fade-in duration-300">
+                  <div className="mb-2 flex flex-col gap-1 border-b border-line pb-2 text-muted sm:flex-row sm:items-center sm:justify-between">
                     <span>WEBHOOK PAYLOAD INSPECTOR</span>
                     <span className="text-emerald-400 font-bold">
                       POST /api/newsletter • 200 OK

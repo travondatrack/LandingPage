@@ -25,9 +25,9 @@ const config: Config = {
         cyanAccent: "#38BDF8"
       },
       boxShadow: {
-        soft: "0 18px 60px rgb(7 17 31 / 0.45)",
-        cyan: "0 0 35px rgba(56, 189, 248, 0.25)",
-        cyanStrong: "0 0 50px rgba(56, 189, 248, 0.45)"
+        soft: "0 18px 50px rgb(15 23 42 / 0.14)",
+        cyan: "0 14px 32px rgb(2 132 199 / 0.16)",
+        cyanStrong: "0 22px 60px rgb(15 23 42 / 0.14)"
       },
       maxWidth: {
         content: "1240px"

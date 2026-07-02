@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { Heart, Menu, ShoppingBag, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 const navItems = [
   { href: "#story", label: "Story" },
@@ -58,13 +57,13 @@ export function SiteHeader() {
     <header
       className={`sticky top-0 z-30 border-b transition ${
         scrolled
-          ? "border-line bg-surface/86 shadow-sm backdrop-blur-xl"
-          : "border-transparent bg-surface/64 backdrop-blur-md"
+          ? "border-line/80 bg-surface/92 shadow-[0_10px_30px_rgb(15_23_42/0.06)] backdrop-blur-xl"
+          : "border-transparent bg-surface/78 backdrop-blur-md"
       }`}
     >
       <div className="mx-auto flex min-h-16 max-w-content items-center justify-between gap-4 px-5">
         <a className="inline-flex min-w-0 items-center gap-2.5 font-bold text-ink" href="#">
-          <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-accent/10 p-1.5 border border-accent/20 shadow-2xs">
+          <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl border border-line bg-white p-1.5 shadow-sm">
             <Image
               src="/qtphone-logo-transparent.png"
               alt="QTPhone Logo"
@@ -73,9 +72,7 @@ export function SiteHeader() {
               priority
             />
           </div>
-          <span className="truncate text-xl font-extrabold tracking-tight bg-gradient-to-r from-ink to-accent bg-clip-text text-transparent">
-            QTPhone
-          </span>
+          <span className="truncate text-xl font-extrabold tracking-tight text-ink">QTPhone</span>
         </a>
 
         <nav aria-label="Primary navigation" className="hidden items-center gap-1 text-sm lg:flex">
@@ -84,8 +81,8 @@ export function SiteHeader() {
               key={item.href}
               className={`rounded-full px-4 py-2 font-medium transition ${
                 activeSection === item.href.slice(1)
-                  ? "bg-accent/10 text-accent"
-                  : "text-muted hover:bg-surface hover:text-ink"
+                  ? "bg-elevated text-accent"
+                  : "text-muted hover:bg-elevated/70 hover:text-ink"
               }`}
               href={item.href}
             >
@@ -97,9 +94,8 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <BadgeButton count={counts.favorites} icon="heart" label="Favorite products" />
           <BadgeButton count={counts.cart} icon="bag" label="Cart preview" />
-          <ThemeToggle />
           <a
-            className="premium-button hidden min-h-10 items-center justify-center rounded-full bg-accent px-4 text-sm font-semibold text-white lg:inline-flex"
+            className="premium-button hidden min-h-10 items-center justify-center rounded-full bg-accent px-5 text-sm font-semibold text-white shadow-[0_12px_28px_rgb(var(--color-accent)/0.22)] lg:inline-flex"
             href="#products"
           >
             Shop picks
@@ -117,7 +113,7 @@ export function SiteHeader() {
 
       {menuOpen ? (
         <div className="fixed inset-0 z-40 bg-ink/40 lg:hidden" role="presentation">
-          <aside className="ml-auto flex h-full w-[min(84vw,340px)] flex-col border-l border-line bg-elevated p-5 shadow-soft">
+          <aside className="ml-auto flex h-full w-[min(84vw,340px)] flex-col border-l border-line bg-surface p-5 shadow-[0_24px_70px_rgb(15_23_42/0.18)]">
             <div className="flex items-center justify-between">
               <span className="text-lg font-semibold text-ink">Menu</span>
               <button
@@ -133,7 +129,7 @@ export function SiteHeader() {
               {navItems.map((item) => (
                 <a
                   key={item.href}
-                  className="rounded-xl px-4 py-3 text-base font-semibold text-ink transition hover:bg-surface"
+                  className="rounded-xl px-4 py-3 text-base font-semibold text-ink transition hover:bg-elevated"
                   href={item.href}
                   onClick={() => setMenuOpen(false)}
                 >

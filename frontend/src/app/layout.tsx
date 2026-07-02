@@ -53,13 +53,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('qtphone-theme');if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`
-          }}
-        />
-      </head>
       <body className="bg-canvas text-ink selection:bg-accent selection:text-white">
         <a className="skip-link" href="#main-content">
           Skip to content

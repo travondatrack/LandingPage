@@ -8,11 +8,11 @@ const footerLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-line bg-canvas py-10">
+    <footer className="border-t border-line bg-white py-10">
       <div className="mx-auto flex max-w-content flex-col gap-6 px-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-lg bg-accent/10 p-1 border border-accent/20">
+            <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-lg border border-line bg-white p-1 shadow-sm">
               <Image
                 src="/qtphone-logo-transparent.png"
                 alt="QTPhone Logo"

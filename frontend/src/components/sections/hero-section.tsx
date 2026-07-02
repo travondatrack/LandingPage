@@ -62,12 +62,12 @@ export function HeroSection({ productState }: HeroSectionProps) {
     (productState.status === "success" ? productState.products[0] : undefined);
 
   return (
-    <section className="relative isolate overflow-hidden bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(56,189,248,0.18),transparent)] bg-canvas py-10 sm:py-14 lg:min-h-[calc(92vh-4rem)] lg:py-16">
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(110deg,transparent_0%,rgb(var(--color-accent)/0.12)_44%,transparent_70%)]" />
-      <div className="mx-auto grid max-w-content items-center gap-8 px-5 lg:grid-cols-[1fr_0.92fr]">
+    <section className="relative isolate overflow-hidden bg-[linear-gradient(180deg,#FFFFFF_0%,#F8FAFC_58%,#EAF6FF_100%)] py-14 sm:py-18 lg:min-h-[calc(92vh-4rem)] lg:py-20">
+      <div className="absolute right-[-8rem] top-12 -z-10 h-[28rem] w-[28rem] rounded-full bg-accent/10 blur-3xl" />
+      <div className="mx-auto grid max-w-content items-center gap-10 px-5 lg:grid-cols-[1fr_0.9fr]">
         <div className="soft-reveal">
           <h1
-            className="mt-5 max-w-4xl text-4xl font-black leading-[1.02] tracking-tight text-ink sm:text-5xl lg:text-6xl"
+            className="mt-5 max-w-4xl text-4xl font-black leading-[1.02] tracking-tight text-ink sm:text-5xl lg:text-7xl"
             aria-label={heroHeadline}
           >
             <span aria-hidden="true">{typedHeadline}</span>
@@ -82,7 +82,7 @@ export function HeroSection({ productState }: HeroSectionProps) {
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <a
-              className="premium-button inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-accent px-6 text-sm font-semibold text-white shadow-cyan transition hover:scale-105"
+              className="premium-button inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-accent px-6 text-sm font-bold text-white shadow-[0_16px_36px_rgb(var(--color-accent)/0.22)] transition hover:scale-105"
               href="#products"
             >
               Explore Flagship Series
@@ -94,7 +94,7 @@ export function HeroSection({ productState }: HeroSectionProps) {
             {trustStats.map((stat) => (
               <div
                 key={stat.label}
-                className="rounded-2xl border border-line bg-surface/78 p-3 backdrop-blur sm:p-4 hover:border-accent/50 transition"
+                className="rounded-2xl border border-line/70 bg-white p-3 shadow-sm transition hover:border-accent/40 sm:p-4"
               >
                 <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
                   {stat.label}
@@ -108,12 +108,12 @@ export function HeroSection({ productState }: HeroSectionProps) {
         </div>
 
         <div className="soft-reveal relative">
-          <div className="premium-panel product-sheen relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-surface/75 backdrop-blur-xl p-4 sm:p-5 shadow-cyanStrong">
+          <div className="premium-panel product-sheen relative overflow-hidden rounded-2xl bg-white/86 p-4 shadow-[0_28px_80px_rgb(15_23_42/0.12)] sm:p-5">
             {featured ? (
               <article>
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/20 border border-accent/40 px-3 py-1 text-xs font-bold text-accent sm:text-sm">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/20 bg-accent/10 px-3 py-1 text-xs font-bold text-accent sm:text-sm">
                       <Zap aria-hidden="true" size={14} />
                       {formatDiscount(featured.discountPercentage)}
                     </span>
@@ -139,7 +139,7 @@ export function HeroSection({ productState }: HeroSectionProps) {
                     <a
                       href={`#product-${featured.id}`}
                       aria-label={`View ${featured.name} in the product collection`}
-                      className="group relative mt-4 block aspect-[16/10] overflow-hidden rounded-[1.25rem] border border-white/5 bg-[radial-gradient(ellipse_at_center,rgb(var(--color-accent)/0.15),transparent_70%)] bg-elevated transition hover:border-accent/55 hover:shadow-cyan sm:aspect-[16/11]"
+                      className="group relative mt-4 block aspect-[16/10] overflow-hidden rounded-2xl border border-line/70 bg-[linear-gradient(135deg,#FFFFFF,#EAF6FF)] transition hover:border-accent/45 hover:shadow-[0_18px_50px_rgb(var(--color-accent)/0.14)] sm:aspect-[16/11]"
                     >
                       <Image
                         src={featured.image}
@@ -147,7 +147,7 @@ export function HeroSection({ productState }: HeroSectionProps) {
                         fill
                         priority
                         sizes="(min-width: 1024px) 520px, 92vw"
-                        className="object-contain p-5 drop-shadow-[0_15px_30px_rgba(56,189,248,0.25)] transition duration-500 group-hover:scale-[1.05] sm:p-7"
+                        className="object-contain p-5 drop-shadow-[0_18px_30px_rgb(15_23_42/0.16)] transition duration-500 group-hover:scale-[1.05] sm:p-7"
                       />
                       {products.length > 1 ? (
                         <div className="absolute bottom-3 right-3 rounded-full bg-surface/90 border border-line/60 px-3 py-1 text-xs font-semibold text-ink shadow-sm backdrop-blur">
@@ -165,7 +165,7 @@ export function HeroSection({ productState }: HeroSectionProps) {
                           {featured.name}
                         </h2>
                       </div>
-                      <div className="rounded-2xl border border-accent/30 bg-accent/10 px-4 py-2.5 text-right sm:py-3 shadow-cyan">
+                      <div className="rounded-2xl border border-line bg-white px-4 py-2.5 text-right shadow-sm sm:py-3">
                         <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                           Launch Deal
                         </p>

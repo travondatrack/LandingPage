@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json({
       reply:
-        "I can still help with the page: use search, tabs, product detail, favorites, cart preview, and dark mode to compare products.",
+        "I can still help with the page: use search, tabs, product detail, favorites, cart preview, and comparison tools to choose a flagship model.",
       provider: "demo",
       configured: false
     });

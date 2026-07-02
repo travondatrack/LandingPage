@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
   Search,
@@ -25,7 +26,6 @@ import {
   formatDiscount,
   formatPrice,
   formatRating,
-  formatSpecValue,
   formatStock,
   getDiscountedPrice
 } from "@/lib/format";
@@ -92,6 +92,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const toastTimer = useRef<number | undefined>(undefined);
+  const canUsePortal = typeof document !== "undefined";
 
   useEffect(() => {
     if (quickViewProduct) {
@@ -264,11 +265,10 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
   return (
     <section
       id="products"
-      className="relative isolate overflow-hidden bg-surface py-20 sm:py-28 border-t border-line/70"
+      className="relative isolate overflow-hidden border-t border-line/70 bg-white py-20 sm:py-28"
       aria-labelledby="showcase-title"
     >
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:28px_28px]" />
-      <div className="absolute top-0 left-1/2 -z-10 h-[450px] w-[800px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(56,189,248,0.12),transparent_70%)] blur-3xl pointer-events-none" />
+      <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[360px] w-[min(760px,92vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-elevated/70 blur-3xl" />
 
       {/* Floating Action Toast */}
       <AnimatePresence>
@@ -278,14 +278,14 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.25 }}
-            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 rounded-full border border-accent/50 bg-elevated/95 px-5 py-3 text-xs sm:text-sm font-bold text-ink shadow-cyanStrong backdrop-blur-xl"
+            className="fixed bottom-24 left-1/2 z-50 flex w-[min(calc(100vw-2rem),34rem)] -translate-x-1/2 items-center gap-2.5 rounded-2xl border border-line bg-white/95 px-4 py-3 text-xs font-bold text-ink shadow-[0_18px_46px_rgb(15_23_42/0.16)] backdrop-blur-xl sm:rounded-full sm:px-5 sm:text-sm"
           >
             <Sparkles
               size={16}
               className="text-accent shrink-0 animate-spin"
               style={{ animationDuration: "3s" }}
             />
-            <span>{toastMessage}</span>
+            <span className="min-w-0 break-words">{toastMessage}</span>
           </motion.div>
         ) : null}
       </AnimatePresence>
@@ -313,21 +313,21 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
         </div>
 
         {/* Main Navigation Tabs */}
-        <div className="mt-8 flex flex-wrap items-center gap-3 border-b border-line/70 pb-5">
+        <div className="mt-8 grid grid-cols-1 gap-3 border-b border-line/70 pb-5 sm:flex sm:flex-wrap sm:items-center">
           <button
             type="button"
             onClick={() => {
               setActiveMainTab("collection");
               trackBehavior("switch_tab", { tab: "collection" });
             }}
-            className={`inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-xs sm:text-sm font-extrabold transition ${
+            className={`inline-flex min-w-0 items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-xs font-extrabold transition sm:justify-start sm:px-5 sm:text-sm ${
               activeMainTab === "collection"
                 ? "bg-accent text-white shadow-sm"
                 : "bg-surface text-muted hover:text-ink border border-line"
             }`}
           >
             <Smartphone size={16} />
-            <span>Flagship Collection</span>
+            <span className="min-w-0 break-words">Flagship Collection</span>
             <span
               className={`ml-1 rounded-full px-2 py-0.5 text-[10px] ${activeMainTab === "collection" ? "bg-white/20 text-white" : "bg-elevated text-muted"}`}
             >
@@ -341,14 +341,14 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
               setActiveMainTab("favorites");
               trackBehavior("switch_tab", { tab: "favorites" });
             }}
-            className={`inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-xs sm:text-sm font-extrabold transition ${
+            className={`inline-flex min-w-0 items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-xs font-extrabold transition sm:justify-start sm:px-5 sm:text-sm ${
               activeMainTab === "favorites"
                 ? "bg-pink-500 text-white shadow-sm"
                 : "bg-surface text-muted hover:text-ink border border-line"
             }`}
           >
             <Heart size={16} className={favoriteIds.length > 0 ? "fill-current" : ""} />
-            <span>VIP Favorites</span>
+            <span className="min-w-0 break-words">VIP Favorites</span>
             {favoriteIds.length > 0 ? (
               <span className="ml-1 rounded-full bg-white/20 px-2 py-0.5 text-[10px] text-white font-black">
                 {favoriteIds.length}
@@ -362,14 +362,14 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
               setActiveMainTab("cart");
               trackBehavior("switch_tab", { tab: "cart" });
             }}
-            className={`inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-xs sm:text-sm font-extrabold transition ${
+            className={`inline-flex min-w-0 items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-xs font-extrabold transition sm:justify-start sm:px-5 sm:text-sm ${
               activeMainTab === "cart"
                 ? "bg-emerald-600 text-white shadow-sm"
                 : "bg-surface text-muted hover:text-ink border border-line"
             }`}
           >
             <ShoppingBag size={16} />
-            <span>Shopping Cart</span>
+            <span className="min-w-0 break-words">Shopping Cart</span>
             {cartIds.length > 0 ? (
               <span className="ml-1 rounded-full bg-white/20 px-2 py-0.5 text-[10px] text-white font-black">
                 {cartIds.length}
@@ -382,7 +382,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
         {activeMainTab === "collection" ? (
           <>
             {/* Clean Interactive Control Bar */}
-            <div className="mt-6 grid gap-4 rounded-[1.75rem] border border-white/10 bg-elevated/70 p-4 sm:p-5 backdrop-blur-xl shadow-sm lg:grid-cols-[1fr_auto_auto] items-center">
+            <div className="mt-6 grid min-w-0 gap-4 rounded-2xl border border-line bg-white p-4 shadow-sm sm:p-5 lg:grid-cols-[minmax(0,1fr)_auto_auto] lg:items-center">
               <label className="relative block">
                 <span className="sr-only">Search smartphone models</span>
                 <Search
@@ -399,7 +399,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
               </label>
 
               {/* Futuristic Glowing Underline Beam & Dot Pills */}
-              <div className="flex flex-wrap items-center gap-2 rounded-2xl bg-surface/90 p-2 border border-line/70 shadow-inner">
+              <div className="grid min-w-0 grid-cols-2 gap-2 rounded-2xl border border-line/70 bg-canvas p-2 sm:flex sm:flex-wrap sm:items-center">
                 {categories.map((cat) => {
                   const isActive = selectedCategory === cat.id;
                   return (
@@ -409,21 +409,21 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                       whileHover={{ y: -1 }}
                       whileTap={{ scale: 0.92, rotateZ: 1 }}
                       onClick={() => handleCategory(cat.id)}
-                      className={`relative flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-black tracking-wide transition-colors z-10 whitespace-nowrap overflow-hidden ${
+                      className={`relative z-10 flex min-w-0 items-center justify-center gap-1.5 overflow-hidden rounded-xl px-3 py-2 text-center text-[11px] font-black tracking-wide transition-colors sm:justify-start sm:px-4 sm:text-xs ${
                         isActive ? "text-accent bg-accent/10" : "text-muted hover:text-ink"
                       }`}
                     >
                       {isActive ? (
                         <motion.span
                           layoutId="cyberDot"
-                          className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_8px_rgb(56,189,248)] animate-pulse"
+                          className="h-1.5 w-1.5 rounded-full bg-accent"
                         />
                       ) : null}
-                      <span>{cat.label}</span>
+                      <span className="min-w-0 break-words">{cat.label}</span>
                       {isActive ? (
                         <motion.div
                           layoutId="cyberUnderline"
-                          className="absolute bottom-0 left-2 right-2 h-[3px] rounded-full bg-[linear-gradient(90deg,transparent,rgb(var(--color-accent)),transparent)] shadow-cyan"
+                          className="absolute bottom-0 left-2 right-2 h-[3px] rounded-full bg-accent"
                           transition={{ type: "spring", stiffness: 350, damping: 25 }}
                         />
                       ) : null}
@@ -433,7 +433,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
               </div>
 
               {/* Sort Dropdown */}
-              <label className="relative flex items-center gap-2">
+              <label className="relative flex min-w-0 items-center gap-2">
                 <span className="sr-only">Sort products</span>
                 <motion.div
                   key={sortMode}
@@ -445,7 +445,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                   <SlidersHorizontal size={15} />
                 </motion.div>
                 <select
-                  className="min-h-12 w-full appearance-none rounded-2xl border border-line bg-surface pl-10 pr-8 text-xs font-bold text-ink focus:border-accent transition cursor-pointer"
+                  className="min-h-12 w-full min-w-0 appearance-none rounded-2xl border border-line bg-surface pl-10 pr-8 text-xs font-bold text-ink transition focus:border-accent lg:w-auto"
                   value={sortMode}
                   onChange={(e) => handleSort(e.target.value as SortMode)}
                 >
@@ -462,13 +462,13 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
               {productState.status === "loading" ? (
                 <ProductSkeletonGrid />
               ) : productState.status === "error" ? (
-                <div className="rounded-[2rem] border border-danger/40 bg-elevated/70 p-10 text-center backdrop-blur-xl">
+                <div className="rounded-2xl border border-danger/40 bg-white p-10 text-center shadow-sm">
                   <AlertCircle size={40} className="mx-auto text-danger" />
                   <h3 className="mt-4 text-lg font-bold text-ink">Catalog Connection Notice</h3>
                   <p className="mt-2 text-sm text-muted max-w-md mx-auto">{productState.message}</p>
                 </div>
               ) : visibleProducts.length === 0 ? (
-                <div className="rounded-[2rem] border border-white/10 bg-elevated/70 p-12 text-center backdrop-blur-xl">
+                <div className="rounded-2xl border border-line bg-white p-12 text-center shadow-sm">
                   <Search size={36} className="mx-auto text-muted/60" />
                   <h3 className="mt-4 text-lg font-bold text-ink">No matching flagship models</h3>
                   <p className="mt-2 text-sm text-muted">
@@ -513,7 +513,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
 
                   {/* Clean Pagination Bar */}
                   {totalPages > 1 ? (
-                    <div className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-elevated/60 px-6 py-4 backdrop-blur-md">
+                    <div className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-white px-6 py-4 shadow-sm">
                       <p className="text-xs font-bold text-muted">
                         Showing{" "}
                         <span className="text-ink">{(currentPage - 1) * PAGE_SIZE + 1}</span> -{" "}
@@ -570,7 +570,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
         {activeMainTab === "favorites" ? (
           <div className="mt-8">
             {favoriteProducts.length === 0 ? (
-              <div className="rounded-[2rem] border border-white/10 bg-elevated/70 p-16 text-center backdrop-blur-xl">
+              <div className="rounded-2xl border border-line bg-white p-16 text-center shadow-sm">
                 <Heart size={44} className="mx-auto text-pink-400/40" />
                 <h3 className="mt-4 text-xl font-extrabold text-ink">No saved VIP Favorites yet</h3>
                 <p className="mt-2 text-sm text-muted max-w-md mx-auto">
@@ -615,7 +615,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
         {activeMainTab === "cart" ? (
           <div className="mt-8">
             {cartProducts.length === 0 ? (
-              <div className="rounded-[2rem] border border-white/10 bg-elevated/70 p-16 text-center backdrop-blur-xl">
+              <div className="rounded-2xl border border-line bg-white p-16 text-center shadow-sm">
                 <ShoppingBag size={44} className="mx-auto text-emerald-400/40" />
                 <h3 className="mt-4 text-xl font-extrabold text-ink">
                   Your Shopping Cart is empty
@@ -633,14 +633,14 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                 </button>
               </div>
             ) : (
-              <div className="grid gap-8 lg:grid-cols-[1fr_360px] items-start">
+              <div className="grid min-w-0 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
                 <div className="space-y-4">
                   {cartProducts.map((product) => (
                     <div
                       key={product.id}
-                      className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-white/10 bg-elevated/70 p-4 sm:p-5 backdrop-blur-xl shadow-sm"
+                      className="flex min-w-0 flex-col items-center justify-between gap-4 rounded-2xl border border-line bg-white p-4 shadow-sm sm:flex-row sm:p-5"
                     >
-                      <div className="flex items-center gap-4 w-full sm:w-auto">
+                      <div className="flex min-w-0 w-full items-center gap-4 sm:w-auto">
                         <div className="relative h-20 w-24 shrink-0 rounded-xl bg-surface p-2">
                           <Image
                             src={product.image}
@@ -649,16 +649,20 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                             className="object-contain p-1"
                           />
                         </div>
-                        <div>
+                        <div className="min-w-0">
                           <span className="text-[11px] font-bold uppercase tracking-wider text-accent">
                             {product.brand}
                           </span>
-                          <h4 className="font-extrabold text-ink sm:text-base">{product.name}</h4>
-                          <p className="text-xs text-muted mt-0.5">{product.processor}</p>
+                          <h4 className="break-words font-extrabold text-ink sm:text-base">
+                            {product.name}
+                          </h4>
+                          <p className="mt-0.5 break-words text-xs text-muted">
+                            {product.processor}
+                          </p>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-line">
+                      <div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-4 border-t border-line pt-3 sm:w-auto sm:justify-end sm:border-t-0 sm:pt-0">
                         <PriceStack product={product} align="right" compact />
 
                         <button
@@ -675,39 +679,39 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
                 </div>
 
                 {/* Cart Summary Panel */}
-                <div className="sticky top-24 rounded-[2rem] border border-accent/40 bg-elevated/90 p-6 backdrop-blur-2xl shadow-cyanStrong space-y-6">
+                <div className="sticky top-24 min-w-0 space-y-6 rounded-2xl border border-line bg-white p-5 shadow-[0_22px_60px_rgb(15_23_42/0.1)] sm:p-6">
                   <h3 className="text-lg font-extrabold text-ink border-b border-line pb-4">
                     VIP Order Summary
                   </h3>
 
                   <div className="space-y-3 text-sm">
-                    <div className="flex justify-between text-muted">
+                    <div className="flex min-w-0 justify-between gap-3 text-muted">
                       <span>Original Subtotal</span>
                       <span className="font-bold text-muted line-through">
                         {formatPrice(cartOriginalTotal)}
                       </span>
                     </div>
-                    <div className="flex justify-between text-muted">
+                    <div className="flex min-w-0 justify-between gap-3 text-muted">
                       <span>Discount Savings</span>
                       <span className="font-extrabold text-emerald-400">
                         -{formatPrice(cartSavings)}
                       </span>
                     </div>
-                    <div className="flex justify-between text-muted">
+                    <div className="flex min-w-0 justify-between gap-3 text-muted">
                       <span>Selected Items ({cartProducts.length})</span>
                       <span className="font-bold text-ink">{formatPrice(cartTotal)}</span>
                     </div>
-                    <div className="flex justify-between text-muted">
+                    <div className="flex min-w-0 justify-between gap-3 text-muted">
                       <span>Express Shipping</span>
                       <span className="font-extrabold text-emerald-400">FREE</span>
                     </div>
-                    <div className="flex justify-between text-muted">
+                    <div className="flex min-w-0 justify-between gap-3 text-muted">
                       <span>Official Warranty</span>
                       <span className="font-bold text-ink">Included</span>
                     </div>
                   </div>
 
-                  <div className="border-t border-line pt-4 flex justify-between items-baseline">
+                  <div className="flex min-w-0 items-baseline justify-between gap-3 border-t border-line pt-4">
                     <span className="font-bold text-ink">Total Due</span>
                     <span className="text-2xl font-black text-accent">
                       {formatPrice(cartTotal)}
@@ -747,9 +751,9 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 80 }}
             transition={{ duration: 0.35 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex w-[min(94vw,680px)] items-center justify-between gap-4 rounded-[1.5rem] border border-accent/50 bg-elevated/95 px-5 py-3.5 backdrop-blur-2xl shadow-cyanStrong"
+            className="fixed bottom-6 left-1/2 z-40 flex w-[min(calc(100vw-1.5rem),680px)] -translate-x-1/2 flex-col gap-3 rounded-2xl border border-line bg-white/95 px-4 py-3.5 shadow-[0_22px_60px_rgb(15_23_42/0.16)] backdrop-blur-2xl sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5"
           >
-            <div className="flex items-center gap-3 overflow-hidden">
+            <div className="flex w-full min-w-0 items-center gap-3 overflow-hidden sm:w-auto">
               <div className="flex -space-x-2 shrink-0">
                 {comparedProducts.map((p) => (
                   <div
@@ -770,7 +774,7 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex w-full shrink-0 items-center justify-end gap-2 sm:w-auto">
               <button
                 type="button"
                 onClick={() => setCompareIds([])}
@@ -795,269 +799,264 @@ export function ProductShowcase({ productState }: ProductShowcaseProps) {
       </AnimatePresence>
 
       {/* Side-by-Side Compare Modal */}
-      <AnimatePresence>
-        {isCompareOpen ? (
-          <div className="fixed inset-0 z-50 grid place-items-center bg-ink/60 p-4 backdrop-blur-md">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="max-h-[88vh] w-full max-w-4xl overflow-y-auto rounded-[2rem] border border-white/15 bg-elevated p-6 shadow-2xl"
-            >
-              <div className="flex items-center justify-between border-b border-line/70 pb-4">
-                <div className="flex items-center gap-2">
-                  <GitCompare className="text-accent" size={20} />
-                  <h3 className="text-xl font-extrabold text-ink">
-                    Side-by-Side Hardware Comparison
-                  </h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsCompareOpen(false)}
-                  className="h-9 w-9 rounded-xl border border-line bg-surface flex items-center justify-center text-ink hover:border-accent"
-                >
-                  <X size={18} />
-                </button>
-              </div>
+      {canUsePortal
+        ? createPortal(
+            <AnimatePresence>
+              {isCompareOpen ? (
+                <div className="fixed inset-0 z-50 grid place-items-center bg-ink/60 p-4 backdrop-blur-md">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="max-h-[88vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-line bg-white p-4 shadow-2xl sm:p-6"
+                  >
+                    <div className="flex min-w-0 items-center justify-between gap-3 border-b border-line/70 pb-4">
+                      <div className="flex min-w-0 items-center gap-2">
+                        <GitCompare className="shrink-0 text-accent" size={20} />
+                        <h3 className="min-w-0 break-words text-lg font-extrabold text-ink sm:text-xl">
+                          Side-by-Side Hardware Comparison
+                        </h3>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setIsCompareOpen(false)}
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-line bg-surface text-ink hover:border-accent"
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
 
-              <div className="mt-6 overflow-x-auto">
-                <table className="w-full border-collapse text-left text-xs sm:text-sm">
-                  <thead>
-                    <tr className="border-b border-line">
-                      <th className="p-3 font-bold text-muted">Feature</th>
-                      {comparedProducts.map((p) => (
-                        <th key={p.id} className="p-3 text-center min-w-[160px]">
-                          <div className="relative mx-auto h-20 w-20">
-                            <Image src={p.image} alt={p.name} fill className="object-contain" />
-                          </div>
-                          <p className="mt-2 font-bold text-ink">{p.name}</p>
-                          <PriceStack product={p} align="center" compact />
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-line/60">
-                    <tr>
-                      <td className="p-3 font-bold text-muted">Processor</td>
-                      {comparedProducts.map((p) => (
-                        <td key={p.id} className="p-3 text-center text-ink font-medium">
-                          {p.processor}
-                        </td>
-                      ))}
-                    </tr>
-                    <tr>
-                      <td className="p-3 font-bold text-muted">Display</td>
-                      {comparedProducts.map((p) => (
-                        <td key={p.id} className="p-3 text-center text-ink font-medium">
-                          {p.display}
-                        </td>
-                      ))}
-                    </tr>
-                    <tr>
-                      <td className="p-3 font-bold text-muted">Camera System</td>
-                      {comparedProducts.map((p) => (
-                        <td key={p.id} className="p-3 text-center text-ink font-medium">
-                          {p.camera}
-                        </td>
-                      ))}
-                    </tr>
-                    <tr>
-                      <td className="p-3 font-bold text-muted">Battery & Charge</td>
-                      {comparedProducts.map((p) => (
-                        <td key={p.id} className="p-3 text-center text-ink font-medium">
-                          {p.battery}
-                        </td>
-                      ))}
-                    </tr>
-                    <tr>
-                      <td className="p-3 font-bold text-muted">Rating</td>
-                      {comparedProducts.map((p) => (
-                        <td key={p.id} className="p-3 text-center font-bold text-amber-400">
-                          ★ {formatRating(p.rating)}
-                        </td>
-                      ))}
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </motion.div>
-          </div>
-        ) : null}
-      </AnimatePresence>
+                    <div className="mt-6 overflow-x-auto">
+                      <table className="w-full border-collapse text-left text-xs sm:text-sm">
+                        <thead>
+                          <tr className="border-b border-line">
+                            <th className="p-3 font-bold text-muted">Feature</th>
+                            {comparedProducts.map((p) => (
+                              <th key={p.id} className="p-3 text-center min-w-[160px]">
+                                <div className="relative mx-auto h-20 w-20">
+                                  <Image
+                                    src={p.image}
+                                    alt={p.name}
+                                    fill
+                                    className="object-contain"
+                                  />
+                                </div>
+                                <p className="mt-2 font-bold text-ink">{p.name}</p>
+                                <PriceStack product={p} align="center" compact />
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-line/60">
+                          <tr>
+                            <td className="p-3 font-bold text-muted">Processor</td>
+                            {comparedProducts.map((p) => (
+                              <td key={p.id} className="p-3 text-center text-ink font-medium">
+                                {p.processor}
+                              </td>
+                            ))}
+                          </tr>
+                          <tr>
+                            <td className="p-3 font-bold text-muted">Display</td>
+                            {comparedProducts.map((p) => (
+                              <td key={p.id} className="p-3 text-center text-ink font-medium">
+                                {p.display}
+                              </td>
+                            ))}
+                          </tr>
+                          <tr>
+                            <td className="p-3 font-bold text-muted">Camera System</td>
+                            {comparedProducts.map((p) => (
+                              <td key={p.id} className="p-3 text-center text-ink font-medium">
+                                {p.camera}
+                              </td>
+                            ))}
+                          </tr>
+                          <tr>
+                            <td className="p-3 font-bold text-muted">Battery & Charge</td>
+                            {comparedProducts.map((p) => (
+                              <td key={p.id} className="p-3 text-center text-ink font-medium">
+                                {p.battery}
+                              </td>
+                            ))}
+                          </tr>
+                          <tr>
+                            <td className="p-3 font-bold text-muted">Rating</td>
+                            {comparedProducts.map((p) => (
+                              <td key={p.id} className="p-3 text-center font-bold text-amber-400">
+                                ★ {formatRating(p.rating)}
+                              </td>
+                            ))}
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </motion.div>
+                </div>
+              ) : null}
+            </AnimatePresence>,
+            document.body
+          )
+        : null}
 
       {/* Harmonious Premium View Details Modal */}
-      <AnimatePresence>
-        {quickViewProduct ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            onClick={() => setQuickViewProduct(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-slate-950/55 px-3 py-4 backdrop-blur-md before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.16),transparent_56%)] sm:px-5 sm:py-6"
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 24, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 16, scale: 0.96 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-[1.75rem] border border-white/15 bg-slate-950/88 p-4 text-white shadow-[0_30px_100px_rgba(14,165,233,0.22)] backdrop-blur-2xl sm:p-5 md:max-h-[86vh] md:p-6"
-            >
-              <div className="flex max-h-[calc(90vh-2rem)] min-w-0 flex-col md:max-h-[calc(86vh-3rem)]">
-                {/* Top row */}
-                <div className="flex shrink-0 items-center justify-between gap-4 border-b border-white/10 pb-3.5">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest text-accent border border-accent/20">
-                    <Sparkles size={12} />
-                    <span>Product Detail</span>
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setQuickViewProduct(null)}
-                    aria-label="Close modal"
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-slate-200 shadow-2xs transition hover:border-accent hover:bg-accent hover:text-white"
+      {canUsePortal
+        ? createPortal(
+            <AnimatePresence>
+              {quickViewProduct ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  onClick={() => setQuickViewProduct(null)}
+                  className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-ink/40 px-3 py-4 backdrop-blur-md before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_center,rgb(var(--color-accent)/0.12),transparent_56%)] sm:px-5 sm:py-6"
+                >
+                  <motion.div
+                    initial={{ opacity: 0, y: 24, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 16, scale: 0.96 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="relative max-h-[90vh] w-full max-w-5xl overflow-hidden rounded-2xl border border-line bg-white/95 p-4 text-ink shadow-[0_30px_90px_rgb(15_23_42/0.18)] backdrop-blur-2xl sm:p-5 md:max-h-[84vh]"
                   >
-                    <X size={18} />
-                  </button>
-                </div>
-
-                {/* Grid */}
-                <div className="mt-5 grid min-h-0 min-w-0 flex-1 grid-cols-1 gap-5 overflow-y-auto overflow-x-hidden pr-1 md:grid-cols-[0.92fr_1.08fr] md:gap-7">
-                  {/* Left column: Image inside soft glass card */}
-                  <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-[radial-gradient(circle_at_50%_50%,rgba(56,189,248,0.18),rgba(255,255,255,0.08)_48%,transparent_78%)] md:sticky md:top-0 md:aspect-square">
-                    <Image
-                      src={quickViewProduct.image}
-                      alt={quickViewProduct.name}
-                      fill
-                      sizes="(min-width: 768px) 44vw, 92vw"
-                      className="object-contain p-5 transition-transform duration-500 hover:scale-105 sm:p-7"
-                    />
-                  </div>
-
-                  {/* Right column: Details */}
-                  <div className="flex min-w-0 flex-col">
-                    <div className="min-w-0">
-                      <h3 className="line-clamp-2 break-words text-2xl font-black tracking-tight text-white sm:text-3xl md:text-4xl">
-                        {quickViewProduct.name}
-                      </h3>
-
-                      {/* Meta row */}
-                      <div className="flex items-baseline justify-between gap-3 mt-3 flex-wrap">
-                        <PriceStack product={quickViewProduct} contrast />
-                        <div className="flex items-center gap-2">
-                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 text-xs font-bold text-amber-500">
-                            <Star size={13} className="fill-amber-400 text-amber-400" />
-                            <span>{formatRating(quickViewProduct.rating)}</span>
-                          </span>
-                          <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-3 py-0.5 text-xs font-bold text-emerald-400">
-                            {formatStock(quickViewProduct.stock)}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Short description */}
-                      <p className="mt-3 line-clamp-3 break-words text-sm leading-relaxed text-slate-300">
-                        {quickViewProduct.description}
-                      </p>
-
-                      <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.06] p-3.5 backdrop-blur-xl sm:p-4">
-                        <div className="flex items-center justify-between gap-3">
-                          <p className="text-xs font-black uppercase tracking-widest text-accent">
-                            Precision Details
-                          </p>
-                          <span className="rounded-full border border-accent/25 bg-accent/10 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest text-accent">
-                            Signature Specs
-                          </span>
-                        </div>
-
-                        <dl className="mt-3 grid min-w-0 grid-cols-1 gap-2.5 sm:grid-cols-2">
-                          {buildDetailSpecs(quickViewProduct).map((spec) => (
-                            <div
-                              key={spec.label}
-                              className="min-w-0 rounded-xl border border-white/10 bg-white/[0.055] p-3 shadow-sm"
-                            >
-                              <dt className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                {spec.label}
-                              </dt>
-                              <dd className="mt-1 break-words text-xs font-extrabold leading-5 text-white">
-                                {spec.value}
-                              </dd>
-                            </div>
-                          ))}
-                        </dl>
-                      </div>
-                    </div>
-
-                    {/* CTA row */}
-                    <div className="mt-5 shrink-0 border-t border-white/10 pt-4">
-                      <div className="flex items-center gap-3">
+                    <div className="flex max-h-[calc(90vh-2rem)] min-w-0 flex-col md:max-h-[calc(84vh-2.5rem)]">
+                      {/* Top row */}
+                      <div className="flex shrink-0 items-center justify-between gap-4 border-b border-line pb-3.5">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest text-accent border border-accent/20">
+                          <Sparkles size={12} />
+                          <span>Product Detail</span>
+                        </span>
                         <button
                           type="button"
-                          onClick={() => handleCartToggle(quickViewProduct)}
-                          className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-accent py-3.5 text-xs sm:text-sm font-extrabold text-white shadow-cyan hover:bg-accent/90 transition transform active:scale-98"
+                          onClick={() => setQuickViewProduct(null)}
+                          aria-label="Close modal"
+                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-line bg-surface text-ink shadow-2xs transition hover:border-accent hover:bg-accent hover:text-white"
                         >
-                          <ShoppingBag size={17} />
-                          <span>
-                            {cartIds.includes(quickViewProduct.id)
-                              ? "Remove from Cart"
-                              : "Add to Cart"}
-                          </span>
+                          <X size={18} />
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => handleFavoriteToggle(quickViewProduct)}
-                          aria-label="Toggle wishlist"
-                          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border transition ${
-                            favoriteIds.includes(quickViewProduct.id)
-                              ? "border-pink-500 bg-pink-500/20 text-pink-400 shadow-sm"
-                              : "border-white/15 bg-white/10 text-slate-300 hover:border-pink-500/50 hover:text-white"
-                          }`}
-                        >
-                          <Heart
-                            size={18}
-                            className={
-                              favoriteIds.includes(quickViewProduct.id) ? "fill-current" : ""
-                            }
+                      </div>
+
+                      {/* Grid */}
+                      <div className="mt-4 grid min-h-0 min-w-0 flex-1 grid-cols-1 gap-4 overflow-y-auto overflow-x-hidden pr-1 md:grid-cols-[0.82fr_1.18fr] md:overflow-visible md:pr-0">
+                        {/* Left column: Image inside soft glass card */}
+                        <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden rounded-2xl border border-line bg-[linear-gradient(135deg,#FFFFFF,#EAF6FF)] md:sticky md:top-0">
+                          <Image
+                            src={quickViewProduct.image}
+                            alt={quickViewProduct.name}
+                            fill
+                            sizes="(min-width: 768px) 44vw, 92vw"
+                            className="object-contain p-5 transition-transform duration-500 hover:scale-105 sm:p-7"
                           />
-                        </button>
+                        </div>
+
+                        {/* Right column: Details */}
+                        <div className="flex min-w-0 flex-col">
+                          <div className="min-w-0">
+                            <h3 className="line-clamp-2 break-words text-2xl font-black tracking-tight text-ink sm:text-3xl">
+                              {quickViewProduct.name}
+                            </h3>
+
+                            {/* Meta row */}
+                            <div className="flex items-baseline justify-between gap-3 mt-3 flex-wrap">
+                              <PriceStack product={quickViewProduct} />
+                              <div className="flex items-center gap-2">
+                                <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 text-xs font-bold text-amber-500">
+                                  <Star size={13} className="fill-amber-400 text-amber-400" />
+                                  <span>{formatRating(quickViewProduct.rating)}</span>
+                                </span>
+                                <span className="rounded-full border border-emerald-500/30 bg-emerald-500/15 px-3 py-0.5 text-xs font-bold text-emerald-400">
+                                  {formatStock(quickViewProduct.stock)}
+                                </span>
+                              </div>
+                            </div>
+
+                            <p className="mt-3 line-clamp-3 break-words text-sm leading-6 text-muted">
+                              {quickViewProduct.description}
+                            </p>
+
+                            <div className="mt-4 rounded-2xl border border-line bg-surface/78 p-3 shadow-sm backdrop-blur-xl sm:p-3.5">
+                              <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                                <p className="text-xs font-black uppercase tracking-widest text-accent">
+                                  Key Specs
+                                </p>
+                                <span className="w-fit rounded-full border border-accent/25 bg-accent/10 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-accent">
+                                  Essential
+                                </span>
+                              </div>
+
+                              <dl className="mt-3 grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-2">
+                                {buildDetailSpecs(quickViewProduct).map((spec) => (
+                                  <div
+                                    key={spec.label}
+                                    className="min-w-0 rounded-xl border border-line bg-white p-2.5 shadow-sm"
+                                  >
+                                    <dt className="text-[10px] font-black uppercase tracking-wide text-muted">
+                                      {spec.label}
+                                    </dt>
+                                    <dd className="mt-1 break-words text-xs font-extrabold leading-5 text-ink">
+                                      {spec.value}
+                                    </dd>
+                                  </div>
+                                ))}
+                              </dl>
+                            </div>
+                          </div>
+
+                          {/* CTA row */}
+                          <div className="mt-5 shrink-0 border-t border-line pt-4">
+                            <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center">
+                              <button
+                                type="button"
+                                onClick={() => handleCartToggle(quickViewProduct)}
+                                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-accent px-3 py-3 text-xs font-extrabold text-white shadow-cyan transition hover:bg-accent/90 active:scale-98 sm:py-3.5 sm:text-sm"
+                              >
+                                <ShoppingBag size={17} />
+                                <span>
+                                  {cartIds.includes(quickViewProduct.id)
+                                    ? "Remove from Cart"
+                                    : "Add to Cart"}
+                                </span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleFavoriteToggle(quickViewProduct)}
+                                aria-label="Toggle wishlist"
+                                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border transition ${
+                                  favoriteIds.includes(quickViewProduct.id)
+                                    ? "border-pink-500 bg-pink-500/20 text-pink-400 shadow-sm"
+                                    : "border-line bg-surface text-muted hover:border-pink-500/50 hover:text-ink"
+                                }`}
+                              >
+                                <Heart
+                                  size={18}
+                                  className={
+                                    favoriteIds.includes(quickViewProduct.id) ? "fill-current" : ""
+                                  }
+                                />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+                  </motion.div>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>,
+            document.body
+          )
+        : null}
     </section>
   );
 }
 
 function buildDetailSpecs(product: SmartphoneProduct) {
-  const specMap = new Map(product.specs.map((spec) => [spec.label.toLowerCase(), spec.value]));
-  const dimensions = specMap.get("dimensions");
-  const warranty = specMap.get("warranty");
-  const shipping = specMap.get("shipping");
-
   return [
-    { label: "Brand", value: product.brand },
-    { label: "Category", value: formatSpecValue(product.category) },
-    {
-      label: "Stock / Availability",
-      value: `${formatStock(product.stock)} (${product.stock} units)`
-    },
-    { label: "Rating", value: formatRating(product.rating) },
-    {
-      label: "Deal Price / Discount",
-      value: `${formatPrice(getDiscountedPrice(product.price, product.discountPercentage))} after ${formatDiscount(product.discountPercentage)}`
-    },
-    { label: "Dimensions", value: dimensions },
-    { label: "Warranty", value: warranty },
-    { label: "Shipping", value: shipping },
     { label: "Display", value: product.display },
-    { label: "Processor / Performance", value: product.processor },
-    { label: "Camera / Optics", value: product.camera },
-    { label: "Battery / Endurance", value: product.battery }
+    { label: "Processor", value: product.processor },
+    { label: "Camera", value: product.camera },
+    { label: "Battery", value: product.battery }
   ].filter((spec): spec is { label: string; value: string } => Boolean(spec.value));
 }
 
@@ -1085,10 +1084,10 @@ function ProductCardItem({
       id={`product-${product.id}`}
       layout
       variants={cardVariants}
-      className="group relative scroll-mt-24 flex flex-col justify-between overflow-hidden rounded-[2rem] border border-white/10 bg-elevated/70 p-5 backdrop-blur-xl shadow-sm transition-all duration-300 target:border-accent target:shadow-cyan hover:-translate-y-1.5 hover:border-accent/50 hover:shadow-cyan"
+      className="group relative min-w-0 scroll-mt-24 flex flex-col justify-between overflow-hidden rounded-2xl border border-line/70 bg-white p-5 shadow-[0_16px_42px_rgb(15_23_42/0.08)] transition-all duration-300 target:border-accent hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_22px_54px_rgb(15_23_42/0.12)]"
     >
       <div>
-        <div className="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-[linear-gradient(135deg,rgb(var(--color-surface)),rgb(var(--color-accent)/0.08))]">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#FFFFFF,#EAF6FF)]">
           <button
             type="button"
             onClick={onFavorite}
@@ -1096,7 +1095,7 @@ function ProductCardItem({
             className={`absolute top-3.5 right-3.5 z-10 flex h-9 w-9 items-center justify-center rounded-xl border transition ${
               isFavorite
                 ? "border-pink-500/50 bg-pink-500/20 text-pink-400"
-                : "border-line/80 bg-surface/80 text-muted hover:text-ink"
+                : "border-line bg-white/90 text-muted hover:text-ink"
             }`}
           >
             <Heart size={16} className={isFavorite ? "fill-current" : ""} />
@@ -1116,7 +1115,7 @@ function ProductCardItem({
         <div className="mt-4">
           <div className="flex items-center justify-between text-xs text-muted font-semibold">
             <span>{product.brand} • Smartphones</span>
-            <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-[10px] font-bold text-accent">
+            <span className="rounded-full bg-elevated px-2.5 py-0.5 text-[10px] font-bold text-accent">
               {formatDiscount(product.discountPercentage)}
             </span>
           </div>
@@ -1128,7 +1127,7 @@ function ProductCardItem({
       </div>
 
       <div className="mt-5 pt-3.5 border-t border-line/60">
-        <div className="flex items-baseline justify-between">
+        <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-3">
           <PriceStack product={product} compact />
           <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-400">
             <Star size={14} className="fill-current" />
@@ -1136,15 +1135,15 @@ function ProductCardItem({
           </span>
         </div>
 
-        <div className="mt-4 grid grid-cols-[auto_1fr_auto] gap-2">
+        <div className="mt-4 grid min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] gap-2">
           <button
             type="button"
             onClick={onCompare}
             title={isCompared ? "Remove from Compare" : "Add to Compare"}
             className={`flex h-10 w-10 items-center justify-center rounded-xl border text-xs font-bold transition ${
               isCompared
-                ? "border-accent bg-accent/20 text-accent shadow-2xs"
-                : "border-line bg-surface text-muted hover:border-accent hover:text-ink"
+                ? "border-accent bg-accent/10 text-accent shadow-2xs"
+                : "border-line bg-white text-muted hover:border-accent hover:text-ink"
             }`}
           >
             <GitCompare size={15} />
@@ -1153,10 +1152,10 @@ function ProductCardItem({
           <button
             type="button"
             onClick={onQuickView}
-            className="flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-accent/15 border border-accent/30 px-3 text-xs font-bold text-accent hover:bg-accent hover:text-white transition shadow-2xs"
+            className="flex min-h-10 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-accent px-3 text-xs font-bold text-white shadow-[0_10px_22px_rgb(var(--color-accent)/0.18)] transition hover:bg-accentStrong"
           >
             <Eye size={14} />
-            <span>Details</span>
+            <span className="min-w-0 truncate">Details</span>
           </button>
 
           <button
@@ -1166,7 +1165,7 @@ function ProductCardItem({
             className={`flex h-10 w-10 items-center justify-center rounded-xl border transition ${
               inCart
                 ? "border-emerald-500 bg-emerald-500/20 text-emerald-400"
-                : "border-line bg-surface text-muted hover:border-emerald-500 hover:text-emerald-400"
+                : "border-line bg-white text-muted hover:border-emerald-500 hover:text-emerald-500"
             }`}
           >
             <ShoppingBag size={15} className={inCart ? "fill-current" : ""} />
@@ -1197,10 +1196,10 @@ function PriceStack({
         : "items-start";
 
   return (
-    <div className={`flex flex-col ${alignmentClass}`}>
-      <div className="flex flex-wrap items-center gap-2">
+    <div className={`flex min-w-0 flex-col ${alignmentClass}`}>
+      <div className="flex min-w-0 flex-wrap items-center gap-2">
         <span
-          className={`font-black tracking-tight text-accent ${
+          className={`break-words font-black tracking-tight text-accent ${
             compact ? "text-lg" : "text-2xl md:text-3xl"
           }`}
         >
@@ -1248,7 +1247,7 @@ function ProductSkeletonGrid() {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-label="Loading products">
       {Array.from({ length: 6 }, (_, idx) => (
-        <div key={idx} className="rounded-[2rem] border border-white/10 bg-elevated/50 p-5">
+        <div key={idx} className="rounded-2xl border border-line bg-white p-5 shadow-sm">
           <div className="animate-pulse">
             <div className="aspect-[4/3] rounded-[1.5rem] bg-line/40" />
             <div className="mt-4 h-4 w-32 rounded bg-line/50" />

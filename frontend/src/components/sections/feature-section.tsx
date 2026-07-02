@@ -32,14 +32,13 @@ export function FeatureSection() {
   return (
     <section
       id="features"
-      className="relative isolate overflow-hidden border-y border-line bg-[radial-gradient(ellipse_90%_70%_at_12%_20%,rgb(var(--color-accent)/0.16),transparent_58%),linear-gradient(135deg,rgb(var(--color-canvas)),rgb(var(--color-surface))_48%,rgb(var(--color-elevated)))] py-14 sm:py-16 lg:py-18"
+      className="relative isolate overflow-hidden border-y border-line bg-elevated py-16 sm:py-20"
     >
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:34px_34px] opacity-45" />
-      <div className="absolute left-0 top-1/2 -z-10 h-[28rem] w-[28rem] -translate-x-1/3 -translate-y-1/2 rounded-full bg-accent/10 blur-3xl" />
+      <div className="absolute left-0 top-1/2 -z-10 h-[22rem] w-[min(22rem,92vw)] -translate-x-1/3 -translate-y-1/2 rounded-full bg-white/70 blur-3xl sm:h-[28rem] sm:w-[28rem]" />
 
-      <div className="mx-auto max-w-content px-5">
-        <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
-          <div className="max-w-3xl">
+      <div className="mx-auto max-w-content px-4 sm:px-5">
+        <div className="flex min-w-0 flex-col justify-between gap-4 lg:flex-row lg:items-end">
+          <div className="max-w-3xl min-w-0">
             <p className="text-xs font-extrabold uppercase tracking-widest text-accent">
               Why Choose QTPhone
             </p>
@@ -52,11 +51,11 @@ export function FeatureSection() {
           </p>
         </div>
 
-        <div className="mt-8 grid items-center gap-6 md:gap-7 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10">
+        <div className="mt-8 grid min-w-0 items-center gap-6 md:gap-7 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10">
           <div className="soft-reveal relative mx-auto flex w-full max-w-[34rem] justify-center lg:max-w-none">
-            <div className="absolute inset-x-8 top-10 h-72 rounded-full bg-accent/20 blur-3xl" />
-            <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/70 bg-white/52 p-3 shadow-[0_32px_100px_rgb(var(--color-accent)/0.18)] backdrop-blur-2xl transition duration-500 hover:-translate-y-1.5 hover:shadow-[0_38px_120px_rgb(var(--color-accent)/0.26)] motion-reduce:transform-none sm:p-4">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-[linear-gradient(135deg,rgb(var(--color-accent)/0.12),rgb(255_255_255/0.9))]">
+            <div className="absolute inset-x-6 top-10 h-56 rounded-full bg-white/80 blur-3xl sm:inset-x-8 sm:h-72" />
+            <div className="relative w-full overflow-hidden rounded-2xl border border-line/70 bg-white p-3 shadow-[0_24px_60px_rgb(15_23_42/0.1)] transition duration-500 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgb(15_23_42/0.14)] motion-reduce:transform-none sm:p-4">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#FFFFFF,#EAF6FF)]">
                 <Image
                   src="/images/qtphone-feature-mockup.webp"
                   alt="QTPhone premium smartphone"
@@ -65,30 +64,30 @@ export function FeatureSection() {
                   className="object-cover object-[48%_48%] transition duration-700 hover:scale-[1.035]"
                   priority={false}
                 />
-                <div className="absolute inset-0 bg-[linear-gradient(115deg,rgb(255_255_255/0.42),transparent_42%,rgb(var(--color-accent)/0.12))]" />
+                <div className="absolute inset-0 bg-[linear-gradient(115deg,rgb(255_255_255/0.35),transparent_46%,rgb(var(--color-accent)/0.08))]" />
               </div>
-              <div className="absolute left-6 top-6 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/82 px-3 py-1.5 text-xs font-black uppercase tracking-widest text-accent shadow-cyan backdrop-blur">
+              <div className="absolute left-6 top-6 inline-flex items-center gap-2 rounded-full border border-line bg-white/88 px-3 py-1.5 text-xs font-black uppercase tracking-widest text-accent shadow-sm backdrop-blur">
                 <Sparkles aria-hidden="true" size={14} />
                 QTPhone 16 Pro
               </div>
             </div>
           </div>
 
-          <div className="grid auto-cols-[minmax(15rem,82vw)] grid-flow-col gap-3 overflow-x-auto pb-3 sm:auto-cols-auto sm:grid-flow-row sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:gap-4">
+          <div className="grid min-w-0 gap-3 sm:grid-cols-2 lg:gap-4">
             {features.map((feature, index) => {
               const Icon = feature.icon;
 
               return (
                 <article
                   key={feature.title}
-                  className="soft-reveal group min-h-[13.25rem] rounded-2xl border border-white/60 bg-elevated/76 p-4 shadow-sm backdrop-blur-xl transition duration-300 hover:-translate-y-1.5 hover:border-accent hover:shadow-cyan motion-reduce:transform-none sm:min-h-0"
+                  className="soft-reveal group min-w-0 rounded-2xl border border-line/70 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_18px_40px_rgb(15_23_42/0.1)] motion-reduce:transform-none"
                   style={{ animationDelay: `${index * 95}ms` }}
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgb(var(--color-accent)/0.18),rgb(99_102_241/0.12))] text-accent transition duration-300 group-hover:scale-105 group-hover:shadow-[0_0_24px_rgb(var(--color-accent)/0.35)]">
+                  <div className="flex min-w-0 items-start justify-between gap-3">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-elevated text-accent transition duration-300 group-hover:scale-105">
                       <Icon aria-hidden="true" size={22} />
                     </div>
-                    <span className="rounded-full border border-accent/25 bg-accent/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-accent">
+                    <span className="max-w-[8.5rem] break-words rounded-full border border-accent/25 bg-accent/10 px-2.5 py-1 text-center text-[10px] font-black uppercase tracking-wide text-accent">
                       {feature.spec}
                     </span>
                   </div>
