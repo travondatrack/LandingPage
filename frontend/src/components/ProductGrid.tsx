@@ -104,7 +104,7 @@ export default function ProductGrid({
     <section id="smartphone-catalog" className="story-panel bg-[#f8fafc] dark:bg-[#171b26] py-16 px-6 md:px-12 border-b border-slate-200 dark:border-white/10 scroll-mt-20 transition-colors duration-300" data-reveal>
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10" data-reveal>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10" data-reveal="fade-right">
           <div>
             <h2 className="font-display font-light text-3xl sm:text-4xl text-slate-900 dark:text-white tracking-tight">
               Next-Gen <span className="font-serif italic text-slate-500 dark:text-zinc-400">Smart Devices.</span>
@@ -123,7 +123,7 @@ export default function ProductGrid({
         </div>
 
         {/* Filter Controls Row */}
-        <div className="mb-10 grid grid-cols-1 xl:grid-cols-12 gap-4 items-start" data-reveal>
+        <div className="mb-10 grid grid-cols-1 xl:grid-cols-12 gap-4 items-start" data-reveal="fade-left">
           {/* Search Input */}
           <div className="relative xl:col-span-4">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-zinc-500" />
@@ -132,7 +132,7 @@ export default function ProductGrid({
               placeholder="Search specifications, names, or brands..."
               value={search}
               onChange={handleSearchChange}
-              className="w-full bg-white dark:bg-[#202838] hover:bg-slate-50 dark:hover:bg-[#253145] border border-slate-200 dark:border-slate-500/25 focus:border-blue-600 dark:focus:border-sky-400 focus:outline-none rounded-full py-2.5 pl-11 pr-4 text-xs text-slate-800 dark:text-slate-100 transition shadow-xs dark:shadow-none"
+              className="w-full bg-white dark:bg-[#202838] hover:bg-slate-50 dark:hover:bg-[#253145] border border-slate-200 dark:border-slate-500/25 focus:border-blue-600 dark:focus:border-sky-400 focus:outline-none rounded-full py-2.5 pl-11 pr-4 text-xs text-slate-800 dark:text-slate-100 transition shadow-xs dark:shadow-none focus:shadow-[0_0_0_4px_rgba(14,165,233,0.12)]"
             />
           </div>
 
@@ -142,7 +142,7 @@ export default function ProductGrid({
               <button
                 key={series}
                 onClick={() => handleSeriesChange(series)}
-                className={`min-h-10 px-4 py-2.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-semibold border transition ${
+                className={`interactive-press min-h-10 px-4 py-2.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-semibold border transition ${
                   seriesFilter === series
                     ? "bg-blue-600 dark:bg-sky-500 border-transparent text-white dark:text-slate-950 shadow-sm"
                     : "bg-white dark:bg-slate-800/60 border-slate-200 dark:border-slate-500/25 text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white"
@@ -159,7 +159,7 @@ export default function ProductGrid({
             <select
               value={sortOption}
               onChange={handleSortChange}
-              className="w-full bg-white dark:bg-[#202838] hover:bg-slate-50 dark:hover:bg-[#253145] border border-slate-200 dark:border-slate-500/25 focus:border-blue-600 dark:focus:border-sky-400 focus:outline-none rounded-full py-2.5 px-4 text-xs text-slate-700 dark:text-slate-200 transition appearance-none cursor-pointer shadow-xs dark:shadow-none"
+              className="w-full bg-white dark:bg-[#202838] hover:bg-slate-50 dark:hover:bg-[#253145] border border-slate-200 dark:border-slate-500/25 focus:border-blue-600 dark:focus:border-sky-400 focus:outline-none rounded-full py-2.5 px-4 text-xs text-slate-700 dark:text-slate-200 transition appearance-none cursor-pointer shadow-xs dark:shadow-none focus:shadow-[0_0_0_4px_rgba(14,165,233,0.12)]"
             >
               <option value="rating-desc" className="bg-white dark:bg-[#202838] text-slate-800 dark:text-slate-200">Rating: Highest First</option>
               <option value="price-asc" className="bg-white dark:bg-[#202838] text-slate-800 dark:text-slate-200">Price: Low to High</option>
@@ -172,16 +172,21 @@ export default function ProductGrid({
         {/* Content Section */}
         {isLoading ? (
           /* Skeleton Loader List */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="skeleton-shimmer bg-white/[0.01] border border-white/5 rounded-2xl p-4 flex flex-col gap-4 animate-pulse">
-                <div className="bg-white/5 h-44 rounded-xl w-full" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" aria-label="Loading smartphone catalog">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="skeleton-shimmer rounded-2xl border border-slate-200 dark:border-slate-500/20 p-4 flex flex-col gap-4 shadow-sm" style={{ animationDelay: `${i * 80}ms` }}>
+                <div className="h-48 rounded-xl w-full bg-slate-200/80 dark:bg-white/5" />
                 <div className="flex justify-between">
-                  <div className="bg-white/5 h-3 w-1/4 rounded" />
-                  <div className="bg-white/5 h-3 w-1/4 rounded" />
+                  <div className="h-3 w-1/4 rounded bg-slate-200/80 dark:bg-white/5" />
+                  <div className="h-3 w-1/5 rounded bg-slate-200/80 dark:bg-white/5" />
                 </div>
-                <div className="bg-white/5 h-5 w-3/4 rounded animate-pulse" />
-                <div className="bg-white/5 h-10 w-full rounded-full mt-2" />
+                <div className="h-5 w-3/4 rounded bg-slate-200/80 dark:bg-white/5" />
+                <div className="h-3 w-full rounded bg-slate-200/80 dark:bg-white/5" />
+                <div className="h-3 w-2/3 rounded bg-slate-200/80 dark:bg-white/5" />
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <div className="h-10 w-full rounded-full bg-slate-200/80 dark:bg-white/5" />
+                  <div className="h-10 w-full rounded-full bg-slate-200/80 dark:bg-white/5" />
+                </div>
               </div>
             ))}
           </div>
@@ -250,7 +255,7 @@ export default function ProductGrid({
                     type="button"
                     onClick={() => handlePageChange(Math.max(1, normalizedPage - 1))}
                     disabled={normalizedPage === 1}
-                    className="h-10 w-10 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.04] text-slate-700 dark:text-zinc-300 flex items-center justify-center transition hover:border-sky-300 hover:text-sky-700 disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:text-slate-700"
+                    className="interactive-press h-10 w-10 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.04] text-slate-700 dark:text-zinc-300 flex items-center justify-center transition hover:border-sky-300 hover:text-sky-700 disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:text-slate-700"
                     aria-label="Previous product page"
                   >
                     <ChevronLeft className="w-4 h-4" />
@@ -261,7 +266,7 @@ export default function ProductGrid({
                       key={page}
                       type="button"
                       onClick={() => handlePageChange(page)}
-                      className={`h-10 min-w-10 rounded-full px-3 text-xs font-mono font-bold transition ${
+                      className={`interactive-press h-10 min-w-10 rounded-full px-3 text-xs font-mono font-bold transition ${
                         page === normalizedPage
                           ? "bg-sky-600 text-white shadow-lg shadow-sky-600/20"
                           : "border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.04] text-slate-600 dark:text-zinc-400 hover:border-sky-300 hover:text-sky-700 dark:hover:text-sky-300"
@@ -276,7 +281,7 @@ export default function ProductGrid({
                     type="button"
                     onClick={() => handlePageChange(Math.min(totalPages, normalizedPage + 1))}
                     disabled={normalizedPage === totalPages}
-                    className="h-10 w-10 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.04] text-slate-700 dark:text-zinc-300 flex items-center justify-center transition hover:border-sky-300 hover:text-sky-700 disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:text-slate-700"
+                    className="interactive-press h-10 w-10 rounded-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.04] text-slate-700 dark:text-zinc-300 flex items-center justify-center transition hover:border-sky-300 hover:text-sky-700 disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:text-slate-700"
                     aria-label="Next product page"
                   >
                     <ChevronRight className="w-4 h-4" />

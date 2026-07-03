@@ -2,15 +2,17 @@
 
 import React, { useState } from "react";
 import { Product, CartItem } from "../types";
-import { Heart, ShoppingBag, ShieldCheck, Trash2, ArrowRight, Sun, Moon } from "lucide-react";
+import { Heart, ShoppingBag, ShieldCheck, Trash2, ArrowRight, Sun, Moon, Eye, Clock3 } from "lucide-react";
 import { trackTelemetryEvent } from "../api";
 import { useTheme } from "@/lib/theme";
 
 interface NavbarProps {
   favorites: Product[];
   cart: CartItem[];
+  recentlyViewed: Product[];
   onRemoveFavorite: (id: number) => void;
   onRemoveCart: (id: number) => void;
+  onClearRecentlyViewed: () => void;
   onCheckoutDemo: () => void;
   onViewProduct: (product: Product) => void;
   onRefreshTelemetry: () => void;
@@ -20,8 +22,10 @@ interface NavbarProps {
 export default function Navbar({
   favorites,
   cart,
+  recentlyViewed,
   onRemoveFavorite,
   onRemoveCart,
+  onClearRecentlyViewed,
   onCheckoutDemo,
   onViewProduct,
   onRefreshTelemetry,
@@ -29,11 +33,12 @@ export default function Navbar({
 }: NavbarProps) {
   const [showFavDrawer, setShowFavDrawer] = useState(false);
   const [showCartDrawer, setShowCartDrawer] = useState(false);
+  const [showViewedDrawer, setShowViewedDrawer] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
   React.useEffect(() => {
-    onDrawerChange?.(showFavDrawer || showCartDrawer);
-  }, [showFavDrawer, showCartDrawer, onDrawerChange]);
+    onDrawerChange?.(showFavDrawer || showCartDrawer || showViewedDrawer);
+  }, [showFavDrawer, showCartDrawer, showViewedDrawer, onDrawerChange]);
 
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
   const cartTotal = cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
@@ -42,6 +47,7 @@ export default function Navbar({
     setShowFavDrawer(!showFavDrawer);
     if (!showFavDrawer) {
       setShowCartDrawer(false);
+      setShowViewedDrawer(false);
       trackTelemetryEvent("click", "Navbar: Open Favorites Drawer", { count: favorites.length });
       onRefreshTelemetry();
     }
@@ -51,7 +57,18 @@ export default function Navbar({
     setShowCartDrawer(!showCartDrawer);
     if (!showCartDrawer) {
       setShowFavDrawer(false);
+      setShowViewedDrawer(false);
       trackTelemetryEvent("click", "Navbar: Open Cart Drawer", { count: cartItemCount, total: cartTotal });
+      onRefreshTelemetry();
+    }
+  };
+
+  const toggleViewedDrawer = () => {
+    setShowViewedDrawer(!showViewedDrawer);
+    if (!showViewedDrawer) {
+      setShowFavDrawer(false);
+      setShowCartDrawer(false);
+      trackTelemetryEvent("click", "Navbar: Open Recently Viewed Drawer", { count: recentlyViewed.length });
       onRefreshTelemetry();
     }
   };
@@ -110,7 +127,7 @@ export default function Navbar({
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2.5 rounded-full border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-zinc-400 hover:text-black dark:hover:text-white transition cursor-pointer shadow-sm"
+            className="interactive-press p-2.5 rounded-full border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-zinc-400 hover:text-black dark:hover:text-white transition cursor-pointer shadow-sm"
             title={theme === "dark" ? "Chuyển sang Light Mode" : "Chuyển sang Dark Mode dịu mắt"}
           >
             {theme === "dark" ? (
@@ -123,7 +140,7 @@ export default function Navbar({
           {/* Favorites Button */}
           <button
             onClick={toggleFavDrawer}
-            className={`relative p-2.5 rounded-full border text-slate-600 dark:text-zinc-400 hover:text-rose-500 dark:hover:text-rose-400 transition hover:bg-slate-100 dark:hover:bg-white/5 ${
+            className={`interactive-press relative p-2.5 rounded-full border text-slate-600 dark:text-zinc-400 hover:text-rose-500 dark:hover:text-rose-400 transition hover:bg-slate-100 dark:hover:bg-white/5 ${
               showFavDrawer ? "bg-rose-50 dark:bg-rose-950/20 text-rose-500 dark:text-rose-400 border-rose-300 dark:border-rose-500/30" : "border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5"
             }`}
             title="Favorites"
@@ -139,7 +156,7 @@ export default function Navbar({
           {/* Cart Button */}
           <button
             onClick={toggleCartDrawer}
-            className={`relative p-2.5 rounded-full border text-slate-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition hover:bg-slate-100 dark:hover:bg-white/5 ${
+            className={`interactive-press relative p-2.5 rounded-full border text-slate-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition hover:bg-slate-100 dark:hover:bg-white/5 ${
               showCartDrawer ? "bg-slate-200 dark:bg-white/10 text-black dark:text-white border-slate-300 dark:border-white/20" : "border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5"
             }`}
             title="Shopping Cart"
@@ -152,10 +169,26 @@ export default function Navbar({
             )}
           </button>
 
+          {/* Recently Viewed Button */}
+          <button
+            onClick={toggleViewedDrawer}
+            className={`interactive-press relative p-2.5 rounded-full border text-slate-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-sky-300 transition hover:bg-slate-100 dark:hover:bg-white/5 ${
+              showViewedDrawer ? "bg-blue-50 dark:bg-sky-950/20 text-blue-600 dark:text-sky-300 border-blue-300 dark:border-sky-500/30" : "border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5"
+            }`}
+            title="Recently viewed"
+          >
+            <Clock3 className="w-4 h-4" />
+            {recentlyViewed.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-sky-500 text-white dark:text-slate-950 text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                {recentlyViewed.length}
+              </span>
+            )}
+          </button>
+
           {/* Sign in Button */}
           <button
             onClick={() => trackTelemetryEvent("click", "Navbar: Click Sign In")}
-            className="hidden sm:flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white font-display font-medium text-xs px-4 py-2 rounded-full transition shadow-lg shadow-blue-600/20 ml-1 cursor-pointer"
+            className="interactive-press hidden sm:flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white font-display font-medium text-xs px-4 py-2 rounded-full transition shadow-lg shadow-blue-600/20 ml-1 cursor-pointer"
           >
             <span>Sign in</span>
           </button>
@@ -163,12 +196,13 @@ export default function Navbar({
       </header>
 
       {/* Slideout Drawers Overlay */}
-      {(showFavDrawer || showCartDrawer) && (
+      {(showFavDrawer || showCartDrawer || showViewedDrawer) && (
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-xs z-[45] transition-opacity"
           onClick={() => {
             setShowFavDrawer(false);
             setShowCartDrawer(false);
+            setShowViewedDrawer(false);
           }}
         />
       )}
@@ -212,13 +246,13 @@ export default function Navbar({
                 <div className="flex items-center gap-1 shrink-0">
                   <button
                     onClick={() => onViewProduct(product)}
-                    className="p-1 text-slate-500 dark:text-zinc-400 hover:text-black dark:hover:text-white text-[10px] uppercase font-bold tracking-wider font-mono hover:bg-slate-200 dark:hover:bg-white/5 rounded transition"
+                    className="interactive-press p-1 text-slate-500 dark:text-zinc-400 hover:text-black dark:hover:text-white text-[10px] uppercase font-bold tracking-wider font-mono hover:bg-slate-200 dark:hover:bg-white/5 rounded transition"
                   >
                     View
                   </button>
                   <button
                     onClick={() => onRemoveFavorite(product.id)}
-                    className="p-1.5 text-slate-400 dark:text-zinc-500 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-slate-200 dark:hover:bg-white/5 rounded transition"
+                    className="interactive-press p-1.5 text-slate-400 dark:text-zinc-500 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-slate-200 dark:hover:bg-white/5 rounded transition"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -227,6 +261,67 @@ export default function Navbar({
             ))
           )}
         </div>
+      </div>
+
+      {/* Recently Viewed Drawer */}
+      <div
+        className={`fixed top-20 right-0 h-[calc(100vh-5rem)] w-full sm:w-96 bg-white dark:bg-[#1d2432] border-l border-slate-200 dark:border-white/10 z-50 transition-transform duration-300 transform shadow-2xl flex flex-col text-slate-900 dark:text-zinc-100 ${
+          showViewedDrawer ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="p-4 border-b border-slate-200 dark:border-white/5 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Eye className="w-4 h-4 text-blue-600 dark:text-sky-300" />
+            <span className="text-sm font-display font-medium tracking-wide">RECENTLY VIEWED</span>
+          </div>
+          <span className="text-[10px] font-mono text-slate-500 dark:text-zinc-500 uppercase">{recentlyViewed.length} items</span>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
+          {recentlyViewed.length === 0 ? (
+            <div className="flex-1 flex flex-col items-center justify-center text-slate-400 dark:text-zinc-600 gap-2 h-44 text-center">
+              <Clock3 className="w-8 h-8 text-slate-300 dark:text-zinc-800" />
+              <p className="text-xs">No product views yet.</p>
+              <p className="text-[10px] max-w-xs text-slate-400 dark:text-zinc-500">Open any product detail popup and it will appear here.</p>
+            </div>
+          ) : (
+            recentlyViewed.map((product) => (
+              <button
+                key={product.id}
+                type="button"
+                onClick={() => {
+                  setShowViewedDrawer(false);
+                  onViewProduct(product);
+                }}
+                className="interactive-press p-3 rounded-lg bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 hover:border-blue-300 dark:hover:border-sky-400/30 transition flex gap-3 items-center text-left"
+              >
+                <img
+                  src={product.thumbnail}
+                  alt={product.title}
+                  className="w-12 h-12 rounded object-cover bg-slate-100 dark:bg-zinc-950 border border-slate-200 dark:border-white/10 shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-xs font-bold text-slate-800 dark:text-zinc-200 truncate">{product.title}</h4>
+                  <p className="text-[10px] font-mono text-slate-500 dark:text-zinc-400 mt-0.5">
+                    ${product.price} · {product.rating.toFixed(2)} / 5
+                  </p>
+                </div>
+                <Eye className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 shrink-0" />
+              </button>
+            ))
+          )}
+        </div>
+
+        {recentlyViewed.length > 0 && (
+          <div className="p-4 bg-slate-50 dark:bg-white/[0.02] border-t border-slate-200 dark:border-white/5 shrink-0">
+            <button
+              onClick={onClearRecentlyViewed}
+              className="interactive-press w-full border border-slate-200 dark:border-white/10 bg-white dark:bg-white/[0.04] hover:border-rose-300 dark:hover:border-rose-400/30 text-slate-600 hover:text-rose-500 dark:text-zinc-300 dark:hover:text-rose-300 font-display font-bold text-xs py-3 px-4 rounded-full transition"
+            >
+              CLEAR VIEW HISTORY
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Cart List Drawer */}
@@ -270,7 +365,7 @@ export default function Navbar({
                 </div>
                 <button
                   onClick={() => onRemoveCart(item.id)}
-                  className="p-1.5 text-slate-400 dark:text-zinc-500 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-slate-200 dark:hover:bg-white/5 rounded transition shrink-0"
+                  className="interactive-press p-1.5 text-slate-400 dark:text-zinc-500 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-slate-200 dark:hover:bg-white/5 rounded transition shrink-0"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -288,7 +383,7 @@ export default function Navbar({
 
             <button
               onClick={onCheckoutDemo}
-              className="w-full bg-blue-600 dark:bg-sky-500 hover:bg-blue-500 dark:hover:bg-sky-400 text-white dark:text-slate-950 font-display font-bold text-xs py-3 px-4 rounded-full flex items-center justify-center gap-2 transition shadow-md"
+              className="interactive-press w-full bg-blue-600 dark:bg-sky-500 hover:bg-blue-500 dark:hover:bg-sky-400 text-white dark:text-slate-950 font-display font-bold text-xs py-3 px-4 rounded-full flex items-center justify-center gap-2 transition shadow-md"
             >
               <span>RESERVE PRE-ORDER</span>
               <ArrowRight className="w-3.5 h-3.5" />

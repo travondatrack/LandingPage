@@ -76,7 +76,7 @@ export default function Newsletter({ onRefreshTelemetry }: NewsletterProps) {
         ) : (
           /* Subscription Form */
           <form onSubmit={handleSubmit} className="mt-8 max-w-md mx-auto flex flex-col gap-2.5">
-            <div className="relative flex items-center bg-white dark:bg-[#202838] hover:bg-slate-50 dark:hover:bg-[#253145] border border-slate-300 dark:border-slate-500/25 focus-within:border-blue-600 dark:focus-within:border-sky-400 rounded-full overflow-hidden p-1 transition duration-200 shadow-sm dark:shadow-none">
+            <div className="relative flex items-center bg-white dark:bg-[#202838] hover:bg-slate-50 dark:hover:bg-[#253145] border border-slate-300 dark:border-slate-500/25 focus-within:border-blue-600 dark:focus-within:border-sky-400 rounded-full overflow-hidden p-1 transition duration-200 shadow-sm dark:shadow-none focus-within:shadow-[0_0_0_4px_rgba(14,165,233,0.12)]">
               <input
                 type="email"
                 placeholder="Enter your email address..."
@@ -88,7 +88,7 @@ export default function Newsletter({ onRefreshTelemetry }: NewsletterProps) {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="bg-blue-600 hover:bg-blue-500 text-white font-display font-medium text-xs px-6 py-2.5 rounded-full transition flex items-center justify-center gap-1.5 shrink-0 disabled:opacity-50 cursor-pointer shadow-lg shadow-blue-600/20"
+                className="interactive-press bg-blue-600 hover:bg-blue-500 text-white font-display font-medium text-xs px-6 py-2.5 rounded-full transition flex items-center justify-center gap-1.5 shrink-0 disabled:opacity-50 cursor-pointer shadow-lg shadow-blue-600/20"
               >
                 {isLoading ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />

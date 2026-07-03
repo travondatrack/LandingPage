@@ -42,6 +42,9 @@ export function LandingPage() {
   // Pre-order cart state (cached locally after hydration)
   const [cart, setCart] = useState<CartItem[]>([]);
 
+  // Recently viewed products state (cached locally after hydration)
+  const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
+
   // Active comparisons (IDs only)
   const [comparingIds, setComparingIds] = useState<number[]>([]);
 
@@ -54,6 +57,7 @@ export function LandingPage() {
   useEffect(() => {
     setFavorites(safeParse<Product[]>("helicorp-favs", []));
     setCart(safeParse<CartItem[]>("helicorp-cart", []));
+    setRecentlyViewed(safeParse<Product[]>("qtphone-recently-viewed", []));
     setHasLoadedStorage(true);
   }, []);
 
@@ -76,6 +80,16 @@ export function LandingPage() {
       // ignore quota exceeded errors
     }
   }, [cart, hasLoadedStorage]);
+
+  // Sync recently viewed state cache
+  useEffect(() => {
+    if (!hasLoadedStorage) return;
+    try {
+      localStorage.setItem("qtphone-recently-viewed", JSON.stringify(recentlyViewed));
+    } catch {
+      // ignore quota exceeded errors
+    }
+  }, [recentlyViewed, hasLoadedStorage]);
 
   // Track page load telemetry once catalog is ready
   useEffect(() => {
@@ -179,18 +193,30 @@ export function LandingPage() {
   // Trigger quick spec view modal overlay
   const handleViewDetails = (product: Product) => {
     setSelectedDetailsProduct(product);
+    setRecentlyViewed((current) => [product, ...current.filter((item) => item.id !== product.id)].slice(0, 6));
     trackTelemetryEvent("click", `Inspect Specifications Detail: ${product.title}`, { productId: product.id });
+    triggerTelemetryRefresh();
+  };
+
+  const handleClearRecentlyViewed = () => {
+    setRecentlyViewed([]);
+    trackTelemetryEvent("click", "Cleared recently viewed products");
+    showToast("Recently viewed products cleared.", "info");
     triggerTelemetryRefresh();
   };
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#171b26] text-slate-900 dark:text-zinc-100 flex flex-col font-sans transition-colors duration-300">
+      <div className="scroll-progress" aria-hidden="true" />
+
       {/* Navbar layer */}
       <Navbar
         favorites={favorites}
         cart={cart}
+        recentlyViewed={recentlyViewed}
         onRemoveFavorite={handleRemoveFavoriteId}
         onRemoveCart={handleRemoveCartId}
+        onClearRecentlyViewed={handleClearRecentlyViewed}
         onCheckoutDemo={handleCheckoutDemo}
         onViewProduct={handleViewDetails}
         onRefreshTelemetry={triggerTelemetryRefresh}

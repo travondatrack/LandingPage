@@ -44,6 +44,10 @@ export function useScrollytelling() {
     let animationFrame = 0;
 
     function updateParallax() {
+      const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, window.scrollY / scrollable));
+      document.documentElement.style.setProperty("--scroll-progress", progress.toFixed(4));
+
       if (prefersReducedMotion || parallaxItems.size === 0) {
         animationFrame = 0;
         return;

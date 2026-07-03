@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DEFAULT_NEWSLETTER_WEBHOOK_URL =
   "https://webhook.site/85604a13-d533-4852-9e7b-9bcc8379661e";
+
+const NewsletterSchema = z.object({
+  email: z.string().email().max(120),
+  source: z.string().max(80).optional(),
+  updates: z.boolean().optional()
+});
+
 type NewsletterSubscription = {
   email: string;
   source: string;
@@ -30,8 +38,23 @@ const subscriptions: NewsletterSubscription[] = [];
 
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as { email?: string; source?: string; updates?: boolean };
-    const email = body.email?.trim().toLowerCase() ?? "";
+    const rawBody = await request.json().catch(() => null);
+    const parseResult = NewsletterSchema.safeParse(rawBody);
+
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          ok: false,
+          validated: false,
+          message: "Invalid subscription data structure.",
+          errors: parseResult.error.flatten()
+        },
+        { status: 422 }
+      );
+    }
+
+    const body = parseResult.data;
+    const email = body.email.trim().toLowerCase();
     const source =
       typeof body.source === "string" && body.source.trim()
         ? body.source.trim().replace(/[^\w .:-]/g, "").slice(0, 80)

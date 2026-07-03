@@ -31,7 +31,7 @@ export default function ProductCard({
 
   return (
     <div
-      className="micro-lift group relative bg-white dark:bg-[#202838] border border-slate-200 dark:border-slate-500/20 rounded-2xl overflow-hidden hover:bg-slate-50 dark:hover:bg-[#253145] hover:border-slate-300 dark:hover:border-slate-400/30 transition-all duration-500 flex flex-col justify-between shadow-sm dark:shadow-[0_18px_45px_rgba(0,0,0,0.16)]"
+      className="micro-lift product-card-interactive group relative bg-white dark:bg-[#202838] border border-slate-200 dark:border-slate-500/20 rounded-2xl overflow-hidden hover:bg-slate-50 dark:hover:bg-[#253145] hover:border-slate-300 dark:hover:border-slate-400/30 transition-all duration-500 flex flex-col justify-between shadow-sm dark:shadow-[0_18px_45px_rgba(0,0,0,0.16)]"
       style={{ contentVisibility: "auto" }}
     >
       {/* Badges / Floating Controls Header */}
@@ -44,7 +44,7 @@ export default function ProductCard({
         {/* Favorite Trigger */}
         <button
           onClick={() => onToggleFavorite(product)}
-          className={`p-2 rounded-full border backdrop-blur-md transition-all active:scale-90 ${
+          className={`interactive-press p-2 rounded-full border backdrop-blur-md transition-all active:scale-90 ${
             isFavorite
               ? "bg-rose-500/20 border-rose-500/40 text-rose-500 dark:text-rose-400"
               : "bg-white/80 dark:bg-slate-900/55 border-slate-200 dark:border-slate-500/25 text-slate-600 dark:text-slate-300 hover:text-rose-500 dark:hover:text-rose-400 shadow-xs"
@@ -56,7 +56,7 @@ export default function ProductCard({
       </div>
 
       {/* Product Image Area */}
-      <div className="relative pt-[70%] bg-slate-100 dark:bg-[#253145] overflow-hidden border-b border-slate-200 dark:border-slate-500/20 flex items-center justify-center">
+      <div className="product-sheen relative pt-[70%] bg-slate-100 dark:bg-[#253145] overflow-hidden border-b border-slate-200 dark:border-slate-500/20 flex items-center justify-center">
         <img
           src={product.thumbnail}
           alt={product.title}
@@ -65,10 +65,10 @@ export default function ProductCard({
           loading="lazy"
         />
         {/* Hover quick spec shortcut bar */}
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
           <button
             onClick={() => onViewDetails(product)}
-            className="px-5 py-2.5 bg-white text-black text-xs font-semibold rounded-full flex items-center gap-1.5 hover:bg-zinc-200 transition-all active:scale-95 cursor-pointer"
+            className="interactive-press px-5 py-2.5 bg-white text-black text-xs font-semibold rounded-full flex items-center gap-1.5 hover:bg-zinc-200 transition-all active:scale-95 cursor-pointer"
           >
             <Eye className="w-3.5 h-3.5" />
             <span>Specifications</span>
@@ -117,7 +117,7 @@ export default function ProductCard({
             {/* Cartpre-order button */}
             <button
               onClick={() => onToggleCart(product)}
-              className={`py-2 px-3 rounded-full text-[11px] font-semibold flex items-center justify-center gap-1.5 transition active:scale-95 ${
+              className={`interactive-press py-2 px-3 rounded-full text-[11px] font-semibold flex items-center justify-center gap-1.5 transition active:scale-95 ${
                 isInCart
                   ? "bg-emerald-50 dark:bg-emerald-400/10 text-emerald-600 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-300/25"
                   : "bg-blue-600 dark:bg-sky-500 hover:bg-blue-500 dark:hover:bg-sky-400 text-white dark:text-slate-950 shadow-xs"
@@ -139,7 +139,7 @@ export default function ProductCard({
             {/* Compare checkbox / button */}
             <button
               onClick={() => onToggleCompare(product)}
-              className={`py-2 px-3 rounded-full text-[11px] font-semibold flex items-center justify-center gap-1.5 transition border ${
+              className={`interactive-press py-2 px-3 rounded-full text-[11px] font-semibold flex items-center justify-center gap-1.5 transition border ${
                 isComparing
                   ? "border-blue-500 dark:border-sky-300/40 bg-blue-50 dark:bg-sky-400/10 text-blue-600 dark:text-sky-200"
                   : "border-slate-200 dark:border-slate-500/25 bg-slate-100 dark:bg-slate-800/70 text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white"

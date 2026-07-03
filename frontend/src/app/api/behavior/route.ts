@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { telemetryStore } from "../events/store";
 
 type StoredBehaviorEvent = {
@@ -7,6 +8,21 @@ type StoredBehaviorEvent = {
   page?: string;
   timestamp: string;
   userAgent?: string;
+};
+
+type WebhookDelivery = {
+  ok: boolean;
+  status: number | null;
+  endpoint: string;
+  error?: string;
+};
+
+type TelegramDelivery = {
+  ok: boolean;
+  status: number | null;
+  endpoint: string;
+  chatId?: string | number;
+  error?: string;
 };
 
 const behaviorEvents: StoredBehaviorEvent[] = [];
@@ -29,6 +45,13 @@ const ALLOWED_EVENTS = new Set([
   "view_product_detail",
   "switch_tab"
 ]);
+
+const BehaviorEventSchema = z.object({
+  event: z.string().min(1).max(80),
+  detail: z.record(z.string(), z.unknown()).optional().default({}),
+  page: z.string().optional().default("/"),
+  timestamp: z.string().optional()
+});
 
 function getWebhookUrl() {
   return (
@@ -55,7 +78,7 @@ function sanitizeDetail(detail: unknown): StoredBehaviorEvent["detail"] {
   }
 
   return Object.entries(detail as Record<string, unknown>)
-    .slice(0, 12)
+    .slice(0, 15)
     .reduce<StoredBehaviorEvent["detail"]>((acc, [rawKey, rawValue]) => {
       const key = rawKey.trim().replace(/[^\w.-]/g, "").slice(0, 40);
 
@@ -97,15 +120,27 @@ function normalizePage(value: unknown) {
 
 export async function POST(request: NextRequest) {
   try {
-    const payload = (await request.json()) as Partial<StoredBehaviorEvent>;
-    const eventName =
-      typeof payload.event === "string" && payload.event.trim()
-        ? payload.event.trim().slice(0, 80)
-        : "unknown";
+    const rawBody = await request.json().catch(() => null);
+    const parseResult = BehaviorEventSchema.safeParse(rawBody);
+
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          ok: false,
+          validated: false,
+          message: "Invalid behavior event data structure.",
+          errors: parseResult.error.flatten()
+        },
+        { status: 422 }
+      );
+    }
+
+    const payload = parseResult.data;
+    const eventName = payload.event.trim().slice(0, 80);
 
     if (!ALLOWED_EVENTS.has(eventName)) {
       return NextResponse.json(
-        { ok: false, message: "Unsupported behavior event.", field: "event" },
+        { ok: false, validated: false, message: "Unsupported behavior event.", field: "event" },
         { status: 422 }
       );
     }
@@ -125,7 +160,7 @@ export async function POST(request: NextRequest) {
       behaviorEvents.splice(0, behaviorEvents.length - 100);
     }
 
-    // Mirror to main telemetry store so UI dashboard sees behavior tracking
+    // Mirror to main telemetry store so UI developer dashboard sees behavior tracking
     telemetryStore.addEvent({
       id: `beh-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       type: eventName,
@@ -135,7 +170,7 @@ export async function POST(request: NextRequest) {
     });
 
     const webhookUrl = getWebhookUrl();
-    let webhookDelivery: { ok: boolean; status: number | null; endpoint: string; error?: string };
+    let webhookDelivery: WebhookDelivery;
 
     try {
       const webhookResponse = await fetch(webhookUrl, {
@@ -166,14 +201,123 @@ export async function POST(request: NextRequest) {
       };
     }
 
+    // Deliver notification to Telegram Webhook / Bot API (invisible to frontend UI / landing page)
+    let telegramDelivery: TelegramDelivery | undefined;
+    const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
+    let telegramChatId = process.env.TELEGRAM_CHAT_ID;
+    const telegramWebhookUrl =
+      process.env.TELEGRAM_WEBHOOK_URL ?? process.env.BEHAVIOR_TELEGRAM_WEBHOOK_URL;
+
+    if (telegramBotToken || telegramWebhookUrl) {
+      let tgMsg = `📊 *User Behavior Tracked*\n\n`;
+      tgMsg += `⚡ *Event:* \`${storedEvent.event}\`\n`;
+      tgMsg += `🌐 *Page:* \`${storedEvent.page}\`\n`;
+
+      if (storedEvent.event === "page_click") {
+        const label = storedEvent.detail.label || storedEvent.detail.tag || "Interactive Element";
+        const section = storedEvent.detail.section || "global";
+        tgMsg += `🖱️ *Click Action:* \`${label}\`\n📍 *Section:* \`${section}\`\n`;
+      } else if (storedEvent.event === "scroll_depth") {
+        tgMsg += `📜 *Scroll Depth:* \`${storedEvent.detail.depth}%\`\n`;
+      } else {
+        const detailStr = JSON.stringify(storedEvent.detail);
+        if (detailStr && detailStr !== "{}") {
+          tgMsg += `📋 *Detail:* \`${detailStr.slice(0, 300)}\`\n`;
+        }
+      }
+      tgMsg += `⏰ *Timestamp:* \`${storedEvent.timestamp}\``;
+
+      if (telegramWebhookUrl) {
+        try {
+          const tgRes = await fetch(telegramWebhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              text: tgMsg,
+              parse_mode: "Markdown",
+              source: "qtphone-behavior-tracker",
+              event: storedEvent
+            })
+          });
+          telegramDelivery = {
+            ok: tgRes.ok,
+            status: tgRes.status,
+            endpoint: sanitizeWebhookEndpoint(telegramWebhookUrl)
+          };
+        } catch (e: unknown) {
+          telegramDelivery = {
+            ok: false,
+            status: null,
+            endpoint: sanitizeWebhookEndpoint(telegramWebhookUrl),
+            error: e instanceof Error ? e.message : "Network error reaching Telegram webhook"
+          };
+        }
+      } else if (telegramBotToken) {
+        if (!telegramChatId) {
+          try {
+            const updRes = await fetch(`https://api.telegram.org/bot${telegramBotToken}/getUpdates`);
+            if (updRes.ok) {
+              const updData = await updRes.json();
+              if (updData.ok && Array.isArray(updData.result) && updData.result.length > 0) {
+                const latest = updData.result[updData.result.length - 1];
+                telegramChatId =
+                  latest.message?.chat?.id ||
+                  latest.my_chat_member?.chat?.id ||
+                  latest.channel_post?.chat?.id;
+              }
+            }
+          } catch {
+            // ignore getUpdates network error
+          }
+        }
+
+        if (telegramChatId) {
+          try {
+            const tgRes = await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                chat_id: telegramChatId,
+                text: tgMsg,
+                parse_mode: "Markdown"
+              })
+            });
+            const tgJson = await tgRes.json().catch(() => ({}));
+            telegramDelivery = {
+              ok: tgRes.ok && Boolean(tgJson.ok),
+              status: tgRes.status,
+              endpoint: `Telegram Bot (@qtphone_bot)`,
+              chatId: telegramChatId,
+              error: !tgRes.ok ? (tgJson.description || "Failed to send Telegram message") : undefined
+            };
+          } catch (e: unknown) {
+            telegramDelivery = {
+              ok: false,
+              status: null,
+              endpoint: `Telegram Bot (@qtphone_bot)`,
+              error: e instanceof Error ? e.message : "Network error reaching Telegram API"
+            };
+          }
+        } else {
+          telegramDelivery = {
+            ok: false,
+            status: null,
+            endpoint: `Telegram Bot (@qtphone_bot)`,
+            error: "Chat ID not found yet. Please send /start to @qtphone_bot on Telegram."
+          };
+        }
+      }
+    }
+
     return NextResponse.json({
       ok: true,
       validated: true,
       stored: behaviorEvents.length,
-      webhook: webhookDelivery
+      webhook: webhookDelivery,
+      telegram: telegramDelivery
     });
   } catch {
-    return NextResponse.json({ ok: false, message: "Invalid behavior payload." }, { status: 400 });
+    return NextResponse.json({ ok: false, validated: false, message: "Invalid behavior payload." }, { status: 400 });
   }
 }
 
