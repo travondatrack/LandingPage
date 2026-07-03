@@ -11,12 +11,8 @@
     "typecheck": "cd frontend && npm run typecheck"
   },
   "dependencies": {
-    "@gltf-transform/core": "^4.4.0",
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.6.1",
     "next": "^15.0.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "three": "^0.185.0"
+    "react-dom": "^19.0.0"
   }
 }

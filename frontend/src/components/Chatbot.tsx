@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Message } from "../types";
 import { sendChatbotMessage } from "../api";
-import { MessageSquare, X, Send, Loader2, Bot, Sparkles } from "lucide-react";
+import { MessageSquare, X, Send, Loader2 } from "lucide-react";
 import { showToast } from "./Toast";
 
 interface ChatbotProps {
