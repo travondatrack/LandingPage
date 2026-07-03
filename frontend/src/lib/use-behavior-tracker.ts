@@ -1,22 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { trackBehavior } from "@/lib/behavior";
 
 const depthMarks = [25, 50, 75, 100];
 
 export function useBehaviorTracker() {
-  const [toastMessage, setToastMessage] = useState("");
-  const toastTimer = useRef<number | undefined>(undefined);
+  const lastClickLabel = useRef("");
+  const lastClickTime = useRef(0);
 
   useEffect(() => {
     const sentDepths = new Set<number>();
-
-    function showToast(message: string) {
-      setToastMessage(message);
-      window.clearTimeout(toastTimer.current);
-      toastTimer.current = window.setTimeout(() => setToastMessage(""), 2400);
-    }
 
     function handleScroll() {
       const scrollable = document.documentElement.scrollHeight - window.innerHeight;
@@ -29,7 +23,6 @@ export function useBehaviorTracker() {
 
       sentDepths.add(mark);
       trackBehavior("scroll_depth", { depth: mark });
-      showToast(`Scroll depth tracked: ${mark}%`);
     }
 
     function handleClick(event: MouseEvent) {
@@ -45,13 +38,20 @@ export function useBehaviorTracker() {
         interactive.getAttribute("aria-label") ??
         interactive.textContent?.trim().replace(/\s+/g, " ").slice(0, 80) ??
         interactive.tagName.toLowerCase();
+      const now = Date.now();
+
+      if (label === lastClickLabel.current && now - lastClickTime.current < 900) {
+        return;
+      }
+
+      lastClickLabel.current = label;
+      lastClickTime.current = now;
 
       trackBehavior("page_click", {
         label,
         tag: interactive.tagName.toLowerCase(),
         section: interactive.closest("section")?.id ?? "global"
       });
-      showToast(`Interaction tracked: ${label}`);
     }
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -59,11 +59,8 @@ export function useBehaviorTracker() {
     handleScroll();
 
     return () => {
-      window.clearTimeout(toastTimer.current);
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("click", handleClick);
     };
   }, []);
-
-  return toastMessage;
 }

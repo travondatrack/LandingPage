@@ -1,17 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { ThemeProvider } from "@/lib/theme";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://qtphone.example.com";
-const title = "QTPhone | Flagship Smart Device Studio";
+const title = "QTPhone Flagship Series | Next-Gen Smart Devices";
 const description =
-  "Explore the QTPhone flagship smart device landing page. Discover next-generation design engineered for studio photography, all-day battery endurance, and exceptional AI performance.";
+  "Explore the QTPhone Flagship Series showcase. Designed for next-gen mobility, aerospace titanium materials, and unparalleled neural intelligence.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title,
   description,
-  applicationName: "QTPhone",
-  keywords: ["flagship smartphone", "QTPhone", "next-gen smartphones", "premium smart devices"],
+  applicationName: "QTPhone Flagship Series",
+  keywords: ["QTPhone", "Flagship Series", "smartphone showcase", "specs comparison", "aerospace titanium"],
   icons: {
     icon: "/qtphone-icon-transparent-512.png",
     shortcut: "/qtphone-icon-transparent-512.png",
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#F8FAFC"
+  themeColor: "#171b26"
 };
 
 export default function RootLayout({
@@ -52,13 +53,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="bg-canvas text-ink selection:bg-accent selection:text-white">
+    <html lang="en" suppressHydrationWarning className="dark">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+try {
+  var theme = localStorage.getItem("qtphone-theme");
+  if (theme === "light" || theme === "dark") {
+    document.documentElement.classList.remove("light", "dark");
+    document.documentElement.classList.add(theme);
+    document.documentElement.style.colorScheme = theme;
+  }
+} catch (_) {}
+            `.trim()
+          }}
+        />
+      </head>
+      <body className="bg-[#f8fafc] dark:bg-[#171b26] text-slate-900 dark:text-zinc-100 selection:bg-blue-600 selection:text-white transition-colors duration-300">
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>
-        <div className="site-grain" aria-hidden="true" />
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

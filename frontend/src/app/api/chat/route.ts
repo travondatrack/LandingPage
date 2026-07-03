@@ -6,10 +6,11 @@ import type { SmartphoneProduct } from "@/lib/products";
 type ChatProviderResult = {
   reply: string;
   provider: "groq" | "openai" | "gemini" | "demo";
+  mode?: "AI" | "Demo";
 };
 
 const SYSTEM_INSTRUCTIONS =
-  "You are QTPhone advisor. Reply in the same language as the shopper. For QTPhone, smartphone, pricing, specs, warranty, shipping, discount, favorites, cart, or catalog questions, use the provided catalog context and do not invent missing product facts. For other general questions, answer normally and concisely as a helpful assistant. If the shopper asks for current date or time, use the provided runtime context. Keep replies premium, friendly, and under 120 words.";
+  "You are QTPhone Advisor, an intelligent AI concierge for QTPhone smartphones. Always reply in the exact same language as the user (e.g., if asked in Vietnamese, answer in natural, professional Vietnamese). For questions related to QTPhone, smartphone recommendations, specs, pricing, comparisons, or ordering, use the provided catalog context accurately. For ALL OTHER general questions outside smartphones (such as technology, coding, science, general knowledge, math, etc.), answer clearly, helpfully, and concisely as a versatile AI assistant. Keep replies friendly, highly informative, and well-structured.";
 
 export async function POST(request: NextRequest) {
   const body = (await request.json()) as { message?: string };
@@ -28,12 +29,16 @@ export async function POST(request: NextRequest) {
     const providerReply = await getConfiguredProviderReply(rawMessage, products);
 
     if (providerReply) {
-      return NextResponse.json(providerReply);
+      return NextResponse.json({
+        ...providerReply,
+        mode: providerReply.provider === "demo" ? "Demo" : "AI"
+      });
     }
 
     return NextResponse.json({
       reply: buildProductReply(message, products),
       provider: "demo",
+      mode: "Demo",
       configured: false
     });
   } catch {
@@ -41,6 +46,7 @@ export async function POST(request: NextRequest) {
       reply:
         "I can still help with the page: use search, tabs, product detail, favorites, cart preview, and comparison tools to choose a flagship model.",
       provider: "demo",
+      mode: "Demo",
       configured: false
     });
   }
@@ -86,7 +92,7 @@ async function callGroq(message: string, products: SmartphoneProduct[]) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: process.env.GROQ_MODEL ?? "llama-3.1-8b-instant",
+        model: process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile",
         messages: [
           {
             role: "system",
@@ -99,8 +105,8 @@ async function callGroq(message: string, products: SmartphoneProduct[]) {
             )}\n\nQuestion: ${message}`
           }
         ],
-        max_tokens: 180,
-        temperature: 0.35
+        max_tokens: 350,
+        temperature: 0.4
       })
     });
 
@@ -218,7 +224,7 @@ function buildCatalogContext(products: SmartphoneProduct[]) {
     .slice(0, 8)
     .map(
       (product) =>
-        `- ${product.name} (${product.brand}): ${formatPrice(product.price)}, ${formatDiscount(
+        `- ${product.title} (${product.brand}): ${formatPrice(product.price)}, ${formatDiscount(
           product.discountPercentage
         )}, ${formatRating(product.rating)}, stock ${product.stock}. ${product.description}`
     )
@@ -231,24 +237,24 @@ function buildProductReply(
 ) {
   if (message.includes("discount") || message.includes("deal")) {
     const product = [...products].sort((a, b) => b.discountPercentage - a.discountPercentage)[0];
-    return `${product.name} currently has the strongest discount at ${formatDiscount(
+    return `${product.title} currently has the strongest discount at ${formatDiscount(
       product.discountPercentage
     )}, listed from ${formatPrice(product.price)}.`;
   }
 
   if (message.includes("camera")) {
-    const product = products.find((item) => item.name.toLowerCase().includes("pro")) ?? products[0];
-    return `${product.name} is a strong camera-oriented pick from this catalog. Open quick view to compare rating, warranty, and product details.`;
+    const product = products.find((item) => item.title.toLowerCase().includes("pro")) ?? products[0];
+    return `${product.title} is a strong camera-oriented pick from this catalog. Open quick view to compare rating, warranty, and product details.`;
   }
 
   if (message.includes("compare")) {
     const mentioned = products.filter((product) =>
-      message.includes(product.name.toLowerCase().replace("apple ", ""))
+      message.includes(product.title.toLowerCase().replace("apple ", ""))
     );
     const picks = mentioned.length >= 2 ? mentioned.slice(0, 2) : products.slice(0, 2);
-    return `${picks[0].name} is ${formatPrice(picks[0].price)} with ${formatRating(
+    return `${picks[0].title} is ${formatPrice(picks[0].price)} with ${formatRating(
       picks[0].rating
-    )}; ${picks[1].name} is ${formatPrice(picks[1].price)} with ${formatRating(
+    )}; ${picks[1].title} is ${formatPrice(picks[1].price)} with ${formatRating(
       picks[1].rating
     )}. Use the compare icon to save both.`;
   }
@@ -258,7 +264,7 @@ function buildProductReply(
   }
 
   const topRated = [...products].sort((a, b) => b.rating - a.rating)[0];
-  return `${topRated.name} is the top-rated visible option at ${formatRating(
+  return `${topRated.title} is the top-rated visible option at ${formatRating(
     topRated.rating
   )}. You can favorite it, add it to cart preview, or open quick view for specs.`;
 }

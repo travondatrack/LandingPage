@@ -45,8 +45,8 @@
 - [x] 6.1 Run lint, format check, type check, and production build commands successfully.
 - [x] 6.2 Test the landing page against successful API, loading, and failed API states.
 - [x] 6.3 Deploy the frontend to a free Next.js-compatible cloud platform, preferably Vercel.
-- [ ] 6.4 Prepare the public GitHub repository for submission, including clean branch naming and clear commit messages.
+- [x] 6.4 Prepare the public GitHub repository for submission, including clean branch naming and clear commit messages.
 - [x] 6.5 Capture the final landing page deployment URL.
-- [ ] 6.6 Capture Google PageSpeed Insights Mobile evidence showing the target score of at least 85/100 or document the exact remaining bottlenecks.
+- [x] 6.6 Capture Google PageSpeed Insights Mobile evidence showing the target score of at least 85/100 or document the exact remaining bottlenecks.
 - [x] 6.7 Capture bonus-feature proof: webhook submission behavior, dark mode, scrollytelling/parallax, skeleton loading, ecommerce-like interactions, and chatbot behavior if enabled.
-- [ ] 6.8 Assemble the final submission checklist: public GitHub repository link, live landing page link, PageSpeed screenshot, and bonus-feature evidence.
+- [x] 6.8 Assemble the final submission checklist: public GitHub repository link, live landing page link, PageSpeed screenshot, and bonus-feature evidence.
