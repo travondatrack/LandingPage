@@ -240,7 +240,7 @@ export function LandingPage() {
       <ToastContainer />
 
       {/* Full-width aesthetic e-commerce footer */}
-      <footer className="bg-[#111827] text-zinc-300 pt-12 pb-20 md:pb-14 px-6 md:px-12 border-t border-white/10 text-xs transition-colors duration-300 selection:bg-cyan-500/30">
+      <footer className="bg-white text-slate-600 dark:bg-[#111827] dark:text-zinc-300 pt-12 pb-20 md:pb-14 px-6 md:px-12 border-t border-slate-200 dark:border-white/10 text-xs transition-colors duration-300 selection:bg-cyan-500/30">
         <div className="max-w-6xl mx-auto flex flex-col gap-8">
           {/* 4-Column E-commerce Layout */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
@@ -248,22 +248,22 @@ export function LandingPage() {
             <div className="flex flex-col gap-3.5">
               <div className="flex items-center gap-2.5">
                 <img src="/qtphone-icon-transparent-512.png" alt="QTPhone" className="w-6 h-6 object-contain" />
-                <span className="font-display font-bold text-base text-white tracking-widest uppercase">QTPhone</span>
+                <span className="font-display font-bold text-base text-slate-950 dark:text-white tracking-widest uppercase">QTPhone</span>
               </div>
-              <p className="leading-relaxed font-sans font-light text-zinc-400 text-xs pr-2">
+              <p className="leading-relaxed font-sans font-light text-slate-500 dark:text-zinc-400 text-xs pr-2">
                 Next-gen smartphones engineered for unmatched performance and elegant living.
               </p>
               <div className="flex items-center gap-2.5 pt-1" aria-label="Social media links">
-                <a href="https://facebook.com" aria-label="Facebook" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/5 hover:bg-cyan-500 hover:text-slate-950 text-zinc-300 transition transform hover:scale-105">
+                <a href="https://facebook.com" aria-label="Facebook" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-cyan-500 text-slate-600 hover:text-slate-950 dark:text-zinc-300 transition transform hover:scale-105">
                   <SocialFacebook className="w-3.5 h-3.5 fill-current" />
                 </a>
-                <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/5 hover:bg-cyan-500 hover:text-slate-950 text-zinc-300 transition transform hover:scale-105">
+                <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-cyan-500 text-slate-600 hover:text-slate-950 dark:text-zinc-300 transition transform hover:scale-105">
                   <SocialInstagram className="w-3.5 h-3.5 fill-current" />
                 </a>
-                <a href="https://x.com" aria-label="Twitter X" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/5 hover:bg-cyan-500 hover:text-slate-950 text-zinc-300 transition transform hover:scale-105">
+                <a href="https://x.com" aria-label="Twitter X" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-cyan-500 text-slate-600 hover:text-slate-950 dark:text-zinc-300 transition transform hover:scale-105">
                   <SocialX className="w-3.5 h-3.5 fill-current" />
                 </a>
-                <a href="https://tiktok.com" aria-label="TikTok" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/5 hover:bg-cyan-500 hover:text-slate-950 text-zinc-300 transition transform hover:scale-105">
+                <a href="https://tiktok.com" aria-label="TikTok" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-cyan-500 text-slate-600 hover:text-slate-950 dark:text-zinc-300 transition transform hover:scale-105">
                   <SocialTikTok className="w-3.5 h-3.5 fill-current" />
                 </a>
               </div>
@@ -271,30 +271,30 @@ export function LandingPage() {
 
             {/* Col 2: Support */}
             <div className="flex flex-col gap-3">
-              <h4 className="font-display font-bold text-xs text-white uppercase tracking-wider">Support</h4>
-              <ul className="flex flex-col gap-2 font-medium text-xs text-zinc-400">
-                <li><a href="#contact" className="hover:text-cyan-400 transition">Contact Us</a></li>
-                <li><a href="#faq" className="hover:text-cyan-400 transition">FAQ</a></li>
-                <li><a href="#shipping" className="hover:text-cyan-400 transition">Shipping</a></li>
-                <li><a href="#tracking" className="hover:text-cyan-400 transition">Order Tracking</a></li>
+              <h4 className="font-display font-bold text-xs text-slate-950 dark:text-white uppercase tracking-wider">Support</h4>
+              <ul className="flex flex-col gap-2 font-medium text-xs text-slate-500 dark:text-zinc-400">
+                <li><a href="#contact" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Contact Us</a></li>
+                <li><a href="#faq" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">FAQ</a></li>
+                <li><a href="#shipping" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Shipping</a></li>
+                <li><a href="#tracking" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Order Tracking</a></li>
               </ul>
             </div>
 
             {/* Col 3: Company */}
             <div className="flex flex-col gap-3">
-              <h4 className="font-display font-bold text-xs text-white uppercase tracking-wider">Company</h4>
-              <ul className="flex flex-col gap-2 font-medium text-xs text-zinc-400">
-                <li><a href="#about" className="hover:text-cyan-400 transition">About</a></li>
-                <li><a href="#warranty" className="hover:text-cyan-400 transition">Warranty</a></li>
-                <li><a href="#stores" className="hover:text-cyan-400 transition">Store Locator</a></li>
-                <li><a href="#careers" className="hover:text-cyan-400 transition">Careers</a></li>
+              <h4 className="font-display font-bold text-xs text-slate-950 dark:text-white uppercase tracking-wider">Company</h4>
+              <ul className="flex flex-col gap-2 font-medium text-xs text-slate-500 dark:text-zinc-400">
+                <li><a href="#about" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">About</a></li>
+                <li><a href="#warranty" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Warranty</a></li>
+                <li><a href="#stores" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Store Locator</a></li>
+                <li><a href="#careers" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Careers</a></li>
               </ul>
             </div>
 
             {/* Col 4: Newsletter */}
             <div className="flex flex-col gap-3">
-              <h4 className="font-display font-bold text-xs text-white uppercase tracking-wider">Newsletter</h4>
-              <p className="text-xs text-zinc-400 leading-relaxed font-light">
+              <h4 className="font-display font-bold text-xs text-slate-950 dark:text-white uppercase tracking-wider">Newsletter</h4>
+              <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed font-light">
                 Get VIP flagship drops & neural engine insights directly to your inbox.
               </p>
               <form onSubmit={(e) => { e.preventDefault(); showToast("Subscribed to VIP Newsletter!", "newsletter"); }} className="flex gap-1.5 pt-1">
@@ -302,7 +302,7 @@ export function LandingPage() {
                   type="email"
                   placeholder="Enter email..."
                   required
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-cyan-400 transition"
+                  className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition"
                 />
                 <button
                   type="submit"
@@ -316,17 +316,17 @@ export function LandingPage() {
 
           {/* Bottom Bar: Copyright & High-Contrast Legal Links */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-1 text-xs md:pr-16">
-            <div className="text-zinc-400 font-light text-center md:text-left">
+            <div className="text-slate-500 dark:text-zinc-400 font-light text-center md:text-left">
               © 2026 QTPhone. All rights reserved.
             </div>
 
             <nav aria-label="Legal Navigation">
-              <ul className="flex flex-wrap justify-center gap-4 text-zinc-300 font-medium">
-                <li><a href="#privacy" className="hover:text-cyan-400 transition">Privacy Policy</a></li>
-                <li><a href="#terms" className="hover:text-cyan-400 transition">Terms</a></li>
-                <li><a href="#accessibility" className="hover:text-cyan-400 transition">Accessibility</a></li>
-                <li><a href="#cookies-choices" className="hover:text-cyan-400 transition">Set My Cookie Choices</a></li>
-                <li><a href="#cookies-policy" className="hover:text-cyan-400 transition">Cookie Policy</a></li>
+              <ul className="flex flex-wrap justify-center gap-4 text-slate-600 dark:text-zinc-300 font-medium">
+                <li><a href="#privacy" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Privacy Policy</a></li>
+                <li><a href="#terms" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Terms</a></li>
+                <li><a href="#accessibility" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Accessibility</a></li>
+                <li><a href="#cookies-choices" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Set My Cookie Choices</a></li>
+                <li><a href="#cookies-policy" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Cookie Policy</a></li>
               </ul>
             </nav>
           </div>
