@@ -1,88 +1,142 @@
-# HELICORP Series X1 Showcase — Flagship Smartphone Landing Page
+# QTPhone
 
-A next-generation, responsive smartphone landing page built for the **HELICORP Series X1 Showcase** IT Internship assignment (Round 2). This project integrates public mobile data from the [DummyJSON API](https://dummyjson.com/products/category/smartphones) with custom specification enrichment, real-time developer telemetry, dynamic product comparison matrices, and an AI-powered shopping concierge.
+<div align="center">
 
----
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs" alt="Next.js 15"/>
+    <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=0f172a" alt="React 19"/>
+    <img src="https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white" alt="TypeScript 5.7"/>
+    <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38BDF8?logo=tailwindcss&logoColor=white" alt="Tailwind CSS 3.4"/>
+    <img src="https://img.shields.io/badge/Node.js-18+-339933?logo=nodedotjs&logoColor=white" alt="Node.js 18+"/>
+    <img src="https://img.shields.io/badge/Vercel-Ready-black?logo=vercel" alt="Vercel Ready"/>
+  </p>
+</div>
 
-## 🌟 Key Highlights & Architecture
+## Live Demo
 
-- **Framework**: Next.js 15+ (App Router, Server & Client Components)
-- **Language**: TypeScript (Strict type safety across API routes, UI state, and telemetry payloads)
-- **Styling**: Tailwind CSS with custom design tokens (`canvas`, `surface`, `ink`, `cyanAccent`)
-- **Icons**: Lucide React
-- **Data Layer**: Dynamic data fetching from `https://dummyjson.com/products/category/smartphones` enriched with custom high-fidelity hardware specifications (Retina displays, SoC processors, camera optics, battery speeds).
+Experience the live version of QTPhone here: [https://qtphone.vercel.app](https://qtphone.vercel.app)
 
----
 
-## 📱 Core Landing Page Sections
+## 🌟 Overview
 
-1. **Sticky Navbar & Interaction Drawers**:
-   - Quick navigation links and real-time counters.
-   - Slide-out drawers for **Saved Favorites** and **Pre-order Reservation Cart**.
-2. **Hero Showcase**:
-   - High-impact smartphone silhouette with floating interactive hardware badges.
-   - Instant CTAs linked to product catalogs and comparison tables.
-3. **Smartphone Curations (Product Grid)**:
-   - Live filtering by brand (`Apple`, `Samsung`, `Huawei`, `OPPO`, etc.).
-   - Multi-field keyword search across titles, descriptions, and specs.
-   - Dynamic sorting by hardware rating, price ascending/descending, and pre-order discount percentage.
-4. **Interactive Specifications Matrix (Compare Section)**:
-   - Side-by-side comparative table supporting up to 3 devices simultaneously.
-   - Differential highlighting for divergent hardware specifications.
-   - Quick-trigger **Battle Scenarios** (e.g., *Compare Top Flagships*).
-5. **Detailed Hardware Modal**:
-   - Full-screen inspection modal featuring interactive image thumbnail galleries, color swatch selectors, and complete technical breakdowns.
-6. **Pre-order Newsletter & Live Webhook Pipeline**:
-   - Email validation with instant server-side webhook simulation payload inspectable directly in the UI.
-7. **Developer Telemetry Console (Bottom Drawer)**:
-   - Live monitor recording user interactions (`navigation`, `scroll-depth`, `click`, `favorite`, `cart`, `newsletter`) persisted in memory on the server.
+QTPhone is a polished e-commerce-style smartphone landing page built with Next.js 15, React 19, TypeScript, Tailwind CSS, and App Router API routes. It aims to deliver a complete product browsing experience by combining a cinematic hero section, responsive product catalog, detailed product modal, filtering and sorting tools, favorites, mini cart behavior, email notification form, telemetry logging, and an AI chatbot for product recommendations.
 
----
+The project focuses on user experience, visual clarity, and performance across desktop, tablet, and mobile screens. Product data is fetched from the public DummyJSON smartphone catalog and enriched with clearer flagship specifications for display, comparison, and consultation flows.
 
-## 🚀 Bonus & Interactive Features
+## ✨ Features
 
-- **Light/Dark & Premium Dark Theme**: Curated deep `#050505` aesthetic with glassmorphism overlays and vibrant accent borders.
-- **Scrollytelling & Milestone Tracking**: Automatically logs milestone scroll depths (25%, 50%, 75%, 100%) and emits non-blocking UI notifications.
-- **AI Co-pilot Chatbot (`/api/chat`)**: Built-in neural concierge supporting multi-provider LLM routing (OpenAI / Google Gemini) with instant demo fallback.
-- **Zero Layout Shifts & Optimized Media**: Skeletons during data fetching and constrained responsive image frames.
+- **Modern Landing Page UI** - Clean product-focused layout with responsive sections for desktop, tablet, and mobile
+- **Hero Product Showcase** - Prominent first-screen hero area with product imagery, animated device presentation, key metrics, and call-to-action buttons
+- **Product Catalog** - Product cards include basic information, image, price, rating, discount, stock status, and action buttons
+- **Filtering & Sorting** - Search products and filter by device series, with sorting by rating, price, and discount
+- **Product Detail Popup** - Detail modal displays product images, technical specifications, color/options style UI, price, and purchase actions
+- **Technology Highlight Section** - Dedicated showcase for AI, camera, battery, display, processor, durability, and premium hardware strengths
+- **Favorites** - Users can save favorite products and review them from the navigation drawer
+- **Mini Cart** - Basic shopping behavior with add/remove actions, quantity display, cart drawer, and subtotal preview
+- **Email Notification Form** - Newsletter/pre-order notification form with validation and optional webhook delivery
+- **AI Product Chatbot** - Floating chatbot in the corner for smartphone advice, comparisons, and product recommendations
+- **Light/Dark Mode** - Theme toggle with persisted light and dark UI states
+- **UX & Performance Optimized** - Responsive image handling, loading states, scroll interactions, compact UI feedback, and optimized Next.js build flow
 
----
+## 🎯 Quick Start
 
-## 🛠️ Getting Started Locally
+### Prerequisites
 
-### 1. Prerequisites
-Ensure you have **Node.js 18+** installed.
+- Node.js 18 or higher
+- npm
+- Git
 
-### 2. Installation & Run
-Navigate into the `frontend` directory:
+### Installation
 
-```bash
-cd frontend
-npm install
-npm run dev
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/travondatrack/LandingPage.git QTPhone
+   cd QTPhone
+   ```
+
+2. **Install dependencies**
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with optional webhook or AI provider configuration
+   ```
+
+4. **Run the application**
+   ```bash
+   npm run dev
+   ```
+
+5. **Open the site**
+   ```text
+   http://localhost:3000
+   ```
+
+## 📚 Documentation
+
+- [Frontend README](frontend/README.md)
+- [Environment Example](frontend/.env.example)
+- [Next.js Configuration](frontend/next.config.ts)
+- [Product Catalog Logic](frontend/src/lib/products.ts)
+- [API Routes](frontend/src/app/api)
+
+## 🏗️ Project Structure
+
+```text
+QTPhone/
++-- frontend/
+|   +-- public/
+|   |   +-- qtphone-icon-transparent-512.png
+|   +-- src/
+|   |   +-- app/
+|   |   |   +-- api/
+|   |   |       +-- behavior/
+|   |   |       +-- chat/
+|   |   |       +-- events/
+|   |   |       +-- newsletter/
+|   |   +-- components/
+|   |   +-- lib/
+|   |   +-- types.ts
+|   +-- package.json
+|   +-- tailwind.config.ts
+|   +-- vercel.json
++-- openspec/
++-- README.md
++-- .gitignore
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to interact with the showcase.
+## 🤝 Contributing
 
-### 3. Production Build Verification
-Verify type validity and optimized static generation:
+We love your input! We want to make contributing to QTPhone as easy and transparent as possible. Please open an issue or pull request with a clear description of the change.
 
-```bash
-cd frontend
-npm run build
-```
+### Ways to Contribute
+
+- 🐛 Report bugs
+- 💡 Suggest new features
+- 📝 Improve documentation
+- 🔧 Submit pull requests
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- DummyJSON for public smartphone catalog data
+- Next.js, React, TypeScript, and Tailwind CSS communities
+- Lucide React for the icon set
+- OpenAI, Gemini, or Groq-compatible providers for optional AI chatbot responses
+
+## 📞 Support
+
+- 📧 Email: 23162101@student.hcmute.edu.vn
 
 ---
 
-## 📋 Final Submission Checklist
-
-- [x] **Public GitHub Repository**: [https://github.com/travondatrack/LandingPage](https://github.com/travondatrack/LandingPage)
-- [x] **DummyJSON Integration**: Real-time category data fetch + custom high-fidelity hardware specs enrichment.
-- [x] **Responsive UI & Accessibility**: Tested across mobile viewports (`390px`) up to desktop (`1280px+`).
-- [x] **Bonus Verification Proof**:
-  - Live Webhook execution logs visible on newsletter submission.
-  - Expandable developer telemetry dashboard tracking event streams.
-  - Interactive Pre-order cart & Favorites queue persisted locally.
-
----
-*Developed for HELICORP Round 2 IT Internship Assessment.*
+<div align="center">
+  Made with ❤️ by <a href="https://github.com/travondatrack">@travondatrack</a>
+</div>
