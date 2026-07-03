@@ -15,7 +15,16 @@ npm run build
 
 ## Deployment
 
-Deploy the `frontend` directory as the project root on Vercel.
+Deploy on Vercel with these project settings:
+
+```text
+Root Directory: frontend
+Install Command: npm install
+Build Command: npm run build
+Output Directory: leave empty / default Next.js
+```
+
+The Vercel config for these commands is in `frontend/vercel.json`. Do not set a custom output directory such as `.next`; Vercel's Next.js preset handles it automatically.
 
 Optional environment variables:
 
