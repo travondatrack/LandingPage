@@ -15,7 +15,6 @@ import DetailModal from "./DetailModal";
 import Newsletter from "./Newsletter";
 import Chatbot from "./Chatbot";
 import ToastContainer, { showToast } from "./Toast";
-import { ShieldCheck, Sparkles } from "lucide-react";
 
 function safeParse<T>(key: string, fallback: T): T {
   try {
@@ -312,18 +311,6 @@ export function LandingPage() {
                   Join
                 </button>
               </form>
-            </div>
-          </div>
-
-          {/* E-commerce Trust Ribbon Row */}
-          <div className="py-4 border-t border-b border-white/10 flex flex-wrap items-center justify-center sm:justify-between gap-4 text-zinc-300">
-            <div className="flex items-center gap-2 text-[11px] font-mono">
-              <ShieldCheck className="w-4 h-4 text-cyan-400 shrink-0" />
-              <span>FLAGSHIP SECURED & 256-BIT ENCRYPTED</span>
-            </div>
-            <div className="flex items-center gap-2 text-[11px] font-mono">
-              <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
-              <span>NEURAL ENGINE OK & AI CO-PILOT ACTIVE</span>
             </div>
           </div>
 
